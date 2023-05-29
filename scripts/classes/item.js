@@ -11,12 +11,12 @@ import { ItemsWithSpells5eItemSheet } from './item-sheet.js';
 const FakeEmptySpell = (uuid, parent) =>
   new Item.implementation(
     {
-      name: game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.MISSING_ITEM`),
+      name: game.i18n.localize("IWS.MISSING_ITEM"),
       img: 'icons/svg/hazard.svg',
       type: 'spell',
       system: {
         description: {
-          value: game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.MISSING_ITEM_DESCRIPTION`),
+          value: game.i18n.localize("IWS.MISSING_ITEM_DESCRIPTION"),
         },
       },
       _id: uuid.split('.').pop(),
@@ -263,8 +263,8 @@ export class ItemsWithSpells5eItem {
     let shouldDeleteSpell =
       alsoDeleteEmbeddedSpell &&
       (await Dialog.confirm({
-        title: game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.MODULE_NAME`),
-        content: game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.WARN_ALSO_DELETE`),
+        title: game.i18n.localize("IWS.MODULE_NAME"),
+        content: game.i18n.localize("IWS.WARN_ALSO_DELETE"),
       }));
 
     if (shouldDeleteSpell) {

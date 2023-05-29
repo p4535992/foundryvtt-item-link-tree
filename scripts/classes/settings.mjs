@@ -1,4 +1,4 @@
-import { ItemsWithSpells5e } from "../items-with-spells-5e.js";
+import {ItemsWithSpells5e} from "../items-with-spells-5e.js";
 
 // the item types that can NEVER have spells in them.
 export const EXCLUDED_TYPES = [
@@ -24,8 +24,8 @@ export function _registerSettings() {
   }
 
   game.settings.register(ItemsWithSpells5e.MODULE_ID, "sortOrder", {
-    name: `${ItemsWithSpells5e.MODULE_ID}.SETTINGS.SORT_ORDER.NAME`,
-    hint: `${ItemsWithSpells5e.MODULE_ID}.SETTINGS.SORT_ORDER.HINT`,
+    name: "IWS.SETTINGS.SORT_ORDER.NAME",
+    hint: "IWS.SETTINGS.SORT_ORDER.HINT",
     scope: "world",
     config: true,
     type: Boolean,
@@ -34,12 +34,12 @@ export function _registerSettings() {
   });
 
   game.settings.registerMenu(ItemsWithSpells5e.MODULE_ID, "itemTypeExclusion", {
-    name: `${ItemsWithSpells5e.MODULE_ID}.SETTINGS.ITEM_EXCLUSION.NAME`,
-    hint: `${ItemsWithSpells5e.MODULE_ID}.SETTINGS.ITEM_EXCLUSION.HINT`,
+    name: "IWS.SETTINGS.ITEM_EXCLUSION.NAME",
+    hint: "IWS.SETTINGS.ITEM_EXCLUSION.HINT",
     scope: "world",
     config: true,
     type: IWS_TypeSettings,
-    label: `${ItemsWithSpells5e.MODULE_ID}.SETTINGS.ITEM_EXCLUSION.NAME`,
+    label: "IWS.SETTINGS.ITEM_EXCLUSION.NAME",
     restricted: true
   });
 }
@@ -51,7 +51,7 @@ class IWS_TypeSettings extends FormApplication {
   }
 
   get title() {
-    return game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.SETTINGS.ITEM_EXCLUSION.TITLE`);
+    return game.i18n.localize("IWS.SETTINGS.ITEM_EXCLUSION.TITLE");
   }
 
   get template() {

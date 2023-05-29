@@ -12,6 +12,13 @@
       "url": "https://github.com/ElfFriend-DnD",
       "patreon": "https://www.patreon.com/ElfFriend_DnD",
       "ko-fi": "https://ko-fi.com/elffriend"
+    },
+    {
+      "name": "Zhell",
+      "discord": "Zhell#9201",
+      "url": "https://github.com/krbz999",
+      "patreon": "https://www.patreon.com/zhell",
+      "ko-fi": "https://ko-fi.com/zhell"
     }
   ],
   "esmodules": [
@@ -32,30 +39,34 @@
     }
   ],
   "relationships": {
-    "systems": [{
-      "id": "dnd5e",
-      "type": "system",
-      "compatibility": {
-        "minimum": "2.2.1"
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "2.2.1"
+        }
       }
-    }],
-    "requires": [{
-      "id": "lib-wrapper",
-      "compatibility": {
-        "minimum": "1.12.7.1"
+    ],
+    "requires": [
+      {
+        "id": "lib-wrapper",
+        "compatibility": {
+          "minimum": "1.12.7.1"
+        }
       }
-    }]
+    ]
   },
-  "bugs": "https://github.com/ElfFriend-DnD/foundryvtt-items-with-spells-5e/issues",
-  "changelog": "https://github.com/ElfFriend-DnD/foundryvtt-items-with-spells-5e/releases",
-  "download": "https://github.com/ElfFriend-DnD/foundryvtt-items-with-spells-5e/releases/latest/download/module.zip",
-  "manifest": "https://github.com/ElfFriend-DnD/foundryvtt-items-with-spells-5e/releases/latest/download/module.json",
-  "readme": "https://raw.githubusercontent.com/ElfFriend-DnD/foundryvtt-items-with-spells-5e/main/README.md",
-  "url": "https://github.com/ElfFriend-DnD/foundryvtt-items-with-spells-5e",
+  "bugs": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/issues",
+  "changelog": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/releases",
+  "download": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/releases/latest/download/module.zip",
+  "manifest": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/releases/latest/download/module.json",
+  "readme": "https://raw.githubusercontent.com/krbz999/foundryvtt-items-with-spells-5e/main/README.md",
+  "url": "https://github.com/krbz999/foundryvtt-items-with-spells-5e",
   "flags": {
     "allowBugReporter": true,
     "fvttdevleague": {
-        "package-jam": 2022
+      "package-jam": 2022
     }
   }
 }
