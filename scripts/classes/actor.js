@@ -73,8 +73,8 @@ export class ItemsWithSpells5eActor {
     const alsoDeleteChildSpells =
       options?.itemsWithSpells5e?.alsoDeleteChildSpells ??
       (await Dialog.confirm({
-        title: game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.MODULE_NAME`),
-        content: game.i18n.localize(`${ItemsWithSpells5e.MODULE_ID}.QUERY_ALSO_DELETE`),
+        title: game.i18n.localize("IWS.MODULE_NAME"),
+        content: game.i18n.localize("IWS.QUERY_ALSO_DELETE"),
       }));
 
     if (alsoDeleteChildSpells) {
