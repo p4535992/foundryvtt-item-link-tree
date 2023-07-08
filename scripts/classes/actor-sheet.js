@@ -1,4 +1,3 @@
-//@ts-check
 import { ItemsWithSpells5e } from '../items-with-spells-5e.js';
 
 /**

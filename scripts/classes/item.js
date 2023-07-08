@@ -1,6 +1,4 @@
-//@ts-check
 import { ItemsWithSpells5e } from '../items-with-spells-5e.js';
-import { ItemsWithSpells5eActor } from './actor.js';
 import { ItemsWithSpells5eItemSheet } from './item-sheet.js';
 
 /**
