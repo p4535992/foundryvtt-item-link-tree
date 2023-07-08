@@ -1,4 +1,3 @@
-//@ts-check
 import { ItemsWithSpells5e } from '../items-with-spells-5e.js';
 import { ItemsWithSpells5eItem } from './item.js';
 
@@ -88,17 +87,21 @@ export class ItemsWithSpells5eActor {
    */
   static addChildSpellsToActor = async (itemCreated) => {
     // abort if no item provided or if not an owned item
-    if (!itemCreated || !itemCreated.isOwned) {
-      return;
-    }
+    if (!itemCreated || !itemCreated.isOwned) return;
 
     const itemWithSpellsItem = new ItemsWithSpells5eItem(itemCreated);
 
     // do nothing if there are no item spells
-    if (!itemWithSpellsItem.itemSpellList.length) {
-      return;
-    }
+    if (!itemWithSpellsItem.itemSpellList.length) return;
+
+    // Construct spell data.
     const itemSpellData = [...(await itemWithSpellsItem.itemSpellItemMap).values()].map((item) => item.toJSON());
+
+    // Set limited uses value to the maximum for each spell.
+    itemSpellData.forEach(data => {
+      const usesMax = foundry.utils.getProperty(data, "system.uses.max");
+      if(usesMax) foundry.utils.setProperty(data, "system.uses.value", dnd5e.utils.simplifyBonus(usesMax, itemCreated.getRollData()));
+    });
 
     ItemsWithSpells5e.log(false, 'addChildSpellsToActor', itemSpellData);
 
