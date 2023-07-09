@@ -177,8 +177,7 @@ export class ItemsWithSpells5eItem {
       const fullItemData = await fromUuid(uuid);
 
       if (!fullItemData) {
-        ui.notifications.error('Item data not found');
-        console.error('Item data for', uuid, 'not found');
+        ui.notifications.error('Item data for', uuid, 'not found');
         return;
       }
 
@@ -188,35 +187,23 @@ export class ItemsWithSpells5eItem {
         ['system.preparation.mode']: 'atwill',
       });
 
-      const [newItem] = await this.item.parent.createEmbeddedDocuments('Item', [adjustedItemData]);
-
+      const [newItem] = await this.item.actor.createEmbeddedDocuments('Item', [adjustedItemData]);
       uuid = newItem.uuid;
 
       ItemsWithSpells5e.log(false, 'new item created', newItem);
     }
 
-    const itemSpells = [...this.itemSpellList, { uuid }];
+    const itemSpells = [...this.itemSpellList, {uuid}];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
-    await this.item.update(
-      {
-        flags: {
-          [ItemsWithSpells5e.MODULE_ID]: {
-            [ItemsWithSpells5e.FLAGS.itemSpells]: itemSpells,
-          },
-        },
-      },
-      { render: false },
-    );
+    const property = `flags.${ItemsWithSpells5e.MODULE_ID}.${ItemsWithSpells5e.FLAGS.itemSpells}`;
+    await this.item.update({[property]: itemSpells}, {render: false});
 
     await this.refresh();
 
     // now re-render the item and actor sheets
     this.item.render();
-
-    if (this.item.parent) {
-      this.item.parent.render();
-    }
+    if (this.item.actor) this.item.actor.render();
   }
 
   /**
@@ -224,21 +211,14 @@ export class ItemsWithSpells5eItem {
    * @param {string} itemId - the id of the item to remove
    * @param {Object} options
    * @param {boolean} [options.alsoDeleteEmbeddedSpell] - Should the spell be deleted also, only for owned items
+   * @returns {Item} the updated or deleted spell after having its parent item removed, or null
    */
   async removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell } = {}) {
     const itemToDelete = this.itemSpellItemMap.get(itemId);
 
-    let uuidToRemove; // spell item's uuid this item stores for its relationship
-
-    if (this.item.isOwned) {
-      // in this case we are storing the actual owned spell item's UUID
-      uuidToRemove = itemToDelete.uuid;
-    } else {
-      // in the un-owned case, we store the sourceId
-      uuidToRemove = itemToDelete.getFlag('core', 'sourceId');
-    }
-
-    const newItemSpells = this.itemSpellList.filter(({ uuid }) => uuid !== uuidToRemove);
+    // If owned, we are storing the actual owned spell item's uuid. Else we store the source id.
+    const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
+    const newItemSpells = this.itemSpellList.filter(({uuid}) => uuid !== uuidToRemove);
 
     // update the data manager's internal store of the items it contains
     this._itemSpellItems?.delete(itemId);
@@ -246,30 +226,22 @@ export class ItemsWithSpells5eItem {
 
     await this.item.setFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.itemSpells, newItemSpells);
 
-    if (!this.item.isOwned) {
-      return;
-    }
+    // Nothing more to do for unowned items.
+    if (!this.item.isOwned) return;
 
     // remove the spell's `parentItem` flag
     const spellItem = fromUuidSync(uuidToRemove);
 
-    // the other item has already been deleted probably, do nothing
-    if (!spellItem) {
-      return;
-    }
+    // the other item has already been deleted, probably do nothing.
+    if (!spellItem) return;
 
-    let shouldDeleteSpell =
-      alsoDeleteEmbeddedSpell &&
-      (await Dialog.confirm({
-        title: game.i18n.localize("IWS.MODULE_NAME"),
-        content: game.i18n.localize("IWS.WARN_ALSO_DELETE"),
-      }));
+    const shouldDeleteSpell = alsoDeleteEmbeddedSpell && (await Dialog.confirm({
+      title: game.i18n.localize("IWS.MODULE_NAME"),
+      content: game.i18n.localize("IWS.WARN_ALSO_DELETE")
+    }));
 
-    if (shouldDeleteSpell) {
-      await spellItem.delete();
-    } else {
-      await spellItem.unsetFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.parentItem);
-    }
+    if (shouldDeleteSpell) return spellItem.delete();
+    else return spellItem.unsetFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.parentItem);
   }
 
   /**

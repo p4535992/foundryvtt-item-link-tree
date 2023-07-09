@@ -85,23 +85,18 @@ export class ItemsWithSpells5eItemSheet {
    * @returns Promise that resolves when the item has been modified
    */
   async _dragEnd(event) {
-    if(!this.app.isEditable || this.item.isOwned) return;
-    ItemsWithSpells5e.log(false, 'dragEnd', { event });
+    if(!this.app.isEditable) return;
+    ItemsWithSpells5e.log(false, 'dragEnd', {event});
+
     const data = TextEditor.getDragEventData(event);
+    ItemsWithSpells5e.log(false, 'dragEnd', {data});
 
-    ItemsWithSpells5e.log(false, 'dragEnd', { data });
-
-    if (data.type !== 'Item') {
-      return;
-    }
+    if (data.type !== 'Item') return;
 
     const item = fromUuidSync(data.uuid);
+    ItemsWithSpells5e.log(false, 'dragEnd', {item});
 
-    ItemsWithSpells5e.log(false, 'dragEnd', { item });
-
-    if (item.type !== 'spell') {
-      return;
-    }
+    if (item.type !== 'spell') return;
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenSpellsTab = true;
