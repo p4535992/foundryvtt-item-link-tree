@@ -1,0 +1,22 @@
+{
+  "IWS.CHARGES_HINT": "Wird der Zauber mit Ladungen des Gegenstands an dem er hängt gewirkt, muss oben die Zahl der verbrauchten Ladungen konfiguriert werden.",
+  "IWS.Configure": "Konfigurieren",
+  "IWS.ConfigureOverrides": "Magischen Gegenstand konfigurieren",
+  "IWS.DeleteSpell": "Zauber löschen",
+  "IWS.LIMITED_HINT": "Wenn dieser Zauber seine eigene Zahl Nutzungen pro Rast oder ähnliche Beschränkungen hat, muss das oben festgelegt werden.",
+  "IWS.MISSING_ITEM_DESCRIPTION": "Ursprungsitem dieses Zaubers konnte nicht gefunden worden. Wurde eventuell gelöscht?",
+  "IWS.MISSING_ITEM": "Fehlendes Item",
+  "IWS.MODULE_NAME": "Items with Spells",
+  "IWS.QUERY_ALSO_DELETE": "Auch die Zauber von dem Item löschen?",
+  "IWS.RemoveLink": "Verbindung löschen",
+  "IWS.SAVE_HINT": "Falls dieser Zauber einen festen SG oder andere spezielle Rettungswurflogik hat.",
+  "IWS.SETTINGS.ITEM_EXCLUSION.HINT": "Wählen, welche Itemtypen über Zauber verfügen können.",
+  "IWS.SETTINGS.ITEM_EXCLUSION.NAME": "Itemtypen wählen",
+  "IWS.SETTINGS.ITEM_EXCLUSION.TITLE": "Itemtyp Auschlussmenü",
+  "IWS.SETTINGS.SORT_ORDER.HINT": "Wenn aktiviert werden die durch dieses Modul erzeugten Zauberbuchsektionen am Ende statt am Anfang des Zauberbuchs hinzugefügt.",
+  "IWS.SETTINGS.SORT_ORDER.NAME": "Zauberbuch-Sortierfolge",
+  "IWS.SPELL_LEVEL_HINT": "Falls der Zauber auf einem bestimmten Grad gewirkt wird, Grad oben setzen.",
+  "IWS.WARN_ALSO_DELETE": "Dies löscht auch den Zauber von dem Akteur. Sicher, dass der eingebettete Zauber gelöscht werden soll?",
+  "IWS.WARN_CANNOT_ADDREMOVE": "Auf einem Item im Besitz können Zauber nicht hinzugefügt oder entfernt werden. Diese Zauber wurden dem Zauberbuchreiter des Akteurs hinzugefügt.",
+  "IWS.WARN_OWNED": "Es werden die Zauber eines Items im Besitz eines Akteurs bearbeitet. Jegliche Änderungen hier werden nicht auf die Zauber des besitzenden Akteurs übertragen."
+}
