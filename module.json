@@ -27,7 +27,7 @@
     "/styles/items-with-spells-5e.css"
   ],
   "compatibility": {
-    "minimum": 10,
+    "minimum": 11,
     "verified": 11
   },
   "languages": [
@@ -48,8 +48,8 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "minimum": "2.2.1",
-          "maximum": "2.2.9"
+          "minimum": "2.3.0",
+          "maximum": "2.3.9"
         }
       }
     ],
