@@ -23,5 +23,6 @@
   "item-link-tree.customLink.label": "Custom Link Type",
   "item-link-tree.CreateCustomLink": "Create Custom Link",
   "item-link-tree.SETTINGS.GM_ONLY.NAME": "Only GM can use the 'Leafs' tab",
-  "item-link-tree.SETTINGS.GM_ONLY.TITLE": "If enable only the GM can see and edit the 'Leafs' Tab"
+  "item-link-tree.SETTINGS.GM_ONLY.TITLE": "If enable only the GM can see and edit the 'Leafs' Tab",
+  "item-link-tree.SETTINGS.GM_ONLY.HINT": "If enable only the GM can see and edit the 'Leafs' Tab"
 }
