@@ -168,6 +168,8 @@ export class ItemsWithSpells5eItem {
     // MUTATED if this is an owned item
     let uuid = providedUuid;
 
+    // MOD 4535992
+    /*
     if (this.item.isOwned) {
       // if this item is already on an actor, we need to
       // 0. see if the uuid is already on the actor
@@ -192,7 +194,7 @@ export class ItemsWithSpells5eItem {
 
       ItemsWithSpells5e.log(false, 'new item created', newItem);
     }
-
+    */
     const itemSpells = [...this.itemSpellList, {uuid}];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
@@ -229,6 +231,8 @@ export class ItemsWithSpells5eItem {
     // Nothing more to do for unowned items.
     if (!this.item.isOwned) return;
 
+    // MOD 4535992
+    /*
     // remove the spell's `parentItem` flag
     const spellItem = fromUuidSync(uuidToRemove);
 
@@ -242,6 +246,7 @@ export class ItemsWithSpells5eItem {
 
     if (shouldDeleteSpell) return spellItem.delete();
     else return spellItem.unsetFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.parentItem);
+    */
   }
 
   /**

@@ -1,7 +1,7 @@
 import { ItemsWithSpells5eActorSheet } from './classes/actor-sheet.js';
 import { ItemsWithSpells5eActor } from './classes/actor.js';
 import { ItemsWithSpells5eItemSheet } from './classes/item-sheet.js';
-import { _registerSettings } from './classes/settings.mjs';
+import { _registerSettings } from './classes/settings.js';
 
 export class ItemsWithSpells5e {
   static API = {};

@@ -2,9 +2,9 @@
   <ol class="items-list items-with-spells-items-list">
     <li class="items-header flexrow">
       <h3 class="item-name flexrow">
-        {{localize 'TYPES.Item.spellPl'}}
+        {{localize 'Tree'}}
       </h3>
-
+      <!--
       <div class="item-detail">
         {{localize 'DND5E.ActionSave'}}
       </div>
@@ -16,6 +16,7 @@
       <div class="item-detail spell-uses">
         {{localize 'DND5E.Charges'}}
       </div>
+      -->
 
       <div class="item-controls"></div>
 
@@ -28,7 +29,7 @@
           <div class="item-image" style="background-image: url({{spell.img}})">{{{@root/rollIcon}}}</div>
           <h4>{{spell.name}}</h4>
         </div>
-
+        <!--
         <div class="item-detail item-with-spells-item-detail">
           {{#if spell.labels.save}}
           <span title="{{labels.save}}">{{labels.save}}</span>
@@ -49,7 +50,7 @@
           {{localize 'DND5E.Charges'}}
           {{/if}}
         </div>
-
+        -->
         <div class="item-controls flexrow context-menu item-with-spells-item-controls">
           {{#if @root/isOwner}}
           <a class="item-control configure-overrides"

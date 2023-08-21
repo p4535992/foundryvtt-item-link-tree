@@ -1,99 +1,103 @@
-# Items with Spells DnD5e
+### Item Link Tree
 
-![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2FElfFriend-DnD%2Ffoundryvtt-items-with-spells-5e%2Fmain%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange)
-![Latest Release Download Count](https://img.shields.io/badge/dynamic/json?label=Downloads@latest&query=assets%5B1%5D.download_count&url=https%3A%2F%2Fapi.github.com%2Frepos%2FElfFriend-DnD%2Ffoundryvtt-items-with-spells-5e%2Freleases%2Flatest)
-![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fitems-with-spells-5e&colorB=4aa94a)
-[![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fcompact-roll-card-5e%2Fshield%2Fendorsements)](https://www.foundryvtt-hub.com/package/items-with-spells-5e/)
-[![Foundry Hub Comments](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fcompact-roll-card-5e%2Fshield%2Fcomments)](https://www.foundryvtt-hub.com/package/items-with-spells-5e/)
+![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/foundryvtt-item-link-tree/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
 
-[![ko-fi](https://img.shields.io/badge/-buy%20me%20a%20coke-%23FF5E5B)](https://ko-fi.com/elffriend)
-[![patreon](https://img.shields.io/badge/-patreon-%23FF424D)](https://www.patreon.com/ElfFriend_DnD)
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fitem-link-tree&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=item-link-tree)
 
-This module aims to allow users to attach spells to items in such a way that when the parent item is added to an actor, the spells attached come with, pre-configured with consumption overrides and other small QOL changes.
+![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-item-link-tree%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibility.verified&colorB=orange&style=for-the-badge)
 
-It also adds a new display of spell-attached items to the Spellbook.
+![Latest Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-item-link-tree%2Fmaster%2Fsrc%2Fmodule.json&label=Latest%20Release&prefix=v&query=$.version&colorB=red&style=for-the-badge)
 
-## Features
+[![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fitem-link-tree%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/item-link-tree/)
 
-This module does not replace or augment any core item workflow logic, only allows a way to signify that some Items also add spells to actors when added to an actor.
+![GitHub all releases](https://img.shields.io/github/downloads/p4535992/foundryvtt-item-link-tree/total?style=for-the-badge)
 
-Recommended Use Cases:
-- Magic Items which have Spells attached to them.
-- Features which specifically add spells that have their own limited uses, not meant to be used with spell slots.
+[![Translation status](https://weblate.foundryvtt-hub.com/widgets/item-link-tree/-/287x66-black.png)](https://weblate.foundryvtt-hub.com/engage/item-link-tree/)
 
-Not Recommended for:
-- Class Spell Lists
-- Subclass Specific Spells (e.g. "Always Prepared" spells)
+Build a tree hierarchy for your objects to link them together and use the logic you create to do weird things with other modules.
 
-The scope of this module is intentionally limited and will not fully replace the edge-cases that Magic Items attempts to accommodate.
+This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-items-with-spells-5e) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval.
 
-### Adding Spells to Items
+I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/zhell)
 
-Only works for Unowned Items, and only for non-spells.
+**NOTE: This module is been tested only on Dnd5e system**
 
-A new Tab is added to the Item Sheet: "Spells"
+## Installation
 
-![Drag and Drop the "Web" spell from the SRD Compendium to add it to a "Wand of Web" item.](https://user-images.githubusercontent.com/7644614/190871191-9255a1af-c784-41a3-a9f2-722fc90cef26.png)
+It's always easiest to install modules from the in game add-on browser.
 
-This tab allows spells to be Dragged and Dropped into the Spell List from either the Items Tab or any loaded Compendium.
+To install this module manually:
+1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
+2.  Click "Install Module"
+3.  In the "Manifest URL" field, paste the following url:
+`https://raw.githubusercontent.com/p4535992/foundryvtt-item-link-tree/master/src/module.json`
+4.  Click 'Install' and wait for installation to complete
+5.  Don't forget to enable the module in game using the "Manage Module" button
 
-### Configuring Overrides
+### libWrapper
 
-Once the Spell is added to the Item, clicking on the "Edit" button will open the spell override configuration.
-
-![Demonstration of overrides for the Wand of Web](https://user-images.githubusercontent.com/7644614/190871004-22077815-bbcc-4348-b6d6-b8cb033813fc.png)
-
-The override configuration allows an Item's spells to be configured in the two primary ways that RAW dnd5e makes Spells possible to use on Items:
-#### 1. Independent Uses for each Spell
-
-Configure the "Limited Uses" override as you would normally for an item.
-
-E.g. `1` of `1` per `Day`.
-
-> This module does not add the ability to define a spell as castable as either 1/day or with spell slots, useful for some newer feats as example.
-
-#### 2. Spell consumes charges of the "parent"
-
-Configure the "Charges" input to input how many parent item charges this spell uses when cast.
-
-> This module does not add the ability to prompt the user how many charges to use when casting a spell, useful for the Wand of Fireballs as example.
-
-#### Saving Throw Override
-
-If an Item's spell has a specified DC calculation rules, change the "vs DC" input accordingly. Be sure to change the `Spellcasting` dropdown to `Flat` if the DC is a flat DC.
-
-E.g. vs DC. `15` `Flat` for Wand of Web casting "Web"
-
-### Using Spells on Actors
-
-When an Item with spells attached is added to an Actor, the spells attached to the item are also added. Any overrides configured are applied at this moment as well.
-
-Unless the Item requires Attunement, a new section will appear in the Actor's "Spellbook" tab which contains that Item's spells. Multiple sections will appear if multiple items with spells are on a given actor.
-
-The spells listed can be used like normal. The Core System's consumption behavior takes over at this point. Editing a spell that is already on an actor can be done by editing the spell from the Spellbook Tab.
-
-![Demonstration of the "Wand of Web" displayed in an Actor Sheet.](https://user-images.githubusercontent.com/7644614/190870987-ba49d749-47cb-49f7-91d7-1f869f2f8190.png)
+This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
 
-https://user-images.githubusercontent.com/7644614/190871810-824db216-56fa-4411-9e03-ada2a9c0f251.mp4
+## Known issue
+
+# API
 
 
-## API
+# Build
 
-When programatically deleting items that have spells attached, it is possible to skip the prompt for the user by providing the following object in the [DocumentModificationContext](https://foundryvtt.com/api/classes/foundry.abstract.Document.html#delete) option of the `delete` method.
+## Install all packages
 
-```
-someItem.delete({
-  itemsWithSpells5e: { alsoDeleteChildSpells: true } // or false
-})
+```bash
+npm install
 ```
 
-The logic within this module will respect the boolean provided, deleting the child item spells itself if `true`, or leaving them alone if `false`.
+### dev
 
-## Compatibility
+`dev` will let you develop you own code with hot reloading on the browser
 
-Compatible with:
-- Actions List 5e
+```bash
+npm run dev
+```
 
-Uncertain Compatiblity with:
-- Magic Items
+## npm build scripts
+
+### build
+
+`build` will build and set up a symlink between `dist` and your `dataPath`.
+
+```bash
+npm run build
+```
+
+### build-watch
+
+`build-watch` will build and watch for changes, rebuilding automatically.
+
+```bash
+npm run build-watch
+```
+
+### prettier-format
+
+`prettier-format` launch the prettier plugin based on the configuration [here](./.prettierrc)
+
+```bash
+npm run-script prettier-format
+```
+
+## [Changelog](./CHANGELOG.md)
+
+## Issues
+
+Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/p4535992/foundryvtt-item-link-tree/issues), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
+
+## License
+
+- [Items with spells 5e](https://github.com/krbz999/foundryvtt-items-with-spells-5e) with [MIT](https://github.com/krbz999/foundryvtt-items-with-spells-5e/blob/master/LICENSE)
+
+This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
+
+## Credit
+
+- Thanks to [krbz999 (aka Zhell)](https://github.com/krbz999/) for the module [Items with spells 5e](https://github.com/krbz999/foundryvtt-items-with-spells-5e)
