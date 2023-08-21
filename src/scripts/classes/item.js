@@ -1,5 +1,5 @@
-import { ItemLinkTree } from '../../module.js';
-import { ItemLinkTreeItemSheet } from './item-sheet.js';
+import { ItemLinkTree } from "../../module.js";
+import { ItemLinkTreeItemSheet } from "./item-sheet.js";
 
 /**
  * Creates a fake temporary item as filler for when a UUID is unable to resolve an item
@@ -10,16 +10,16 @@ const FakeEmptyItem = (uuid, parent) =>
   new Item.implementation(
     {
       name: game.i18n.localize("item-link-tree.MISSING_ITEM"),
-      img: 'icons/svg/hazard.svg',
-      type: 'spell',
+      img: "icons/svg/hazard.svg",
+      type: "spell",
       system: {
         description: {
           value: game.i18n.localize("item-link-tree.MISSING_ITEM_DESCRIPTION"),
         },
       },
-      _id: uuid.split('.').pop(),
+      _id: uuid.split(".").pop(),
     },
-    { temporary: true, parent },
+    { temporary: true, parent }
   );
 
 /**
@@ -67,10 +67,10 @@ export class ItemLinkTreeItem {
    * Update this class's understanding of the item items
    */
   async refresh() {
-    ItemLinkTree.log(false, 'REFRESHING', this.itemSpellList);
+    ItemLinkTree.log(false, "REFRESHING", this.itemSpellList);
     this._getItemSpellFlagMap();
     await this._getItemSpellItems();
-    ItemLinkTree.log(false, 'REFRESHed');
+    ItemLinkTree.log(false, "REFRESHed");
   }
 
   /**
@@ -82,7 +82,7 @@ export class ItemLinkTreeItem {
     // original could be in a compendium or on an actor
     let original = await fromUuid(uuid);
 
-    ItemLinkTree.log(false, 'original', original);
+    ItemLinkTree.log(false, "original", original);
 
     // return a fake 'empty' item if we could not create a childItem
     if (!original) {
@@ -96,18 +96,18 @@ export class ItemLinkTreeItem {
 
     // these changes are always applied
     const fixedChanges = {
-      ['flags.core.sourceId']: uuid, // set the sourceId as the original item
+      ["flags.core.sourceId"]: uuid, // set the sourceId as the original item
       [`flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.parentItem}`]: this.item.uuid,
-      ['system.preparation.mode']: 'atwill',
+      ["system.preparation.mode"]: "atwill",
     };
 
     const update = foundry.utils.mergeObject(changes, fixedChanges);
 
     // backfill the 'charges' and 'target' for parent-item-charge consumption style items
-    if (foundry.utils.getProperty(changes, 'system.consume.amount')) {
+    if (foundry.utils.getProperty(changes, "system.consume.amount")) {
       foundry.utils.mergeObject(update, {
-        'system.consume.type': 'charges',
-        'system.consume.target': this.item.id,
+        "system.consume.type": "charges",
+        "system.consume.target": this.item.id,
       });
     }
 
@@ -118,7 +118,7 @@ export class ItemLinkTreeItem {
     });
     await childItem.updateSource(update);
 
-    ItemLinkTree.log(false, 'getChildItem', childItem);
+    ItemLinkTree.log(false, "getChildItem", childItem);
 
     return childItem;
   }
@@ -138,7 +138,7 @@ export class ItemLinkTreeItem {
 
         itemMap.set(childItem.id, childItem);
         return childItem;
-      }),
+      })
     );
 
     this._itemSpellItems = itemMap;
@@ -153,7 +153,7 @@ export class ItemLinkTreeItem {
   _getItemSpellFlagMap() {
     const map = new Map();
     this.itemSpellList.forEach((itemSpellFlag) => {
-      const id = itemSpellFlag.uuid.split('.').pop();
+      const id = itemSpellFlag.uuid.split(".").pop();
       map.set(id, itemSpellFlag);
     });
     this._itemSpellFlagMap = map;
@@ -195,11 +195,11 @@ export class ItemLinkTreeItem {
       ItemLinkTree.log(false, 'new item created', newItem);
     }
     */
-    const itemLeafs = [...this.itemSpellList, {uuid}];
+    const itemLeafs = [...this.itemSpellList, { uuid }];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
     const property = `flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.itemLeafs}`;
-    await this.item.update({[property]: itemLeafs}, {render: false});
+    await this.item.update({ [property]: itemLeafs }, { render: false });
 
     await this.refresh();
 
@@ -220,7 +220,7 @@ export class ItemLinkTreeItem {
 
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
-    const newItemSpells = this.itemSpellList.filter(({uuid}) => uuid !== uuidToRemove);
+    const newItemSpells = this.itemSpellList.filter(({ uuid }) => uuid !== uuidToRemove);
 
     // update the data manager's internal store of the items it contains
     this._itemSpellItems?.delete(itemId);
@@ -272,7 +272,7 @@ export class ItemLinkTreeItem {
           },
         },
       },
-      { render: false },
+      { render: false }
     );
 
     // update this data manager's understanding of the items it contains

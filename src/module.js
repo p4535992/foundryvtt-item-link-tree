@@ -1,18 +1,16 @@
-import { ItemLinkTreeActorSheet } from './classes/actor-sheet.js';
-import { ItemLinkTreeActor } from './classes/actor.js';
-import { ItemLinkTreeItemSheet } from './scripts/classes/item-sheet.js';
-import { _registerSettings } from './scripts/classes/settings.js';
+import { ItemLinkTreeItemSheet } from "./scripts/classes/item-sheet.js";
+import { _registerSettings } from "./scripts/classes/settings.js";
 
 export class ItemLinkTree {
   static API = {};
 
-  static MODULE_ID = 'item-link-tree';
+  static MODULE_ID = "item-link-tree";
 
   static SETTINGS = {};
 
   static FLAGS = {
-    itemLeafs: 'item-leafs',
-    parentItem: 'parent-item',
+    itemLeafs: "item-leafs",
+    parentItem: "parent-item",
   };
 
   static TEMPLATES = {
@@ -25,10 +23,10 @@ export class ItemLinkTree {
    */
   static log(force, ...args) {
     try {
-      const shouldLog = force || game.modules.get('_dev-mode')?.api?.getPackageDebugValue(this.MODULE_ID, 'boolean');
+      const shouldLog = force || game.modules.get("_dev-mode")?.api?.getPackageDebugValue(this.MODULE_ID, "boolean");
 
       if (shouldLog) {
-        console.log(this.MODULE_ID, '|', ...args);
+        console.log(this.MODULE_ID, "|", ...args);
       }
     } catch (e) {
       console.error(e.message);
@@ -40,19 +38,19 @@ export class ItemLinkTree {
   }
 }
 
-Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
+Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag(ItemLinkTree.MODULE_ID);
 });
 
-Hooks.once('init', () => {
-  ItemLinkTree.log(true, 'Initialized');
+Hooks.once("init", () => {
+  ItemLinkTree.log(true, "Initialized");
 
   ItemLinkTree.preloadTemplates();
 
-  ItemLinkTreeActorSheet.init();
+  // ItemLinkTreeActorSheet.init();
 });
 
 Hooks.once("setup", _registerSettings);
 
 ItemLinkTreeItemSheet.init();
-ItemLinkTreeActor.init();
+// ItemLinkTreeActor.init();

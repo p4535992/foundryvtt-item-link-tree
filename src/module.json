@@ -1,23 +1,23 @@
 {
-    "id": "item-link-tree",
-    "title": "Items Link Tree",
-    "description": "A module that allows specific items to be attached to other Items, Features, etc  for Build a tree hierarchy for your items to link together and use the logic you create to do weird things with other modules.",
-    "version": "1.2.0",
+  "id": "item-link-tree",
+  "title": "Items Link Tree",
+  "description": "A module that allows specific items to be attached to other Items, Features, etc  for Build a tree hierarchy for your items to link together and use the logic you create to do weird things with other modules.",
+  "version": "1.2.0",
   "authors": [
     {
-        "name": "Andrew Krigline",
-        "discord": "Calego#0914",
-        "url": "https://github.com/ElfFriend-DnD",
-        "patreon": "https://www.patreon.com/ElfFriend_DnD",
-        "ko-fi": "https://ko-fi.com/elffriend"
-      },
-      {
-        "name": "Zhell",
-        "discord": "Zhell#9201",
-        "url": "https://github.com/krbz999",
-        "patreon": "https://www.patreon.com/zhell",
-        "ko-fi": "https://ko-fi.com/zhell"
-      },
+      "name": "Andrew Krigline",
+      "discord": "Calego#0914",
+      "url": "https://github.com/ElfFriend-DnD",
+      "patreon": "https://www.patreon.com/ElfFriend_DnD",
+      "ko-fi": "https://ko-fi.com/elffriend"
+    },
+    {
+      "name": "Zhell",
+      "discord": "Zhell#9201",
+      "url": "https://github.com/krbz999",
+      "patreon": "https://www.patreon.com/zhell",
+      "ko-fi": "https://ko-fi.com/zhell"
+    },
     {
       "name": "p4535992",
       "url": "https://github.com/p4535992",
@@ -65,10 +65,10 @@
       "path": "languages/en.json"
     },
     {
-        "lang": "de",
-        "name": "Deutsch",
-        "path": "languages/de.json"
-      }
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "languages/de.json"
+    }
   ],
   "packs": [],
   "systems": [],

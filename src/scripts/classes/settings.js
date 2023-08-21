@@ -1,17 +1,10 @@
-import {ItemLinkTree} from "../module.js";
+import { ItemLinkTree } from "../../module.js";
 
 // the item types that can NEVER have items in them.
-export const EXCLUDED_TYPES = [
-  "class",
-  "subclass",
-  "background",
-  "race",
-  "spell",
-  "loot"
-];
+export const EXCLUDED_TYPES = ["class", "subclass", "background", "race", "spell", "loot"];
 
 export function _registerSettings() {
-  const TYPES = Item.TYPES.filter(t => !EXCLUDED_TYPES.includes(t));
+  const TYPES = Item.TYPES.filter((t) => !EXCLUDED_TYPES.includes(t));
 
   for (const type of TYPES) {
     game.settings.register(ItemLinkTree.MODULE_ID, `includeItemType${type.titleCase()}`, {
@@ -19,7 +12,7 @@ export function _registerSettings() {
       config: false,
       type: Boolean,
       default: true,
-      requiresReload: true
+      requiresReload: true,
     });
   }
 
@@ -30,7 +23,7 @@ export function _registerSettings() {
     config: true,
     type: Boolean,
     default: false,
-    requiresReload: false
+    requiresReload: false,
   });
 
   game.settings.registerMenu(ItemLinkTree.MODULE_ID, "itemTypeExclusion", {
@@ -40,12 +33,11 @@ export function _registerSettings() {
     config: true,
     type: IWS_TypeSettings,
     label: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
-    restricted: true
+    restricted: true,
   });
 }
 
 class IWS_TypeSettings extends FormApplication {
-
   get id() {
     return `${ItemLinkTree.MODULE_ID}-item-type-exclusion-menu`;
   }
@@ -59,7 +51,7 @@ class IWS_TypeSettings extends FormApplication {
   }
 
   async getData() {
-    const TYPES = Item.TYPES.filter(t => !EXCLUDED_TYPES.includes(t));
+    const TYPES = Item.TYPES.filter((t) => !EXCLUDED_TYPES.includes(t));
     const data = await super.getData();
     data.types = [];
     for (const type of TYPES) {
@@ -67,7 +59,7 @@ class IWS_TypeSettings extends FormApplication {
       data.types.push({
         checked: game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${label}`),
         value: type,
-        label
+        label,
       });
     }
     return data;

@@ -1,4 +1,4 @@
-import { ItemLinkTree } from '../../module.js';
+import { ItemLinkTree } from "../../module.js";
 
 /**
  * The form to control Item Spell overrides (e.g. for consumption logic)
@@ -33,12 +33,12 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ['dnd5e', 'sheet', 'item'],
+      classes: ["dnd5e", "sheet", "item"],
       template: ItemLinkTree.TEMPLATES.overrides,
       width: 560,
       closeOnSubmit: false,
       submitOnChange: true,
-      height: 'auto',
+      height: "auto",
     });
   }
 
@@ -52,7 +52,7 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
         abilities: CONFIG.DND5E.abilities,
         spellLevels: CONFIG.DND5E.spellLevels,
       },
-      isFlatDC: this.object?.system?.save?.scaling === 'flat',
+      isFlatDC: this.object?.system?.save?.scaling === "flat",
       parentItem: {
         id: this.item.id,
         name: this.item.name,
@@ -60,13 +60,13 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
       },
     };
 
-    ItemLinkTree.log(false, 'getData', ret);
+    ItemLinkTree.log(false, "getData", ret);
 
     return ret;
   }
 
   async _updateObject(event, formData) {
-    ItemLinkTree.log(false, '_updateObject', event, formData);
+    ItemLinkTree.log(false, "_updateObject", event, formData);
 
     const formDataExpanded = foundry.utils.expandObject(formData);
 
@@ -75,7 +75,7 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
     this.object = formDataExpanded.overrides;
 
     if (this.item.isOwned) {
-      ui.notifications.warn('The existing items on the parent actor will not be modified to reflect this change.');
+      ui.notifications.warn("The existing items on the parent actor will not be modified to reflect this change.");
     }
 
     // close if this is a submit (button press or `enter` key)

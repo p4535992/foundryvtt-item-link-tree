@@ -1,6 +1,6 @@
-import { ItemLinkTree } from '../../module.js';
-import { ItemLinkTreeItemSpellOverrides } from './item-link-item-overrides.js';
-import { ItemLinkTreeItem } from './item.js';
+import { ItemLinkTree } from "../../module.js";
+import { ItemLinkTreeItemSpellOverrides } from "./item-link-item-overrides.js";
+import { ItemLinkTreeItem } from "./item.js";
 
 /**
  * A class made to make managing the operations for an Item sheet easier.
@@ -23,7 +23,7 @@ export class ItemLinkTreeItemSheet {
    * Handles the item sheet render hook
    */
   static init() {
-    Hooks.on('renderItemSheet', (app, html) => {
+    Hooks.on("renderItemSheet", (app, html) => {
       let include = false;
       try {
         include = !!game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
@@ -40,7 +40,7 @@ export class ItemLinkTreeItemSheet {
         instance.renderLite();
 
         if (instance._shouldOpenTreeTab) {
-          app._tabs?.[0]?.activate?.('tree');
+          app._tabs?.[0]?.activate?.("tree");
           instance._shouldOpenTreeTab = false;
         }
         return;
@@ -54,7 +54,7 @@ export class ItemLinkTreeItemSheet {
     });
 
     // clean up instances as sheets are closed
-    Hooks.on('closeItemSheet', async (app) => {
+    Hooks.on("closeItemSheet", async (app) => {
       if (this.instances.get(app.appId)) {
         return this.instances.delete(app.appId);
       }
@@ -67,7 +67,7 @@ export class ItemLinkTreeItemSheet {
   async _renderSpellsList() {
     const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellItemMap).values()];
 
-    ItemLinkTree.log(false, 'rendering list', itemLeafsArray);
+    ItemLinkTree.log(false, "rendering list", itemLeafsArray);
 
     return renderTemplate(ItemLinkTree.TEMPLATES.treeTab, {
       itemLeafs: itemLeafsArray,
@@ -85,16 +85,16 @@ export class ItemLinkTreeItemSheet {
    * @returns Promise that resolves when the item has been modified
    */
   async _dragEnd(event) {
-    if(!this.app.isEditable) return;
-    ItemLinkTree.log(false, 'dragEnd', {event});
+    if (!this.app.isEditable) return;
+    ItemLinkTree.log(false, "dragEnd", { event });
 
     const data = TextEditor.getDragEventData(event);
-    ItemLinkTree.log(false, 'dragEnd', {data});
+    ItemLinkTree.log(false, "dragEnd", { data });
 
-    if (data.type !== 'Item') return;
+    if (data.type !== "Item") return;
 
     const item = fromUuidSync(data.uuid);
-    ItemLinkTree.log(false, 'dragEnd', {item});
+    ItemLinkTree.log(false, "dragEnd", { item });
 
     // MOD 4535992
     //if (item.type !== 'spell') return;
@@ -108,9 +108,9 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that opens the item's sheet
    */
   async _handleItemClick(event) {
-    const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
+    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
     const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
-    ItemLinkTree.log(false, '_handleItemClick', !!item.isOwned && !!item.isOwner);
+    ItemLinkTree.log(false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
       editable: !!item.isOwned && !!item.isOwner,
     });
@@ -120,9 +120,9 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that removes the link between this item and the item
    */
   async _handleItemDeleteClick(event) {
-    const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
+    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
 
-    ItemLinkTree.log(false, 'deleting', itemId, this.itemLinkTreeItem.itemSpellItemMap);
+    ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemSpellItemMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -133,9 +133,9 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that also Deletes the embedded item
    */
   async _handleItemDestroyClick(event) {
-    const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
+    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
 
-    ItemLinkTree.log(false, 'destroying', itemId, this.itemLinkTreeItem.itemSpellItemMap);
+    ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemSpellItemMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -146,7 +146,7 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that opens the item's sheet or config overrides, depending on if the item is owned
    */
   async _handleItemEditClick(event) {
-    const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
+    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
     const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
 
     if (item.isOwned) {
@@ -162,10 +162,10 @@ export class ItemLinkTreeItemSheet {
    * This allows for less delay during the update -> renderItemSheet -> set tab cycle
    */
   renderLite() {
-    ItemLinkTree.log(false, 'RENDERING');
+    ItemLinkTree.log(false, "RENDERING");
     // Update the nav menu
     const treeTabButton = $(
-      '<a class="item" data-tab="tree">' + game.i18n.localize(`${ItemLinkTree.MODULE_ID}.tab.label`) + '</a>',
+      '<a class="item" data-tab="tree">' + game.i18n.localize(`${ItemLinkTree.MODULE_ID}.tab.label`) + "</a>"
     );
     const tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
 
@@ -176,7 +176,7 @@ export class ItemLinkTreeItemSheet {
     tabs.append(treeTabButton);
 
     // Create the tab
-    const sheetBody = this.sheetHtml.find('.sheet-body');
+    const sheetBody = this.sheetHtml.find(".sheet-body");
     const treeTab = $(`<div class="tab tree flexcol" data-group="primary" data-tab="tree"></div>`);
     sheetBody.append(treeTab);
 
@@ -193,18 +193,20 @@ export class ItemLinkTreeItemSheet {
     treeTab.append(treeTabHtml);
 
     // Activate Listeners for this ui.
-    treeTabHtml.on('click', '.item-name', this._handleItemClick.bind(this));
-    treeTabHtml.on('click', '.item-delete', this._handleItemDeleteClick.bind(this));
-    treeTabHtml.on('click', '.item-destroy', this._handleItemDestroyClick.bind(this));
-    treeTabHtml.on('click', '.configure-overrides', this._handleItemEditClick.bind(this));
+    treeTabHtml.on("click", ".item-name", this._handleItemClick.bind(this));
+    treeTabHtml.on("click", ".item-delete", this._handleItemDeleteClick.bind(this));
+    treeTabHtml.on("click", ".item-destroy", this._handleItemDestroyClick.bind(this));
+    treeTabHtml.on("click", ".configure-overrides", this._handleItemEditClick.bind(this));
 
     // Register a DragDrop handler for adding new items to this item
     const dragDrop = {
-      dragSelector: '.item',
-      dropSelector: '.item-link-tree-tab',
+      dragSelector: ".item",
+      dropSelector: ".item-link-tree-tab",
       permissions: { drop: () => this.app.isEditable && !this.item.isOwned },
       callbacks: { drop: this._dragEnd },
     };
-    this.app.element[0].querySelector(dragDrop.dropSelector).addEventListener("drop", dragDrop.callbacks.drop.bind(this));
+    this.app.element[0]
+      .querySelector(dragDrop.dropSelector)
+      .addEventListener("drop", dragDrop.callbacks.drop.bind(this));
   }
 }
