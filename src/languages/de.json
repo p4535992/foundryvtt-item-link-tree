@@ -2,7 +2,7 @@
   "item-link-tree.CHARGES_HINT": "Wird der Zauber mit Ladungen des Gegenstands an dem er hängt gewirkt, muss oben die Zahl der verbrauchten Ladungen konfiguriert werden.",
   "item-link-tree.Configure": "Konfigurieren",
   "item-link-tree.ConfigureOverrides": "Magischen Gegenstand konfigurieren",
-  "item-link-tree.DeleteSpell": "Zauber löschen",
+  "item-link-tree.DeleteLeaf": "Zauber löschen",
   "item-link-tree.LIMITED_HINT": "Wenn dieser Zauber seine eigene Zahl Nutzungen pro Rast oder ähnliche Beschränkungen hat, muss das oben festgelegt werden.",
   "item-link-tree.MISSING_ITEM_DESCRIPTION": "Ursprungsitem dieses Zaubers konnte nicht gefunden worden. Wurde eventuell gelöscht?",
   "item-link-tree.MISSING_ITEM": "Fehlendes Item",

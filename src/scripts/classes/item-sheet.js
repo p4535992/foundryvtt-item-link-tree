@@ -24,6 +24,9 @@ export class ItemLinkTreeItemSheet {
    */
   static init() {
     Hooks.on("renderItemSheet", (app, html) => {
+      if (!game.user.isGM && game.settings.get(ItemLinkTree.MODULE_ID, "gmOnly")) {
+        return;
+      }
       let include = false;
       try {
         include = !!game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
@@ -74,12 +77,12 @@ export class ItemLinkTreeItemSheet {
     const itemLeafsArrayTmp = [];
     // TOD made this better...
     for (const leaf of itemLeafsArray) {
-      const itemTmp = fromUuidSync(leaf.uuid);
+      const itemTmp = await fromUuid(leaf.uuid);
       const i = {
         name: itemTmp.name,
         img: itemTmp.img,
         uuid: itemTmp.uuid,
-        id: itemTmp.id,
+        id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
         customLink: leaf.customLink,
       };
       if (i) {
@@ -113,7 +116,7 @@ export class ItemLinkTreeItemSheet {
 
     if (data.type !== "Item") return;
 
-    const item = fromUuidSync(data.uuid);
+    const item = await fromUuid(data.uuid);
     ItemLinkTree.log(false, "dragEnd", { item });
 
     // MOD 4535992
@@ -200,7 +203,7 @@ export class ItemLinkTreeItemSheet {
     return new ItemLinkTreeItemSpellOverrides(this.itemLinkTreeItem, itemId).render(true);
     */
     const itemTmp = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
-    const item = fromUuidSync(itemTmp.uuid);
+    const item = await fromUuid(itemTmp.uuid);
     return item.sheet.render(true);
   }
 

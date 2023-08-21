@@ -221,7 +221,8 @@ export class ItemLinkTreeItem {
     const itemToDelete = this.itemTreeFlagMap.get(itemId);
 
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
-    const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
+    // const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
+    const uuidToRemove = itemToDelete.uuid;
     const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
 
     // update the data manager's internal store of the items it contains
@@ -241,12 +242,12 @@ export class ItemLinkTreeItem {
     // the other item has already been deleted, probably do nothing.
     if (!treeItem) return;
 
-    const shouldDeleteSpell = alsoDeleteEmbeddedSpell && (await Dialog.confirm({
+    const shouldDeleteLeaf = alsoDeleteEmbeddedSpell && (await Dialog.confirm({
       title: game.i18n.localize("item-link-tree.MODULE_NAME"),
       content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE")
     }));
 
-    if (shouldDeleteSpell) return treeItem.delete();
+    if (shouldDeleteLeaf) return treeItem.delete();
     else return treeItem.unsetFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.parentItem);
     */
   }
@@ -262,7 +263,8 @@ export class ItemLinkTreeItem {
     const itemToUpdate = this.itemTreeFlagMap.get(itemId);
 
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
-    const uuidToUpdate = this.item.isOwned ? itemToUpdate.uuid : itemToUpdate.getFlag("core", "sourceId");
+    // const uuidToUpdate = this.item.isOwned ? itemToUpdate.uuid : itemToUpdate.getFlag("core", "sourceId");
+    const uuidToUpdate = itemToUpdate.uuid;
     const newItemLeafs = deepClone(this.itemTreeList);
 
     let currentLeaf;

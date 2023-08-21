@@ -26,6 +26,16 @@ export function _registerSettings() {
     requiresReload: false,
   });
 
+  game.settings.register(ItemLinkTree.MODULE_ID, "gmOnly", {
+    name: "item-link-tree.SETTINGS.GM_ONLY.NAME",
+    hint: "item-link-tree.SETTINGS.GM_ONLY.HINT",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: false,
+  });
+
   game.settings.registerMenu(ItemLinkTree.MODULE_ID, "itemTypeExclusion", {
     name: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
     hint: "item-link-tree.SETTINGS.ITEM_EXCLUSION.HINT",

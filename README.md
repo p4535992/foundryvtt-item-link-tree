@@ -22,6 +22,10 @@ I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/z
 
 **NOTE: This module is been tested only on Dnd5e system**
 
+An 'example I have to connect 3 objects Longsword +1 , Longsword +2 and Longsword +3 in mod that are connected by the logical value "upgrade" because one is the superior version of the other.
+
+
+
 ## Installation
 
 It's always easiest to install modules from the in game add-on browser.

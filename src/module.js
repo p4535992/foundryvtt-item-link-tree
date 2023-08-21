@@ -10,7 +10,7 @@ export class ItemLinkTree {
 
   static FLAGS = {
     itemLeafs: "item-leafs",
-    parentItem: "parent-item",
+    // parentItem: "parent-item",
   };
 
   static TEMPLATES = {

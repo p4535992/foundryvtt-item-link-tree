@@ -44,15 +44,15 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
 
   getData() {
     const ret = {
-      spellLevelToDisplay: this.object?.system?.level ?? this.itemBaseItem?.system?.level,
+      // spellLevelToDisplay: this.object?.system?.level ?? this.itemBaseItem?.system?.level,
       save: this.itemBaseItem.system.save,
       overrides: this.object,
-      config: {
-        limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
-        abilities: CONFIG.DND5E.abilities,
-        spellLevels: CONFIG.DND5E.spellLevels,
-      },
-      isFlatDC: this.object?.system?.save?.scaling === "flat",
+      // config: {
+      //   limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
+      //   abilities: CONFIG.DND5E.abilities,
+      //   spellLevels: CONFIG.DND5E.spellLevels,
+      // },
+      // isFlatDC: this.object?.system?.save?.scaling === "flat",
       parentItem: {
         id: this.item.id,
         name: this.item.name,
