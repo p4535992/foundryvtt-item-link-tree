@@ -20,7 +20,7 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
     this.item = itemLinkTreeItem.item;
 
     // the fake or real base item
-    this.itemBaseItem = itemLinkTreeItem.itemBaseItemMap.get(itemBaseId);
+    this.itemBaseItem = fromUuidSync(itemSpellFlagData.uuid); // MOD 4535992 itemLinkTreeItem.itemBaseItemMap.get(itemBaseId);
   }
 
   get id() {

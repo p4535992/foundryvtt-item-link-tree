@@ -64,13 +64,26 @@ export class ItemLinkTreeItemSheet {
   /**
    * Renders the tree tab template to be injected
    */
-  async _renderSpellsList() {
-    const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellItemMap).values()];
+  async _renderLeafsList() {
+    // MOD 4535992
+    //const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellItemMap).values()];
+    const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellFlagMap).values()];
 
     ItemLinkTree.log(false, "rendering list", itemLeafsArray);
 
+    const itemLeafsArrayTmp = [];
+    // TOD made this better...
+    for (const leaf of itemLeafsArray) {
+      const i = fromUuidSync(leaf.uuid);
+      if (i) {
+        itemLeafsArrayTmp.push(i);
+      } else {
+        console.warn(`${MODULE_ID} | there is a worng item uuid ${leaf}`);
+      }
+    }
+
     return renderTemplate(ItemLinkTree.TEMPLATES.treeTab, {
-      itemLeafs: itemLeafsArray,
+      itemLeafs: itemLeafsArrayTmp, // MOD 4535992 itemLeafsArray,
       config: {
         limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
         abilities: CONFIG.DND5E.abilities,
@@ -109,7 +122,10 @@ export class ItemLinkTreeItemSheet {
    */
   async _handleItemClick(event) {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
-    const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
+    // MOD 4535992
+    //const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
+    const item = this.itemLinkTreeItem.itemSpellFlagMap.get(itemId);
+
     ItemLinkTree.log(false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
       editable: !!item.isOwned && !!item.isOwner,
@@ -122,7 +138,9 @@ export class ItemLinkTreeItemSheet {
   async _handleItemDeleteClick(event) {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
 
-    ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemSpellItemMap);
+    // MOD 4535992
+    //ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemSpellItemMap);
+    ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemSpellFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -135,7 +153,9 @@ export class ItemLinkTreeItemSheet {
   async _handleItemDestroyClick(event) {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
 
-    ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemSpellItemMap);
+    // MOD 4535992
+    //ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemSpellItemMap);
+    ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemSpellFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -147,14 +167,21 @@ export class ItemLinkTreeItemSheet {
    */
   async _handleItemEditClick(event) {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
-    const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
 
+    // MOD 4535992
+    /*
+    //const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
+    
     if (item.isOwned) {
       return item.sheet.render(true);
     }
 
     // pop up a formapp to configure this item's overrides
     return new ItemLinkTreeItemSpellOverrides(this.itemLinkTreeItem, itemId).render(true);
+    */
+    const itemTmp = this.itemLinkTreeItem.itemSpellFlagMap.get(itemId);
+    const item = fromUuidSync(itemTmp.uuid);
+    return item.sheet.render(true);
   }
 
   /**
@@ -189,7 +216,7 @@ export class ItemLinkTreeItemSheet {
   async renderHeavy(treeTab) {
     // await this.itemLinkTreeItem.refresh();
     // Add the list to the tab
-    const treeTabHtml = $(await this._renderSpellsList());
+    const treeTabHtml = $(await this._renderLeafsList());
     treeTab.append(treeTabHtml);
 
     // Activate Listeners for this ui.

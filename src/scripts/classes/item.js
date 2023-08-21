@@ -30,7 +30,7 @@ export class ItemLinkTreeItem {
     this.item = item;
 
     this._itemSpellFlagMap = null;
-    this._itemSpellItems = null;
+    // this._itemSpellItems = null;
   }
 
   /**
@@ -52,16 +52,16 @@ export class ItemLinkTreeItem {
     return this.item.getFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs) ?? [];
   }
 
-  /**
-   * A map of what the "id" of the New item would be to its corresponding Item Data, taking any defined overrides into account.
-   */
-  get itemSpellItemMap() {
-    if (this._itemSpellItems === null) {
-      return this._getItemSpellItems();
-    }
+  // /**
+  //  * A map of what the "id" of the New item would be to its corresponding Item Data, taking any defined overrides into account.
+  //  */
+  // get itemSpellItemMap() {
+  //   if (this._itemSpellItems === null) {
+  //     return this._getItemSpellItems();
+  //   }
 
-    return this._itemSpellItems;
-  }
+  //   return this._itemSpellItems;
+  // }
 
   /**
    * Update this class's understanding of the item items
@@ -69,7 +69,7 @@ export class ItemLinkTreeItem {
   async refresh() {
     ItemLinkTree.log(false, "REFRESHING", this.itemSpellList);
     this._getItemSpellFlagMap();
-    await this._getItemSpellItems();
+    // await this._getItemSpellItems();
     ItemLinkTree.log(false, "REFRESHed");
   }
 
@@ -123,27 +123,27 @@ export class ItemLinkTreeItem {
     return childItem;
   }
 
-  /**
-   * Get a cached copy of temporary items or create and cache those items with the changes from flags applied.
-   * @returns {Promise<Map<string, Item5e>>} - array of temporary items created from the uuids and changes attached to this item
-   */
-  async _getItemSpellItems() {
-    const itemMap = new Map();
+  // /**
+  //  * Get a cached copy of temporary items or create and cache those items with the changes from flags applied.
+  //  * @returns {Promise<Map<string, Item5e>>} - array of temporary items created from the uuids and changes attached to this item
+  //  */
+  // async _getItemSpellItems() {
+  //   const itemMap = new Map();
 
-    await Promise.all(
-      this.itemSpellList.map(async ({ uuid, changes }) => {
-        const childItem = await this._getChildItem({ uuid, changes });
+  //   await Promise.all(
+  //     this.itemSpellList.map(async ({ uuid, changes }) => {
+  //       const childItem = await this._getChildItem({ uuid, changes });
 
-        if (!childItem) return;
+  //       if (!childItem) return;
 
-        itemMap.set(childItem.id, childItem);
-        return childItem;
-      })
-    );
+  //       itemMap.set(childItem.id, childItem);
+  //       return childItem;
+  //     })
+  //   );
 
-    this._itemSpellItems = itemMap;
-    return itemMap;
-  }
+  //   this._itemSpellItems = itemMap;
+  //   return itemMap;
+  // }
 
   /**
    * Get or Create a cached map of child item item "ids" to their flags
@@ -216,14 +216,16 @@ export class ItemLinkTreeItem {
    * @returns {Item} the updated or deleted item after having its parent item removed, or null
    */
   async removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell } = {}) {
-    const itemToDelete = this.itemSpellItemMap.get(itemId);
+    // MOD 4535992
+    // const itemToDelete = this.itemSpellItemMap.get(itemId);
+    const itemToDelete = this.itemSpellFlagMap.get(itemId);
 
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
     const newItemSpells = this.itemSpellList.filter(({ uuid }) => uuid !== uuidToRemove);
 
     // update the data manager's internal store of the items it contains
-    this._itemSpellItems?.delete(itemId);
+    // this._itemSpellItems?.delete(itemId);
     this._itemSpellFlagMap?.delete(itemId);
 
     await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemSpells);
