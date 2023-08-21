@@ -1,9 +1,9 @@
 <form autocomplete="off">
-  <h2>{{localize "IWS.ConfigureOverrides"}}</h2>
+  <h2>{{localize "item-link-tree.ConfigureOverrides"}}</h2>
 
   <ol class="warnings">
     {{#if parentItem.isOwned}}
-    <li class="notification warning">{{localize "IWS.WARN_OWNED"}}</li>
+    <li class="notification warning">{{localize "item-link-tree.WARN_OWNED"}}</li>
     {{/if}}
   </ol>
 
@@ -23,7 +23,7 @@
       </select>
     </div>
 
-    <p class="notes">{{localize "IWS.SPELL_LEVEL_HINT"}}</p>
+    <p class="notes">{{localize "item-link-tree.SPELL_LEVEL_HINT"}}</p>
 
     <hr>
 
@@ -47,7 +47,7 @@
         </select>
       </div>
     </div>
-    <p class="notes">{{localize "IWS.LIMITED_HINT"}}</p>
+    <p class="notes">{{localize "item-link-tree.LIMITED_HINT"}}</p>
 
     <hr>
 
@@ -64,7 +64,7 @@
         <input type="text" name="overrides.system.consume.amount" value="{{overrides.system.consume.amount}}" data-dtype="Number">
       </div>
     </div>
-    <p class="notes">{{localize "IWS.CHARGES_HINT"}}</p>
+    <p class="notes">{{localize "item-link-tree.CHARGES_HINT"}}</p>
 
     <h3 class="form-header">{{localize "DND5E.ActionSave"}}</h3>
     {{!-- Saving Throw --}}
@@ -96,7 +96,7 @@
         </select>
       </div>
     </div>
-    <p class="notes">{{localize "IWS.SAVE_HINT"}}</p>
+    <p class="notes">{{localize "item-link-tree.SAVE_HINT"}}</p>
     -->
   </div>
 

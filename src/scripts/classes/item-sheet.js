@@ -1,4 +1,4 @@
-import { ItemLinkTree } from '../module.js';
+import { ItemLinkTree } from '../../module.js';
 import { ItemLinkTreeItemSpellOverrides } from './item-link-item-overrides.js';
 import { ItemLinkTreeItem } from './item.js';
 
@@ -165,7 +165,7 @@ export class ItemLinkTreeItemSheet {
     ItemLinkTree.log(false, 'RENDERING');
     // Update the nav menu
     const treeTabButton = $(
-      '<a class="item" data-tab="tree">' + game.i18n.localize(`ITEM.TypeSpellPl`) + '</a>',
+      '<a class="item" data-tab="tree">' + game.i18n.localize(`${ItemLinkTree.MODULE_ID}.tab.label`) + '</a>',
     );
     const tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
 

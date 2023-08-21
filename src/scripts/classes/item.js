@@ -1,4 +1,4 @@
-import { ItemLinkTree } from '../module.js';
+import { ItemLinkTree } from '../../module.js';
 import { ItemLinkTreeItemSheet } from './item-sheet.js';
 
 /**
@@ -9,12 +9,12 @@ import { ItemLinkTreeItemSheet } from './item-sheet.js';
 const FakeEmptyItem = (uuid, parent) =>
   new Item.implementation(
     {
-      name: game.i18n.localize("IWS.MISSING_ITEM"),
+      name: game.i18n.localize("item-link-tree.MISSING_ITEM"),
       img: 'icons/svg/hazard.svg',
       type: 'spell',
       system: {
         description: {
-          value: game.i18n.localize("IWS.MISSING_ITEM_DESCRIPTION"),
+          value: game.i18n.localize("item-link-tree.MISSING_ITEM_DESCRIPTION"),
         },
       },
       _id: uuid.split('.').pop(),
@@ -240,8 +240,8 @@ export class ItemLinkTreeItem {
     if (!treeItem) return;
 
     const shouldDeleteSpell = alsoDeleteEmbeddedSpell && (await Dialog.confirm({
-      title: game.i18n.localize("IWS.MODULE_NAME"),
-      content: game.i18n.localize("IWS.WARN_ALSO_DELETE")
+      title: game.i18n.localize("item-link-tree.MODULE_NAME"),
+      content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE")
     }));
 
     if (shouldDeleteSpell) return treeItem.delete();

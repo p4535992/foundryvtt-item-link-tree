@@ -54,16 +54,16 @@
         <div class="item-controls flexrow context-menu item-link-tree-item-controls">
           {{#if @root/isOwner}}
           <a class="item-control configure-overrides"
-            data-tooltip="{{#unless @root/isOwned}}IWS.ConfigureOverrides{{else}}IWS.Configure{{/unless}}">
+            data-tooltip="{{#unless @root/isOwned}}item-link-tree.ConfigureOverrides{{else}}item-link-tree.Configure{{/unless}}">
             <i class="fas fa-edit"></i>
           </a>
 
           {{#if @root/isOwned}}
-          <a class="item-control item-destroy" data-tooltip="IWS.DeleteSpell">
+          <a class="item-control item-destroy" data-tooltip="item-link-tree.DeleteSpell">
             <i class="fas fa-trash"></i>
           </a>
           {{else}}
-          <a class="item-control item-delete" data-tooltip="IWS.RemoveLink">
+          <a class="item-control item-delete" data-tooltip="item-link-tree.RemoveLink">
             <i class="fas {{#if @root/isOwned}}fa-link-slash{{else}}fa-trash{{/if}}"></i>
           </a>
           {{/if}}

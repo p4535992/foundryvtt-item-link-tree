@@ -24,8 +24,8 @@ export function _registerSettings() {
   }
 
   game.settings.register(ItemLinkTree.MODULE_ID, "sortOrder", {
-    name: "IWS.SETTINGS.SORT_ORDER.NAME",
-    hint: "IWS.SETTINGS.SORT_ORDER.HINT",
+    name: "item-link-tree.SETTINGS.SORT_ORDER.NAME",
+    hint: "item-link-tree.SETTINGS.SORT_ORDER.HINT",
     scope: "world",
     config: true,
     type: Boolean,
@@ -34,12 +34,12 @@ export function _registerSettings() {
   });
 
   game.settings.registerMenu(ItemLinkTree.MODULE_ID, "itemTypeExclusion", {
-    name: "IWS.SETTINGS.ITEM_EXCLUSION.NAME",
-    hint: "IWS.SETTINGS.ITEM_EXCLUSION.HINT",
+    name: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
+    hint: "item-link-tree.SETTINGS.ITEM_EXCLUSION.HINT",
     scope: "world",
     config: true,
     type: IWS_TypeSettings,
-    label: "IWS.SETTINGS.ITEM_EXCLUSION.NAME",
+    label: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
     restricted: true
   });
 }
@@ -51,7 +51,7 @@ class IWS_TypeSettings extends FormApplication {
   }
 
   get title() {
-    return game.i18n.localize("IWS.SETTINGS.ITEM_EXCLUSION.TITLE");
+    return game.i18n.localize("item-link-tree.SETTINGS.ITEM_EXCLUSION.TITLE");
   }
 
   get template() {

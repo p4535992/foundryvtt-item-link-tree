@@ -14,9 +14,9 @@
 
 [![Translation status](https://weblate.foundryvtt-hub.com/widgets/item-link-tree/-/287x66-black.png)](https://weblate.foundryvtt-hub.com/engage/item-link-tree/)
 
-Build a tree hierarchy for your objects to link them together and use the logic you create to do weird things with other modules.
+A module that allows specific items to be attached to other Items, Features, etc  for Build a tree hierarchy for your items to link together and use the logic you create to do weird things with other modules.
 
-This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval.
+This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval and license compatibility.
 
 I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/zhell)
 

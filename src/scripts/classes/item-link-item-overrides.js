@@ -1,4 +1,4 @@
-import { ItemLinkTree } from '../module.js';
+import { ItemLinkTree } from '../../module.js';
 
 /**
  * The form to control Item Spell overrides (e.g. for consumption logic)

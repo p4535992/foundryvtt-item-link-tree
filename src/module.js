@@ -1,7 +1,7 @@
 import { ItemLinkTreeActorSheet } from './classes/actor-sheet.js';
 import { ItemLinkTreeActor } from './classes/actor.js';
-import { ItemLinkTreeItemSheet } from './classes/item-sheet.js';
-import { _registerSettings } from './classes/settings.js';
+import { ItemLinkTreeItemSheet } from './scripts/classes/item-sheet.js';
+import { _registerSettings } from './scripts/classes/settings.js';
 
 export class ItemLinkTree {
   static API = {};
@@ -11,7 +11,7 @@ export class ItemLinkTree {
   static SETTINGS = {};
 
   static FLAGS = {
-    itemLeafs: 'item-link-tree',
+    itemLeafs: 'item-leafs',
     parentItem: 'parent-item',
   };
 

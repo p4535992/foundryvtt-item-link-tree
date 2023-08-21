@@ -1,77 +1,103 @@
 {
-  "id": "item-link-tree",
-  "title": "Items with Spells DnD5e",
-  "description": "A module that allows s to be attached to Items, Features, etc.",
-  "version": "1.2.0",
-  "manifestPlusVersion": "1.1.0",
+    "id": "item-link-tree",
+    "title": "Items Link Tree",
+    "description": "A module that allows specific items to be attached to other Items, Features, etc  for Build a tree hierarchy for your items to link together and use the logic you create to do weird things with other modules.",
+    "version": "1.2.0",
   "authors": [
     {
-      "name": "Andrew Krigline",
-      "discord": "Calego#0914",
-      "url": "https://github.com/ElfFriend-DnD",
-      "patreon": "https://www.patreon.com/ElfFriend_DnD",
-      "ko-fi": "https://ko-fi.com/elffriend"
-    },
+        "name": "Andrew Krigline",
+        "discord": "Calego#0914",
+        "url": "https://github.com/ElfFriend-DnD",
+        "patreon": "https://www.patreon.com/ElfFriend_DnD",
+        "ko-fi": "https://ko-fi.com/elffriend"
+      },
+      {
+        "name": "Zhell",
+        "discord": "Zhell#9201",
+        "url": "https://github.com/krbz999",
+        "patreon": "https://www.patreon.com/zhell",
+        "ko-fi": "https://ko-fi.com/zhell"
+      },
     {
-      "name": "Zhell",
-      "discord": "Zhell#9201",
-      "url": "https://github.com/krbz999",
-      "patreon": "https://www.patreon.com/zhell",
-      "ko-fi": "https://ko-fi.com/zhell"
+      "name": "p4535992",
+      "url": "https://github.com/p4535992",
+      "discord": "",
+      "twitter": "",
+      "patreon": "",
+      "github": "p4535992",
+      "ko-fi": "",
+      "reddit": "",
+      "email": ""
     }
   ],
-  "esmodules": [
-    "/scripts/item-link-tree.js"
+  "type": "module",
+  "socket": true,
+  "includes": [
+    "./assets/**",
+    "./lang/**",
+    "./languages/**",
+    "./scripts/**",
+    "./styles/**",
+    "./templates/**",
+    "./module.json",
+    "./README.md",
+    "./icons/**",
+    "./packs/**"
   ],
-  "styles": [
-    "/styles/item-link-tree.css"
+  "media": [
+    {
+      "type": "icon",
+      "location": ""
+    },
+    {
+      "type": "cover",
+      "location": ""
+    },
+    {
+      "type": "screenshot",
+      "location": ""
+    }
   ],
-  "compatibility": {
-    "minimum": 11,
-    "verified": 11
-  },
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "languages/en.json"
     },
     {
-      "lang": "de",
-      "name": "Deutsch",
-      "path": "lang/de.json"
-    }
-  ],
-  "relationships": {
-    "systems": [
-      {
-        "id": "dnd5e",
-        "type": "system",
-        "compatibility": {
-          "minimum": "2.3.0",
-          "maximum": "2.3.9"
-        }
+        "lang": "de",
+        "name": "Deutsch",
+        "path": "languages/de.json"
       }
-    ],
+  ],
+  "packs": [],
+  "systems": [],
+  "scripts": [],
+  "esmodules": ["module.js"],
+  "styles": ["styles/item-link-tree.css"],
+  "compatibility": {
+    "minimum": 11,
+    "verified": 11,
+    "maximum": 11
+  },
+  "manifestPlusVersion": "1.2.1",
+  "url": "https://github.com/p4535992/foundryvtt-item-link-tree",
+  "manifest": "https://github.com/p4535992/foundryvtt-item-link-tree/releases/download/1.2.0/module.json",
+  "download": "https://github.com/p4535992/foundryvtt-item-link-tree/releases/download/1.2.0/module.zip",
+  "readme": "https://github.com/p4535992/foundryvtt-item-link-tree/blob/master/README.md",
+  "changelog": "https://github.com/p4535992/foundryvtt-item-link-tree/blob/master/CHANGELOG.md",
+  "bugs": "https://github.com/p4535992/foundryvtt-item-link-tree/issues",
+  "allowBugReporter": true,
+  "relationships": {
+    "systems": [],
     "requires": [
       {
         "id": "lib-wrapper",
-        "compatibility": {
-          "minimum": "1.12.7.1"
-        }
+        "type": "module",
+        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+        "compatibility": {}
       }
-    ]
-  },
-  "bugs": "https://github.com/krbz999/foundryvtt-item-link-tree/issues",
-  "changelog": "https://github.com/krbz999/foundryvtt-item-link-tree/releases",
-  "download": "https://github.com/krbz999/foundryvtt-item-link-tree/releases/latest/download/module.zip",
-  "manifest": "https://github.com/krbz999/foundryvtt-item-link-tree/releases/latest/download/module.json",
-  "readme": "https://raw.githubusercontent.com/krbz999/foundryvtt-item-link-tree/main/README.md",
-  "url": "https://github.com/krbz999/foundryvtt-item-link-tree",
-  "flags": {
-    "allowBugReporter": true,
-    "fvttdevleague": {
-      "package-jam": 2022
-    }
+    ],
+    "conflicts": []
   }
 }
