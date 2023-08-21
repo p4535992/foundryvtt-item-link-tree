@@ -5,7 +5,7 @@ import { ItemLinkTree } from "../../module.js";
  */
 export class ItemLinkTreeItemSpellOverrides extends FormApplication {
   constructor(itemLinkTreeItem, itemBaseId) {
-    const itemSpellFlagData = itemLinkTreeItem.itemSpellFlagMap.get(itemBaseId);
+    const itemSpellFlagData = itemLinkTreeItem.itemTreeFlagMap.get(itemBaseId);
     ItemLinkTree.log(false, { itemSpellFlagData });
     // set the `object` of this FormApplication as the itemSpell data from the parent item's flags
     super(itemSpellFlagData?.changes ?? {});

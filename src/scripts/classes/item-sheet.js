@@ -66,19 +66,26 @@ export class ItemLinkTreeItemSheet {
    */
   async _renderLeafsList() {
     // MOD 4535992
-    //const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellItemMap).values()];
-    const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellFlagMap).values()];
+    //const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeItemMap).values()];
+    const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeFlagMap).values()];
 
     ItemLinkTree.log(false, "rendering list", itemLeafsArray);
 
     const itemLeafsArrayTmp = [];
     // TOD made this better...
     for (const leaf of itemLeafsArray) {
-      const i = fromUuidSync(leaf.uuid);
+      const itemTmp = fromUuidSync(leaf.uuid);
+      const i = {
+        name: itemTmp.name,
+        img: itemTmp.img,
+        uuid: itemTmp.uuid,
+        id: itemTmp.id,
+        customLink: leaf.customLink,
+      };
       if (i) {
         itemLeafsArrayTmp.push(i);
       } else {
-        console.warn(`${MODULE_ID} | there is a worng item uuid ${leaf}`);
+        console.warn(`${MODULE_ID} | there is a wrong item uuid ${leaf}`);
       }
     }
 
@@ -123,8 +130,8 @@ export class ItemLinkTreeItemSheet {
   async _handleItemClick(event) {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
     // MOD 4535992
-    //const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
-    const item = this.itemLinkTreeItem.itemSpellFlagMap.get(itemId);
+    //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
+    const item = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
 
     ItemLinkTree.log(false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
@@ -139,12 +146,25 @@ export class ItemLinkTreeItemSheet {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
 
     // MOD 4535992
-    //ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemSpellItemMap);
-    ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemSpellFlagMap);
+    //ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemTreeItemMap);
+    ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
     await this.itemLinkTreeItem.removeSpellFromItem(itemId);
+  }
+
+  /**
+   * Event Handler that create the custom link type between this item and the item
+   */
+  async _handleCreateCustomLinkClick(event) {
+    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
+
+    ItemLinkTree.log(false, "customLink", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+
+    // set the flag to re-open this tab when the update completes
+    this._shouldOpenTreeTab = true;
+    await this.itemLinkTreeItem.createCustomLinkItem(itemId);
   }
 
   /**
@@ -154,8 +174,8 @@ export class ItemLinkTreeItemSheet {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
 
     // MOD 4535992
-    //ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemSpellItemMap);
-    ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemSpellFlagMap);
+    //ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemTreeItemMap);
+    ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -170,7 +190,7 @@ export class ItemLinkTreeItemSheet {
 
     // MOD 4535992
     /*
-    //const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
+    //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
     
     if (item.isOwned) {
       return item.sheet.render(true);
@@ -179,7 +199,7 @@ export class ItemLinkTreeItemSheet {
     // pop up a formapp to configure this item's overrides
     return new ItemLinkTreeItemSpellOverrides(this.itemLinkTreeItem, itemId).render(true);
     */
-    const itemTmp = this.itemLinkTreeItem.itemSpellFlagMap.get(itemId);
+    const itemTmp = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
     const item = fromUuidSync(itemTmp.uuid);
     return item.sheet.render(true);
   }
@@ -224,6 +244,8 @@ export class ItemLinkTreeItemSheet {
     treeTabHtml.on("click", ".item-delete", this._handleItemDeleteClick.bind(this));
     treeTabHtml.on("click", ".item-destroy", this._handleItemDestroyClick.bind(this));
     treeTabHtml.on("click", ".configure-overrides", this._handleItemEditClick.bind(this));
+    // MOD 4535992
+    treeTabHtml.on("click", ".item-create-custom-link", this._handleCreateCustomLinkClick.bind(this));
 
     // Register a DragDrop handler for adding new items to this item
     const dragDrop = {

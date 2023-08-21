@@ -19,5 +19,7 @@
   "item-link-tree.WARN_ALSO_DELETE": "This will also delete the item from the Actor. Are you certain you want to delete the embedded item?",
   "item-link-tree.WARN_CANNOT_ADDREMOVE": "An Owned Item's items cannot be added to or removed from. These items have been added to the Actor's itembook Tab.",
   "item-link-tree.WARN_OWNED": "You are editing an owned Item's items, any changes made here will not be applied to the items on the owning actor.",
-  "item-link-tree.tab.label": "Leafs"
+  "item-link-tree.tab.label": "Leafs",
+  "item-link-tree.customLink.label": "Custom Link Type",
+  "item-link-tree.CreateCustomLink": "Create Custom Link"
 }

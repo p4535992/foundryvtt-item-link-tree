@@ -4,16 +4,20 @@
       <h3 class="item-name flexrow">
         {{localize 'Tree'}}
       </h3>
+
+      <div class="item-detail">
+        {{localize 'item-link-tree.customLink.label'}}
+      </div>
       <!--
       <div class="item-detail">
         {{localize 'DND5E.ActionSave'}}
       </div>
 
-      <div class="item-detail spell-uses">
+      <div class="item-detail leaf-uses">
         {{localize 'DND5E.Uses'}}
       </div>
 
-      <div class="item-detail spell-uses">
+      <div class="item-detail leaf-uses">
         {{localize 'DND5E.Charges'}}
       </div>
       -->
@@ -23,31 +27,34 @@
     </li>
 
     <ol class="item-list">
-      {{#each itemLeafs as |spell|}}
-      <li class="item context-enabled flexrow" data-item-id="{{spell.id}}">
+      {{#each itemLeafs as |leaf|}}
+      <li class="item context-enabled flexrow" data-item-id="{{leaf.id}}">
         <div class="item-name flexrow rollable">
-          <div class="item-image" style="background-image: url({{spell.img}})">{{{@root/rollIcon}}}</div>
-          <h4>{{spell.name}}</h4>
+          <div class="item-image" style="background-image: url({{leaf.img}})"></div>
+          <h4>{{leaf.name}}</h4>
         </div>
-        
+
+        <div class="item-detail item-link-tree-item-detail">
+          <span title="{{leaf.customLink}}">{{leaf.customLink}}</span>
+        </div>
         <!--
         <div class="item-detail item-link-tree-item-detail">
-          {{#if spell.labels.save}}
+          {{#if leaf.labels.save}}
           <span title="{{labels.save}}">{{labels.save}}</span>
           {{/if}}
         </div>
 
         <div class="item-detail item-link-tree-item-detail">
-          {{#if (gt spell.system.uses.max 0)}}
-          {{spell.system.uses.max}}
+          {{#if (gt leaf.system.uses.max 0)}}
+          {{leaf.system.uses.max}}
           <span class="sep">{{localize "DND5E.per"}}</span>
-          {{lookup @root/config.limitedUsePeriods spell.system.uses.per}}
+          {{lookup @root/config.limitedUsePeriods leaf.system.uses.per}}
           {{/if}}
         </div>
 
         <div class="item-detail item-link-tree-item-detail">
-          {{#if (gt spell.system.consume.amount 0)}}
-          {{spell.system.consume.amount}}
+          {{#if (gt leaf.system.consume.amount 0)}}
+          {{leaf.system.consume.amount}}
           {{localize 'DND5E.Charges'}}
           {{/if}}
         </div>
@@ -57,6 +64,10 @@
           <a class="item-control configure-overrides"
             data-tooltip="{{#unless @root/isOwned}}item-link-tree.ConfigureOverrides{{else}}item-link-tree.Configure{{/unless}}">
             <i class="fas fa-edit"></i>
+          </a>
+
+          <a class="item-control item-create-custom-link" data-tooltip="item-link-tree.CreateCustomLink">
+            <i class="fa-solid fa-share-from-square"></i>
           </a>
 
           {{#if @root/isOwned}}
