@@ -3,12 +3,12 @@ import { ItemLinkTree } from "../../module.js";
 /**
  * The form to control Item Spell overrides (e.g. for consumption logic)
  */
-export class ItemLinkTreeItemSpellOverrides extends FormApplication {
+export class ItemLinkTreeItemOverrides extends FormApplication {
   constructor(itemLinkTreeItem, itemBaseId) {
-    const itemSpellFlagData = itemLinkTreeItem.itemTreeFlagMap.get(itemBaseId);
-    ItemLinkTree.log(false, { itemSpellFlagData });
+    const itemLeafFlagData = itemLinkTreeItem.itemTreeFlagMap.get(itemBaseId);
+    ItemLinkTree.log(false, { itemLeafFlagData });
     // set the `object` of this FormApplication as the itemSpell data from the parent item's flags
-    super(itemSpellFlagData?.changes ?? {});
+    super(itemLeafFlagData?.changes ?? {});
 
     // the current item we are editing
     this.itemBaseId = itemBaseId;
@@ -20,7 +20,7 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
     this.item = itemLinkTreeItem.item;
 
     // the fake or real base item
-    this.itemBaseItem = fromUuidSync(itemSpellFlagData.uuid); // MOD 4535992 itemLinkTreeItem.itemBaseItemMap.get(itemBaseId);
+    this.itemBaseItem = fromUuidSync(itemLeafFlagData.uuid); // MOD 4535992 itemLinkTreeItem.itemBaseItemMap.get(itemBaseId);
   }
 
   get id() {
@@ -70,7 +70,7 @@ export class ItemLinkTreeItemSpellOverrides extends FormApplication {
 
     const formDataExpanded = foundry.utils.expandObject(formData);
 
-    await this.itemLinkTreeItem.updateItemSpellOverrides(this.itemBaseId, formDataExpanded.overrides);
+    await this.itemLinkTreeItem.updateItemLeafOverrides(this.itemBaseId, formDataExpanded.overrides);
 
     this.object = formDataExpanded.overrides;
 

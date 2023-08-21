@@ -77,17 +77,23 @@ export class ItemLinkTreeItemSheet {
     // TOD made this better...
     for (const leaf of itemLeafsArray) {
       const itemTmp = await fromUuid(leaf.uuid);
-      const i = {
-        name: itemTmp.name,
-        img: itemTmp.img,
-        uuid: itemTmp.uuid,
-        id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
-        customLink: leaf.customLink,
-      };
-      if (i) {
+      if (itemTmp) {
+        const i = {
+          name: itemTmp.name,
+          img: itemTmp.img,
+          uuid: itemTmp.uuid,
+          id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
+          customLink: leaf.customLink,
+        };
         itemLeafsArrayTmp.push(i);
       } else {
-        console.warn(`${MODULE_ID} | there is a wrong item uuid ${leaf}`);
+        console.warn(`${ItemLinkTree.MODULE_ID} | there is a wrong item uuid ${leaf}`);
+        const uuidToRemove = leaf.uuid;
+        for (const [key, value] of this.itemLinkTreeItem.itemTreeFlagMap) {
+          if (value.uuid === uuidToRemove) {
+            await this.itemLinkTreeItem.removeLeafFromItem(key, { alsoDeleteEmbeddedLeaf: false });
+          }
+        }
       }
     }
 
@@ -153,7 +159,7 @@ export class ItemLinkTreeItemSheet {
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
-    await this.itemLinkTreeItem.removeSpellFromItem(itemId);
+    await this.itemLinkTreeItem.removeLeafFromItem(itemId, { alsoDeleteEmbeddedLeaf: true });
   }
 
   /**
@@ -181,7 +187,7 @@ export class ItemLinkTreeItemSheet {
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
-    await this.itemLinkTreeItem.removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell: true });
+    await this.itemLinkTreeItem.removeLeafFromItem(itemId, { alsoDeleteEmbeddedLeaf: true });
   }
 
   /**
@@ -199,7 +205,7 @@ export class ItemLinkTreeItemSheet {
     }
 
     // pop up a formapp to configure this item's overrides
-    return new ItemLinkTreeItemSpellOverrides(this.itemLinkTreeItem, itemId).render(true);
+    return new ItemLinkTreeItemOverrides(this.itemLinkTreeItem, itemId).render(true);
     */
     const itemTmp = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
     const item = await fromUuid(itemTmp.uuid);

@@ -39,7 +39,7 @@ export class ItemLinkTreeItem {
    */
   get itemTreeFlagMap() {
     if (this._itemTreeFlagMap === null) {
-      return this._getItemSpellFlagMap();
+      return this._getItemTreeFlagMap();
     }
 
     return this._itemTreeFlagMap;
@@ -57,7 +57,7 @@ export class ItemLinkTreeItem {
   //  */
   // get itemTreeItemMap() {
   //   if (this._itemTreeItems === null) {
-  //     return this._getItemSpellItems();
+  //     return this._getItemTreeItems();
   //   }
 
   //   return this._itemTreeItems;
@@ -68,8 +68,8 @@ export class ItemLinkTreeItem {
    */
   async refresh() {
     ItemLinkTree.log(false, "REFRESHING", this.itemTreeList);
-    this._getItemSpellFlagMap();
-    // await this._getItemSpellItems();
+    this._getItemTreeFlagMap();
+    // await this._getItemTreeItems();
     ItemLinkTree.log(false, "REFRESHed");
   }
 
@@ -129,7 +129,7 @@ export class ItemLinkTreeItem {
   //  * Get a cached copy of temporary items or create and cache those items with the changes from flags applied.
   //  * @returns {Promise<Map<string, Item5e>>} - array of temporary items created from the uuids and changes attached to this item
   //  */
-  // async _getItemSpellItems() {
+  // async _getItemTreeItems() {
   //   const itemMap = new Map();
 
   //   await Promise.all(
@@ -152,11 +152,11 @@ export class ItemLinkTreeItem {
    * Useful when updating overrides for a specific 'child item'
    * @returns {Map<string, object>} - Map of ids to flags
    */
-  _getItemSpellFlagMap() {
+  _getItemTreeFlagMap() {
     const map = new Map();
-    this.itemTreeList.forEach((itemSpellFlag) => {
-      const id = itemSpellFlag.uuid.split(".").pop();
-      map.set(id, itemSpellFlag);
+    this.itemTreeList.forEach((itemLeafFlag) => {
+      const id = itemLeafFlag.uuid.split(".").pop();
+      map.set(id, itemLeafFlag);
     });
     this._itemTreeFlagMap = map;
     return map;
@@ -214,10 +214,10 @@ export class ItemLinkTreeItem {
    * Removes the relationship between the provided item and this item's items
    * @param {string} itemId - the id of the item to remove
    * @param {Object} options
-   * @param {boolean} [options.alsoDeleteEmbeddedSpell] - Should the item be deleted also, only for owned items
+   * @param {boolean} [options.alsoDeleteEmbeddedLeaf] - Should the item be deleted also, only for owned items
    * @returns {Item} the updated or deleted item after having its parent item removed, or null
    */
-  async removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell } = {}) {
+  async removeLeafFromItem(itemId, { alsoDeleteEmbeddedLeaf } = {}) {
     // MOD 4535992
     // const itemToDelete = this.itemTreeItemMap.get(itemId);
     const itemToDelete = this.itemTreeFlagMap.get(itemId);
@@ -227,16 +227,18 @@ export class ItemLinkTreeItem {
     const uuidToRemove = itemToDelete.uuid;
     const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
 
-    const shouldDeleteLeaf = await Dialog.confirm({
-      title: game.i18n.localize("item-link-tree.MODULE_NAME"),
-      content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE"),
-    });
+    const shouldDeleteLeaf =
+      alsoDeleteEmbeddedLeaf &&
+      (await Dialog.confirm({
+        title: game.i18n.localize("item-link-tree.MODULE_NAME"),
+        content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE"),
+      }));
 
     if (shouldDeleteLeaf) {
-      // update the data manager's internal store of the items it contains
-      // this._itemTreeItems?.delete(itemId);
       this._itemTreeFlagMap?.delete(itemId);
-
+      await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
+    } else if (!alsoDeleteEmbeddedLeaf) {
+      this._itemTreeFlagMap?.delete(itemId);
       await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
     }
     // MOD 4535992
@@ -250,7 +252,7 @@ export class ItemLinkTreeItem {
     // the other item has already been deleted, probably do nothing.
     if (!treeItem) return;
 
-    const shouldDeleteLeaf = alsoDeleteEmbeddedSpell && (await Dialog.confirm({
+    const shouldDeleteLeaf = alsoDeleteEmbeddedLeaf && (await Dialog.confirm({
       title: game.i18n.localize("item-link-tree.MODULE_NAME"),
       content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE")
     }));
@@ -264,7 +266,7 @@ export class ItemLinkTreeItem {
    * Removes the relationship between the provided item and this item's items
    * @param {string} itemId - the id of the item to remove
    * @param {Object} options
-   * @param {boolean} [options.alsoDeleteEmbeddedSpell] - Should the item be deleted also, only for owned items
+   * @param {boolean} [options.alsoDeleteEmbeddedLeaf] - Should the item be deleted also, only for owned items
    * @returns {Item} the updated or deleted item after having its parent item removed, or null
    */
   async createCustomLinkItem(itemId) {
@@ -350,12 +352,12 @@ export class ItemLinkTreeItem {
    * @param {*} itemId - item attached to this item
    * @param {*} overrides - object describing the changes that should be applied to the item
    */
-  async updateItemSpellOverrides(itemId, overrides) {
-    const itemSpellFlagsToUpdate = this.itemTreeFlagMap.get(itemId);
+  async updateItemLeafOverrides(itemId, overrides) {
+    const itemLeafFlagsToUpdate = this.itemTreeFlagMap.get(itemId);
 
-    itemSpellFlagsToUpdate.changes = overrides;
+    itemLeafFlagsToUpdate.changes = overrides;
 
-    this.itemTreeFlagMap.set(itemId, itemSpellFlagsToUpdate);
+    this.itemTreeFlagMap.set(itemId, itemLeafFlagsToUpdate);
 
     const newItemLeafsFlagValue = [...this.itemTreeFlagMap.values()];
 
