@@ -15,7 +15,7 @@ export class ItemLinkTree {
 
   static TEMPLATES = {
     treeTab: `modules/${this.MODULE_ID}/templates/item-link-tree-tab.hbs`,
-    overrides: `modules/${this.MODULE_ID}/templates/item-link-tree-overrides-form.hbs`,
+    // overrides: `modules/${this.MODULE_ID}/templates/item-link-tree-overrides-form.hbs`,
   };
 
   /**

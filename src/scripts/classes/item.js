@@ -30,7 +30,7 @@ export class ItemLinkTreeItem {
     this.item = item;
 
     this._itemTreeFlagMap = null;
-    // this._itemSpellItems = null;
+    // this._itemTreeItems = null;
   }
 
   /**
@@ -56,11 +56,11 @@ export class ItemLinkTreeItem {
   //  * A map of what the "id" of the New item would be to its corresponding Item Data, taking any defined overrides into account.
   //  */
   // get itemTreeItemMap() {
-  //   if (this._itemSpellItems === null) {
+  //   if (this._itemTreeItems === null) {
   //     return this._getItemSpellItems();
   //   }
 
-  //   return this._itemSpellItems;
+  //   return this._itemTreeItems;
   // }
 
   /**
@@ -89,6 +89,7 @@ export class ItemLinkTreeItem {
       original = FakeEmptyItem(uuid, this.item.parent);
     }
 
+    /*
     // this exists if the 'child' item has been created on an actor
     if (original.getFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.parentItem) === this.item.uuid) {
       return original;
@@ -121,6 +122,7 @@ export class ItemLinkTreeItem {
     ItemLinkTree.log(false, "getChildItem", childItem);
 
     return childItem;
+    */
   }
 
   // /**
@@ -141,7 +143,7 @@ export class ItemLinkTreeItem {
   //     })
   //   );
 
-  //   this._itemSpellItems = itemMap;
+  //   this._itemTreeItems = itemMap;
   //   return itemMap;
   // }
 
@@ -225,17 +227,23 @@ export class ItemLinkTreeItem {
     const uuidToRemove = itemToDelete.uuid;
     const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
 
-    // update the data manager's internal store of the items it contains
-    // this._itemSpellItems?.delete(itemId);
-    this._itemTreeFlagMap?.delete(itemId);
+    const shouldDeleteLeaf = await Dialog.confirm({
+      title: game.i18n.localize("item-link-tree.MODULE_NAME"),
+      content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE"),
+    });
 
-    await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
+    if (shouldDeleteLeaf) {
+      // update the data manager's internal store of the items it contains
+      // this._itemTreeItems?.delete(itemId);
+      this._itemTreeFlagMap?.delete(itemId);
 
+      await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
+    }
+    // MOD 4535992
+    /*
     // Nothing more to do for unowned items.
     if (!this.item.isOwned) return;
 
-    // MOD 4535992
-    /*
     // remove the item's `parentItem` flag
     const treeItem = fromUuidSync(uuidToRemove);
 

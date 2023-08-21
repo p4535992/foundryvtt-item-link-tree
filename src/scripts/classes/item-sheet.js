@@ -1,5 +1,4 @@
 import { ItemLinkTree } from "../../module.js";
-import { ItemLinkTreeItemSpellOverrides } from "./item-link-item-overrides.js";
 import { ItemLinkTreeItem } from "./item.js";
 
 /**
