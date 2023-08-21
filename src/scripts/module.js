@@ -1,23 +1,23 @@
-import { ItemsWithSpells5eActorSheet } from './classes/actor-sheet.js';
-import { ItemsWithSpells5eActor } from './classes/actor.js';
-import { ItemsWithSpells5eItemSheet } from './classes/item-sheet.js';
+import { ItemLinkTreeActorSheet } from './classes/actor-sheet.js';
+import { ItemLinkTreeActor } from './classes/actor.js';
+import { ItemLinkTreeItemSheet } from './classes/item-sheet.js';
 import { _registerSettings } from './classes/settings.js';
 
-export class ItemsWithSpells5e {
+export class ItemLinkTree {
   static API = {};
 
-  static MODULE_ID = 'items-with-spells-5e';
+  static MODULE_ID = 'item-link-tree';
 
   static SETTINGS = {};
 
   static FLAGS = {
-    itemSpells: 'item-spells',
+    itemLeafs: 'item-link-tree',
     parentItem: 'parent-item',
   };
 
   static TEMPLATES = {
-    spellsTab: `modules/${this.MODULE_ID}/templates/spells-tab.hbs`,
-    overrides: `modules/${this.MODULE_ID}/templates/overrides-form.hbs`,
+    treeTab: `modules/${this.MODULE_ID}/templates/item-link-tree-tab.hbs`,
+    overrides: `modules/${this.MODULE_ID}/templates/item-link-tree-overrides-form.hbs`,
   };
 
   /**
@@ -41,18 +41,18 @@ export class ItemsWithSpells5e {
 }
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
-  registerPackageDebugFlag(ItemsWithSpells5e.MODULE_ID);
+  registerPackageDebugFlag(ItemLinkTree.MODULE_ID);
 });
 
 Hooks.once('init', () => {
-  ItemsWithSpells5e.log(true, 'Initialized');
+  ItemLinkTree.log(true, 'Initialized');
 
-  ItemsWithSpells5e.preloadTemplates();
+  ItemLinkTree.preloadTemplates();
 
-  ItemsWithSpells5eActorSheet.init();
+  ItemLinkTreeActorSheet.init();
 });
 
 Hooks.once("setup", _registerSettings);
 
-ItemsWithSpells5eItemSheet.init();
-ItemsWithSpells5eActor.init();
+ItemLinkTreeItemSheet.init();
+ItemLinkTreeActor.init();

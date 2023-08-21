@@ -16,7 +16,7 @@
 
 Build a tree hierarchy for your objects to link them together and use the logic you create to do weird things with other modules.
 
-This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-items-with-spells-5e) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval.
+This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval.
 
 I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/zhell)
 
@@ -94,10 +94,10 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 
 ## License
 
-- [Items with spells 5e](https://github.com/krbz999/foundryvtt-items-with-spells-5e) with [MIT](https://github.com/krbz999/foundryvtt-items-with-spells-5e/blob/master/LICENSE)
+- [Items with spells 5e](https://github.com/krbz999/foundryvtt-item-link-tree) with [MIT](https://github.com/krbz999/foundryvtt-item-link-tree/blob/master/LICENSE)
 
 This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
 ## Credit
 
-- Thanks to [krbz999 (aka Zhell)](https://github.com/krbz999/) for the module [Items with spells 5e](https://github.com/krbz999/foundryvtt-items-with-spells-5e)
+- Thanks to [krbz999 (aka Zhell)](https://github.com/krbz999/) for the module [Items with spells 5e](https://github.com/krbz999/foundryvtt-item-link-tree)

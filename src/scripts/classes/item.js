@@ -1,12 +1,12 @@
-import { ItemsWithSpells5e } from '../items-with-spells-5e.js';
-import { ItemsWithSpells5eItemSheet } from './item-sheet.js';
+import { ItemLinkTree } from '../module.js';
+import { ItemLinkTreeItemSheet } from './item-sheet.js';
 
 /**
  * Creates a fake temporary item as filler for when a UUID is unable to resolve an item
  * @param {string} uuid - the `uuid` of the source of this item
  * @returns item with the correct flags to allow deletion
  */
-const FakeEmptySpell = (uuid, parent) =>
+const FakeEmptyItem = (uuid, parent) =>
   new Item.implementation(
     {
       name: game.i18n.localize("IWS.MISSING_ITEM"),
@@ -23,9 +23,9 @@ const FakeEmptySpell = (uuid, parent) =>
   );
 
 /**
- * A class made to make managing the operations for an Item with spells attached easier.
+ * A class made to make managing the operations for an Item with items attached easier.
  */
-export class ItemsWithSpells5eItem {
+export class ItemLinkTreeItem {
   constructor(item) {
     this.item = item;
 
@@ -34,7 +34,7 @@ export class ItemsWithSpells5eItem {
   }
 
   /**
-   * A map of what the "id" of the new spell would be to its corresponding flag definition on this parent item
+   * A map of what the "id" of the new item would be to its corresponding flag definition on this parent item
    * Used when updating an item's overrides as the map lookup is easier than the array lookup
    */
   get itemSpellFlagMap() {
@@ -49,11 +49,11 @@ export class ItemsWithSpells5eItem {
    * Raw flag data
    */
   get itemSpellList() {
-    return this.item.getFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.itemSpells) ?? [];
+    return this.item.getFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs) ?? [];
   }
 
   /**
-   * A map of what the "id" of the New spell would be to its corresponding Item Data, taking any defined overrides into account.
+   * A map of what the "id" of the New item would be to its corresponding Item Data, taking any defined overrides into account.
    */
   get itemSpellItemMap() {
     if (this._itemSpellItems === null) {
@@ -64,13 +64,13 @@ export class ItemsWithSpells5eItem {
   }
 
   /**
-   * Update this class's understanding of the item spells
+   * Update this class's understanding of the item items
    */
   async refresh() {
-    ItemsWithSpells5e.log(false, 'REFRESHING', this.itemSpellList);
+    ItemLinkTree.log(false, 'REFRESHING', this.itemSpellList);
     this._getItemSpellFlagMap();
     await this._getItemSpellItems();
-    ItemsWithSpells5e.log(false, 'REFRESHed');
+    ItemLinkTree.log(false, 'REFRESHed');
   }
 
   /**
@@ -82,28 +82,28 @@ export class ItemsWithSpells5eItem {
     // original could be in a compendium or on an actor
     let original = await fromUuid(uuid);
 
-    ItemsWithSpells5e.log(false, 'original', original);
+    ItemLinkTree.log(false, 'original', original);
 
     // return a fake 'empty' item if we could not create a childItem
     if (!original) {
-      original = FakeEmptySpell(uuid, this.item.parent);
+      original = FakeEmptyItem(uuid, this.item.parent);
     }
 
-    // this exists if the 'child' spell has been created on an actor
-    if (original.getFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.parentItem) === this.item.uuid) {
+    // this exists if the 'child' item has been created on an actor
+    if (original.getFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.parentItem) === this.item.uuid) {
       return original;
     }
 
     // these changes are always applied
     const fixedChanges = {
-      ['flags.core.sourceId']: uuid, // set the sourceId as the original spell
-      [`flags.${ItemsWithSpells5e.MODULE_ID}.${ItemsWithSpells5e.FLAGS.parentItem}`]: this.item.uuid,
+      ['flags.core.sourceId']: uuid, // set the sourceId as the original item
+      [`flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.parentItem}`]: this.item.uuid,
       ['system.preparation.mode']: 'atwill',
     };
 
     const update = foundry.utils.mergeObject(changes, fixedChanges);
 
-    // backfill the 'charges' and 'target' for parent-item-charge consumption style spells
+    // backfill the 'charges' and 'target' for parent-item-charge consumption style items
     if (foundry.utils.getProperty(changes, 'system.consume.amount')) {
       foundry.utils.mergeObject(update, {
         'system.consume.type': 'charges',
@@ -118,7 +118,7 @@ export class ItemsWithSpells5eItem {
     });
     await childItem.updateSource(update);
 
-    ItemsWithSpells5e.log(false, 'getChildItem', childItem);
+    ItemLinkTree.log(false, 'getChildItem', childItem);
 
     return childItem;
   }
@@ -146,8 +146,8 @@ export class ItemsWithSpells5eItem {
   }
 
   /**
-   * Get or Create a cached map of child spell item "ids" to their flags
-   * Useful when updating overrides for a specific 'child spell'
+   * Get or Create a cached map of child item item "ids" to their flags
+   * Useful when updating overrides for a specific 'child item'
    * @returns {Map<string, object>} - Map of ids to flags
    */
   _getItemSpellFlagMap() {
@@ -161,10 +161,10 @@ export class ItemsWithSpells5eItem {
   }
 
   /**
-   * Adds a given UUID to the item's spell list
+   * Adds a given UUID to the item's item list
    * @param {string} providedUuid
    */
-  async addSpellToItem(providedUuid) {
+  async addLinkToItem(providedUuid) {
     // MUTATED if this is an owned item
     let uuid = providedUuid;
 
@@ -184,22 +184,22 @@ export class ItemsWithSpells5eItem {
       }
 
       const adjustedItemData = foundry.utils.mergeObject(fullItemData.toObject(), {
-        ['flags.core.sourceId']: uuid, // set the sourceId as the original spell
-        [`flags.${ItemsWithSpells5e.MODULE_ID}.${ItemsWithSpells5e.FLAGS.parentItem}`]: this.item.uuid,
+        ['flags.core.sourceId']: uuid, // set the sourceId as the original item
+        [`flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.parentItem}`]: this.item.uuid,
         ['system.preparation.mode']: 'atwill',
       });
 
       const [newItem] = await this.item.actor.createEmbeddedDocuments('Item', [adjustedItemData]);
       uuid = newItem.uuid;
 
-      ItemsWithSpells5e.log(false, 'new item created', newItem);
+      ItemLinkTree.log(false, 'new item created', newItem);
     }
     */
-    const itemSpells = [...this.itemSpellList, {uuid}];
+    const itemLeafs = [...this.itemSpellList, {uuid}];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
-    const property = `flags.${ItemsWithSpells5e.MODULE_ID}.${ItemsWithSpells5e.FLAGS.itemSpells}`;
-    await this.item.update({[property]: itemSpells}, {render: false});
+    const property = `flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.itemLeafs}`;
+    await this.item.update({[property]: itemLeafs}, {render: false});
 
     await this.refresh();
 
@@ -209,16 +209,16 @@ export class ItemsWithSpells5eItem {
   }
 
   /**
-   * Removes the relationship between the provided item and this item's spells
+   * Removes the relationship between the provided item and this item's items
    * @param {string} itemId - the id of the item to remove
    * @param {Object} options
-   * @param {boolean} [options.alsoDeleteEmbeddedSpell] - Should the spell be deleted also, only for owned items
-   * @returns {Item} the updated or deleted spell after having its parent item removed, or null
+   * @param {boolean} [options.alsoDeleteEmbeddedSpell] - Should the item be deleted also, only for owned items
+   * @returns {Item} the updated or deleted item after having its parent item removed, or null
    */
   async removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell } = {}) {
     const itemToDelete = this.itemSpellItemMap.get(itemId);
 
-    // If owned, we are storing the actual owned spell item's uuid. Else we store the source id.
+    // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
     const newItemSpells = this.itemSpellList.filter(({uuid}) => uuid !== uuidToRemove);
 
@@ -226,33 +226,33 @@ export class ItemsWithSpells5eItem {
     this._itemSpellItems?.delete(itemId);
     this._itemSpellFlagMap?.delete(itemId);
 
-    await this.item.setFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.itemSpells, newItemSpells);
+    await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemSpells);
 
     // Nothing more to do for unowned items.
     if (!this.item.isOwned) return;
 
     // MOD 4535992
     /*
-    // remove the spell's `parentItem` flag
-    const spellItem = fromUuidSync(uuidToRemove);
+    // remove the item's `parentItem` flag
+    const treeItem = fromUuidSync(uuidToRemove);
 
     // the other item has already been deleted, probably do nothing.
-    if (!spellItem) return;
+    if (!treeItem) return;
 
     const shouldDeleteSpell = alsoDeleteEmbeddedSpell && (await Dialog.confirm({
       title: game.i18n.localize("IWS.MODULE_NAME"),
       content: game.i18n.localize("IWS.WARN_ALSO_DELETE")
     }));
 
-    if (shouldDeleteSpell) return spellItem.delete();
-    else return spellItem.unsetFlag(ItemsWithSpells5e.MODULE_ID, ItemsWithSpells5e.FLAGS.parentItem);
+    if (shouldDeleteSpell) return treeItem.delete();
+    else return treeItem.unsetFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.parentItem);
     */
   }
 
   /**
    * Updates the given item's overrides
-   * @param {*} itemId - spell attached to this item
-   * @param {*} overrides - object describing the changes that should be applied to the spell
+   * @param {*} itemId - item attached to this item
+   * @param {*} overrides - object describing the changes that should be applied to the item
    */
   async updateItemSpellOverrides(itemId, overrides) {
     const itemSpellFlagsToUpdate = this.itemSpellFlagMap.get(itemId);
@@ -267,8 +267,8 @@ export class ItemsWithSpells5eItem {
     await this.item.update(
       {
         flags: {
-          [ItemsWithSpells5e.MODULE_ID]: {
-            [ItemsWithSpells5e.FLAGS.itemSpells]: newItemSpellsFlagValue,
+          [ItemLinkTree.MODULE_ID]: {
+            [ItemLinkTree.FLAGS.itemLeafs]: newItemSpellsFlagValue,
           },
         },
       },
@@ -278,9 +278,9 @@ export class ItemsWithSpells5eItem {
     // update this data manager's understanding of the items it contains
     await this.refresh();
 
-    ItemsWithSpells5eItemSheet.instances.forEach((instance) => {
-      if (instance.itemWithSpellsItem === this) {
-        instance._shouldOpenSpellsTab = true;
+    ItemLinkTreeItemSheet.instances.forEach((instance) => {
+      if (instance.itemLinkTreeItem === this) {
+        instance._shouldOpenTreeTab = true;
       }
     });
 

@@ -1,40 +1,40 @@
-import { ItemsWithSpells5e } from '../items-with-spells-5e.js';
+import { ItemLinkTree } from '../module.js';
 
 /**
  * The form to control Item Spell overrides (e.g. for consumption logic)
  */
-export class ItemsWithSpells5eItemSpellOverrides extends FormApplication {
-  constructor(itemWithSpellsItem, itemSpellId) {
-    const itemSpellFlagData = itemWithSpellsItem.itemSpellFlagMap.get(itemSpellId);
-    ItemsWithSpells5e.log(false, { itemSpellFlagData });
+export class ItemLinkTreeItemSpellOverrides extends FormApplication {
+  constructor(itemLinkTreeItem, itemBaseId) {
+    const itemSpellFlagData = itemLinkTreeItem.itemSpellFlagMap.get(itemBaseId);
+    ItemLinkTree.log(false, { itemSpellFlagData });
     // set the `object` of this FormApplication as the itemSpell data from the parent item's flags
     super(itemSpellFlagData?.changes ?? {});
 
-    // the spell we are editing
-    this.itemSpellId = itemSpellId;
+    // the current item we are editing
+    this.itemBaseId = itemBaseId;
 
-    // the ItemsWithSpells5eItem instance to use
-    this.itemWithSpellsItem = itemWithSpellsItem;
+    // the ItemLinkTreeItem instance to use
+    this.itemLinkTreeItem = itemLinkTreeItem;
 
     // the parent item
-    this.item = itemWithSpellsItem.item;
+    this.item = itemLinkTreeItem.item;
 
-    // the fake or real spell item
-    this.itemSpellItem = itemWithSpellsItem.itemSpellItemMap.get(itemSpellId);
+    // the fake or real base item
+    this.itemBaseItem = itemLinkTreeItem.itemBaseItemMap.get(itemBaseId);
   }
 
   get id() {
-    return `${ItemsWithSpells5e.MODULE_ID}-${this.item.id}-${this.itemSpellItem.id}`;
+    return `${ItemLinkTree.MODULE_ID}-${this.item.id}-${this.itemBaseItem.id}`;
   }
 
   get title() {
-    return `${this.item.name} - ${this.itemSpellItem.name}`;
+    return `${this.item.name} - ${this.itemBaseItem.name}`;
   }
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['dnd5e', 'sheet', 'item'],
-      template: ItemsWithSpells5e.TEMPLATES.overrides,
+      template: ItemLinkTree.TEMPLATES.overrides,
       width: 560,
       closeOnSubmit: false,
       submitOnChange: true,
@@ -44,8 +44,8 @@ export class ItemsWithSpells5eItemSpellOverrides extends FormApplication {
 
   getData() {
     const ret = {
-      spellLevelToDisplay: this.object?.system?.level ?? this.itemSpellItem?.system?.level,
-      save: this.itemSpellItem.system.save,
+      spellLevelToDisplay: this.object?.system?.level ?? this.itemBaseItem?.system?.level,
+      save: this.itemBaseItem.system.save,
       overrides: this.object,
       config: {
         limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
@@ -60,22 +60,22 @@ export class ItemsWithSpells5eItemSpellOverrides extends FormApplication {
       },
     };
 
-    ItemsWithSpells5e.log(false, 'getData', ret);
+    ItemLinkTree.log(false, 'getData', ret);
 
     return ret;
   }
 
   async _updateObject(event, formData) {
-    ItemsWithSpells5e.log(false, '_updateObject', event, formData);
+    ItemLinkTree.log(false, '_updateObject', event, formData);
 
     const formDataExpanded = foundry.utils.expandObject(formData);
 
-    await this.itemWithSpellsItem.updateItemSpellOverrides(this.itemSpellId, formDataExpanded.overrides);
+    await this.itemLinkTreeItem.updateItemSpellOverrides(this.itemBaseId, formDataExpanded.overrides);
 
     this.object = formDataExpanded.overrides;
 
     if (this.item.isOwned) {
-      ui.notifications.warn('The existing spells on the parent actor will not be modified to reflect this change.');
+      ui.notifications.warn('The existing items on the parent actor will not be modified to reflect this change.');
     }
 
     // close if this is a submit (button press or `enter` key)

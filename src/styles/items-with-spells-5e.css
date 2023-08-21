@@ -1,21 +1,21 @@
-.items-with-spells-tab {
+.item-link-tree-tab {
   display: flex;
   flex-direction: column;
 }
 
-.items-with-spells-warnings {
+.item-link-tree-warnings {
   flex: 1 0 auto !important;
 }
 
-.items-with-spells-items-list {
+.item-link-tree-items-list {
   height: 100%;
 }
 
-.item-with-spells-item-detail {
+.item-link-tree-item-detail {
   text-align: center;
   font-size: 12px;
 }
 
-.item-with-spells-item-controls {
+.item-link-tree-item-controls {
   border-left: 1px solid #c9c7b8;
 }

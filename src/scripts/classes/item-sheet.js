@@ -1,19 +1,19 @@
-import { ItemsWithSpells5e } from '../items-with-spells-5e.js';
-import { ItemsWithSpells5eItemSpellOverrides } from './item-spell-overrides.js';
-import { ItemsWithSpells5eItem } from './item.js';
+import { ItemLinkTree } from '../module.js';
+import { ItemLinkTreeItemSpellOverrides } from './item-link-item-overrides.js';
+import { ItemLinkTreeItem } from './item.js';
 
 /**
  * A class made to make managing the operations for an Item sheet easier.
  */
-export class ItemsWithSpells5eItemSheet {
+export class ItemLinkTreeItemSheet {
   /** A boolean to set when we are causing an item update we know should re-open to this tab */
-  _shouldOpenSpellsTab = false;
+  _shouldOpenTreeTab = false;
 
   constructor(app, html) {
     this.app = app;
     this.item = app.item;
     this.sheetHtml = html;
-    this.itemWithSpellsItem = new ItemsWithSpells5eItem(this.item);
+    this.itemLinkTreeItem = new ItemLinkTreeItem(this.item);
   }
 
   /** MUTATED: All open ItemSheet have a cached instance of this class */
@@ -26,11 +26,11 @@ export class ItemsWithSpells5eItemSheet {
     Hooks.on('renderItemSheet', (app, html) => {
       let include = false;
       try {
-        include = !!game.settings.get(ItemsWithSpells5e.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
+        include = !!game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
       } catch {}
       if (!include) return;
 
-      ItemsWithSpells5e.log(false, {
+      ItemLinkTree.log(false, {
         instances: this.instances,
       });
 
@@ -39,9 +39,9 @@ export class ItemsWithSpells5eItemSheet {
 
         instance.renderLite();
 
-        if (instance._shouldOpenSpellsTab) {
-          app._tabs?.[0]?.activate?.('spells');
-          instance._shouldOpenSpellsTab = false;
+        if (instance._shouldOpenTreeTab) {
+          app._tabs?.[0]?.activate?.('tree');
+          instance._shouldOpenTreeTab = false;
         }
         return;
       }
@@ -62,15 +62,15 @@ export class ItemsWithSpells5eItemSheet {
   }
 
   /**
-   * Renders the spell tab template to be injected
+   * Renders the tree tab template to be injected
    */
   async _renderSpellsList() {
-    const itemSpellsArray = [...(await this.itemWithSpellsItem.itemSpellItemMap).values()];
+    const itemLeafsArray = [...(await this.itemLinkTreeItem.itemSpellItemMap).values()];
 
-    ItemsWithSpells5e.log(false, 'rendering list', itemSpellsArray);
+    ItemLinkTree.log(false, 'rendering list', itemLeafsArray);
 
-    return renderTemplate(ItemsWithSpells5e.TEMPLATES.spellsTab, {
-      itemSpells: itemSpellsArray,
+    return renderTemplate(ItemLinkTree.TEMPLATES.treeTab, {
+      itemLeafs: itemLeafsArray,
       config: {
         limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
         abilities: CONFIG.DND5E.abilities,
@@ -81,26 +81,27 @@ export class ItemsWithSpells5eItemSheet {
   }
 
   /**
-   * Ensure the item dropped is a spell, add the spell to the item flags.
+   * Ensure the item dropped is a item, add the item to the item flags.
    * @returns Promise that resolves when the item has been modified
    */
   async _dragEnd(event) {
     if(!this.app.isEditable) return;
-    ItemsWithSpells5e.log(false, 'dragEnd', {event});
+    ItemLinkTree.log(false, 'dragEnd', {event});
 
     const data = TextEditor.getDragEventData(event);
-    ItemsWithSpells5e.log(false, 'dragEnd', {data});
+    ItemLinkTree.log(false, 'dragEnd', {data});
 
     if (data.type !== 'Item') return;
 
     const item = fromUuidSync(data.uuid);
-    ItemsWithSpells5e.log(false, 'dragEnd', {item});
+    ItemLinkTree.log(false, 'dragEnd', {item});
 
-    if (item.type !== 'spell') return;
+    // MOD 4535992
+    //if (item.type !== 'spell') return;
 
     // set the flag to re-open this tab when the update completes
-    this._shouldOpenSpellsTab = true;
-    return this.itemWithSpellsItem.addSpellToItem(data.uuid);
+    this._shouldOpenTreeTab = true;
+    return this.itemLinkTreeItem.addLinkToItem(data.uuid);
   }
 
   /**
@@ -108,37 +109,37 @@ export class ItemsWithSpells5eItemSheet {
    */
   async _handleItemClick(event) {
     const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
-    const item = this.itemWithSpellsItem.itemSpellItemMap.get(itemId);
-    ItemsWithSpells5e.log(false, '_handleItemClick', !!item.isOwned && !!item.isOwner);
+    const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
+    ItemLinkTree.log(false, '_handleItemClick', !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
       editable: !!item.isOwned && !!item.isOwner,
     });
   }
 
   /**
-   * Event Handler that removes the link between this item and the spell
+   * Event Handler that removes the link between this item and the item
    */
   async _handleItemDeleteClick(event) {
     const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
 
-    ItemsWithSpells5e.log(false, 'deleting', itemId, this.itemWithSpellsItem.itemSpellItemMap);
+    ItemLinkTree.log(false, 'deleting', itemId, this.itemLinkTreeItem.itemSpellItemMap);
 
     // set the flag to re-open this tab when the update completes
-    this._shouldOpenSpellsTab = true;
-    await this.itemWithSpellsItem.removeSpellFromItem(itemId);
+    this._shouldOpenTreeTab = true;
+    await this.itemLinkTreeItem.removeSpellFromItem(itemId);
   }
 
   /**
-   * Event Handler that also Deletes the embedded spell
+   * Event Handler that also Deletes the embedded item
    */
   async _handleItemDestroyClick(event) {
     const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
 
-    ItemsWithSpells5e.log(false, 'destroying', itemId, this.itemWithSpellsItem.itemSpellItemMap);
+    ItemLinkTree.log(false, 'destroying', itemId, this.itemLinkTreeItem.itemSpellItemMap);
 
     // set the flag to re-open this tab when the update completes
-    this._shouldOpenSpellsTab = true;
-    await this.itemWithSpellsItem.removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell: true });
+    this._shouldOpenTreeTab = true;
+    await this.itemLinkTreeItem.removeSpellFromItem(itemId, { alsoDeleteEmbeddedSpell: true });
   }
 
   /**
@@ -146,14 +147,14 @@ export class ItemsWithSpells5eItemSheet {
    */
   async _handleItemEditClick(event) {
     const { itemId } = $(event.currentTarget).parents('[data-item-id]').data();
-    const item = this.itemWithSpellsItem.itemSpellItemMap.get(itemId);
+    const item = this.itemLinkTreeItem.itemSpellItemMap.get(itemId);
 
     if (item.isOwned) {
       return item.sheet.render(true);
     }
 
     // pop up a formapp to configure this item's overrides
-    return new ItemsWithSpells5eItemSpellOverrides(this.itemWithSpellsItem, itemId).render(true);
+    return new ItemLinkTreeItemSpellOverrides(this.itemLinkTreeItem, itemId).render(true);
   }
 
   /**
@@ -161,10 +162,10 @@ export class ItemsWithSpells5eItemSheet {
    * This allows for less delay during the update -> renderItemSheet -> set tab cycle
    */
   renderLite() {
-    ItemsWithSpells5e.log(false, 'RENDERING');
+    ItemLinkTree.log(false, 'RENDERING');
     // Update the nav menu
-    const spellsTabButton = $(
-      '<a class="item" data-tab="spells">' + game.i18n.localize(`ITEM.TypeSpellPl`) + '</a>',
+    const treeTabButton = $(
+      '<a class="item" data-tab="tree">' + game.i18n.localize(`ITEM.TypeSpellPl`) + '</a>',
     );
     const tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
 
@@ -172,35 +173,35 @@ export class ItemsWithSpells5eItemSheet {
       return;
     }
 
-    tabs.append(spellsTabButton);
+    tabs.append(treeTabButton);
 
     // Create the tab
     const sheetBody = this.sheetHtml.find('.sheet-body');
-    const spellsTab = $(`<div class="tab spells flexcol" data-group="primary" data-tab="spells"></div>`);
-    sheetBody.append(spellsTab);
+    const treeTab = $(`<div class="tab tree flexcol" data-group="primary" data-tab="tree"></div>`);
+    sheetBody.append(treeTab);
 
-    this.renderHeavy(spellsTab);
+    this.renderHeavy(treeTab);
   }
 
   /**
-   * Heavy lifting part of the spells tab rendering which involves getting the spells and painting them
+   * Heavy lifting part of the items tab rendering which involves getting the items and painting them
    */
-  async renderHeavy(spellsTab) {
-    // await this.itemWithSpellsItem.refresh();
+  async renderHeavy(treeTab) {
+    // await this.itemLinkTreeItem.refresh();
     // Add the list to the tab
-    const spellsTabHtml = $(await this._renderSpellsList());
-    spellsTab.append(spellsTabHtml);
+    const treeTabHtml = $(await this._renderSpellsList());
+    treeTab.append(treeTabHtml);
 
     // Activate Listeners for this ui.
-    spellsTabHtml.on('click', '.item-name', this._handleItemClick.bind(this));
-    spellsTabHtml.on('click', '.item-delete', this._handleItemDeleteClick.bind(this));
-    spellsTabHtml.on('click', '.item-destroy', this._handleItemDestroyClick.bind(this));
-    spellsTabHtml.on('click', '.configure-overrides', this._handleItemEditClick.bind(this));
+    treeTabHtml.on('click', '.item-name', this._handleItemClick.bind(this));
+    treeTabHtml.on('click', '.item-delete', this._handleItemDeleteClick.bind(this));
+    treeTabHtml.on('click', '.item-destroy', this._handleItemDestroyClick.bind(this));
+    treeTabHtml.on('click', '.configure-overrides', this._handleItemEditClick.bind(this));
 
-    // Register a DragDrop handler for adding new spells to this item
+    // Register a DragDrop handler for adding new items to this item
     const dragDrop = {
       dragSelector: '.item',
-      dropSelector: '.items-with-spells-tab',
+      dropSelector: '.item-link-tree-tab',
       permissions: { drop: () => this.app.isEditable && !this.item.isOwned },
       callbacks: { drop: this._dragEnd },
     };

@@ -1,7 +1,7 @@
 {
-  "id": "items-with-spells-5e",
+  "id": "item-link-tree",
   "title": "Items with Spells DnD5e",
-  "description": "A module that allows spells to be attached to Items, Features, etc.",
+  "description": "A module that allows s to be attached to Items, Features, etc.",
   "version": "1.2.0",
   "manifestPlusVersion": "1.1.0",
   "authors": [
@@ -21,10 +21,10 @@
     }
   ],
   "esmodules": [
-    "/scripts/items-with-spells-5e.js"
+    "/scripts/item-link-tree.js"
   ],
   "styles": [
-    "/styles/items-with-spells-5e.css"
+    "/styles/item-link-tree.css"
   ],
   "compatibility": {
     "minimum": 11,
@@ -62,12 +62,12 @@
       }
     ]
   },
-  "bugs": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/issues",
-  "changelog": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/releases",
-  "download": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/releases/latest/download/module.zip",
-  "manifest": "https://github.com/krbz999/foundryvtt-items-with-spells-5e/releases/latest/download/module.json",
-  "readme": "https://raw.githubusercontent.com/krbz999/foundryvtt-items-with-spells-5e/main/README.md",
-  "url": "https://github.com/krbz999/foundryvtt-items-with-spells-5e",
+  "bugs": "https://github.com/krbz999/foundryvtt-item-link-tree/issues",
+  "changelog": "https://github.com/krbz999/foundryvtt-item-link-tree/releases",
+  "download": "https://github.com/krbz999/foundryvtt-item-link-tree/releases/latest/download/module.zip",
+  "manifest": "https://github.com/krbz999/foundryvtt-item-link-tree/releases/latest/download/module.json",
+  "readme": "https://raw.githubusercontent.com/krbz999/foundryvtt-item-link-tree/main/README.md",
+  "url": "https://github.com/krbz999/foundryvtt-item-link-tree",
   "flags": {
     "allowBugReporter": true,
     "fvttdevleague": {

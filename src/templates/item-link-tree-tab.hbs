@@ -1,5 +1,5 @@
-<div class="items-with-spells-tab">
-  <ol class="items-list items-with-spells-items-list">
+<div class="item-link-tree-tab">
+  <ol class="items-list item-link-tree-items-list">
     <li class="items-header flexrow">
       <h3 class="item-name flexrow">
         {{localize 'Tree'}}
@@ -23,20 +23,20 @@
     </li>
 
     <ol class="item-list">
-      {{#each itemSpells as |spell|}}
+      {{#each itemLeafs as |spell|}}
       <li class="item context-enabled flexrow" data-item-id="{{spell.id}}">
         <div class="item-name flexrow rollable">
           <div class="item-image" style="background-image: url({{spell.img}})">{{{@root/rollIcon}}}</div>
           <h4>{{spell.name}}</h4>
         </div>
         <!--
-        <div class="item-detail item-with-spells-item-detail">
+        <div class="item-detail item-link-tree-item-detail">
           {{#if spell.labels.save}}
           <span title="{{labels.save}}">{{labels.save}}</span>
           {{/if}}
         </div>
 
-        <div class="item-detail item-with-spells-item-detail">
+        <div class="item-detail item-link-tree-item-detail">
           {{#if (gt spell.system.uses.max 0)}}
           {{spell.system.uses.max}}
           <span class="sep">{{localize "DND5E.per"}}</span>
@@ -44,14 +44,14 @@
           {{/if}}
         </div>
 
-        <div class="item-detail item-with-spells-item-detail">
+        <div class="item-detail item-link-tree-item-detail">
           {{#if (gt spell.system.consume.amount 0)}}
           {{spell.system.consume.amount}}
           {{localize 'DND5E.Charges'}}
           {{/if}}
         </div>
         -->
-        <div class="item-controls flexrow context-menu item-with-spells-item-controls">
+        <div class="item-controls flexrow context-menu item-link-tree-item-controls">
           {{#if @root/isOwner}}
           <a class="item-control configure-overrides"
             data-tooltip="{{#unless @root/isOwned}}IWS.ConfigureOverrides{{else}}IWS.Configure{{/unless}}">
