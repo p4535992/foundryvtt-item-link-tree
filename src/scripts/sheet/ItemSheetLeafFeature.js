@@ -1,13 +1,9 @@
 import { ItemLinkTree } from "../../module.js";
-import { applyLocksItemSheet } from "./app/tidy5e-lockers.js";
-import { debug } from "./app/tidy5e-logger-util.js";
-import { tidy5eShowItemArt } from "./app/tidy5e-show-item-art.js";
-import { applySpellClassFilterItemSheet } from "./app/tidy5e-spellClassFilter.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      classes: ["item-link-tree", "leaf", "sheet", "item"],
+      classes: ["item-link-tree", "leaf", "dnd5e", "sheet", "item"],
     });
   }
 
@@ -24,6 +20,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
 
     // TODO to localize
     let customTypeTypes = {
+      none: "",
       effect: "Effect",
       bonus: "Bonus",
       effectAndBonus: "Effect and Bonus",
@@ -32,6 +29,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     // Item rendering data
     foundry.utils.mergeObject(context, {
       customTypeTypes: customTypeTypes,
+      flags: item.flags,
     });
     return context;
   }

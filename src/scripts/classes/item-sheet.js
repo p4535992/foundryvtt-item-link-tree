@@ -30,8 +30,9 @@ export class ItemLinkTreeItemSheet {
       try {
         include = !!game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
       } catch {}
-      if (!include) return;
-
+      if (!include) {
+        return;
+      }
       ItemLinkTree.log(false, {
         instances: this.instances,
       });
@@ -121,8 +122,9 @@ export class ItemLinkTreeItemSheet {
     const data = TextEditor.getDragEventData(event);
     ItemLinkTree.log(false, "dragEnd", { data });
 
-    if (data.type !== "Item") return;
-
+    if (data.type !== "Item") {
+      return;
+    }
     const item = await fromUuid(data.uuid);
     ItemLinkTree.log(false, "dragEnd", { item });
 
@@ -224,9 +226,19 @@ export class ItemLinkTreeItemSheet {
     const treeTabButton = $(
       '<a class="item" data-tab="tree">' + game.i18n.localize(`${ItemLinkTree.MODULE_ID}.tab.label`) + "</a>"
     );
-    const tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
 
-    if (!tabs) {
+    let tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
+
+    // if(tabs.length === 0 && this.item.type === "loot"){
+    //   // const primaryTab = $(`<nav class="sheet-navigation tabs" data-group="primary"></nav>`);
+    //   this.sheetHtml.find('.sheet-header').after(`<nav class="sheet-navigation tabs" data-group="primary">
+    //   <a class="item active" data-tab="description">${game.i18n.localize("DND5E.Description")}</a>
+    //   </nav>`)
+    // }
+
+    tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
+
+    if (!tabs || tabs.length === 0) {
       return;
     }
 

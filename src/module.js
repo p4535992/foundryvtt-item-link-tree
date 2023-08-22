@@ -43,7 +43,7 @@ export class ItemLinkTree {
     Items.registerSheet("dnd5e", ItemSheetLeafFeature, {
       makeDefault: false,
       label: "ItemSheetLeafFeature",
-      types: ["loot"], // TODO se non funziona questo allora si usa il tool
+      types: ["tool"],
     });
   }
 }

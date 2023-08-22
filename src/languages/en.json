@@ -21,6 +21,7 @@
   "item-link-tree.WARN_OWNED": "You are editing an owned Item's items, any changes made here will not be applied to the items on the owning actor.",
   "item-link-tree.tab.label": "Leafs",
   "item-link-tree.customLink.label": "Custom Link Type",
+  "item-link-tree.customType.label": "Custom Type",
   "item-link-tree.prefix.label": "Prefix",
   "item-link-tree.suffix.label": "Suffix",
   "item-link-tree.CreateCustomLink": "Create Custom Link",

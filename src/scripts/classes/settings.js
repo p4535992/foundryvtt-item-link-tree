@@ -41,13 +41,13 @@ export function _registerSettings() {
     hint: "item-link-tree.SETTINGS.ITEM_EXCLUSION.HINT",
     scope: "world",
     config: true,
-    type: IWS_TypeSettings,
+    type: ItemLinkTree_TypeSettings,
     label: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
     restricted: true,
   });
 }
 
-class IWS_TypeSettings extends FormApplication {
+class ItemLinkTree_TypeSettings extends FormApplication {
   get id() {
     return `${ItemLinkTree.MODULE_ID}-item-type-exclusion-menu`;
   }
