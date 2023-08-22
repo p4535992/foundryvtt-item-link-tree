@@ -133,7 +133,7 @@ export class ItemLinkTreeItemSheet {
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
-    return this.itemLinkTreeItem.addLinkToItem(data.uuid);
+    return this.itemLinkTreeItem.addLeafToItem(data.uuid);
   }
 
   /**

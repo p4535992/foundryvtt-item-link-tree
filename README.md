@@ -57,6 +57,13 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 # API
 
+# Hooks
+
+### Hooks.call("item-link-tree.postAddLeafToItem", currentItem, itemAdded);
+
+### Hooks.call("item-link-tree.postRemoveLeafFromItem", currentItem, itemRemoved);
+
+
 
 # Build
 

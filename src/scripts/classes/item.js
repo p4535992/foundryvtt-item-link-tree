@@ -166,7 +166,7 @@ export class ItemLinkTreeItem {
    * Adds a given UUID to the item's item list
    * @param {string} providedUuid
    */
-  async addLinkToItem(providedUuid) {
+  async addLeafToItem(providedUuid) {
     // MUTATED if this is an owned item
     let uuid = providedUuid;
 
@@ -197,7 +197,9 @@ export class ItemLinkTreeItem {
       ItemLinkTree.log(false, 'new item created', newItem);
     }
     */
-    const itemLeafs = [...this.itemTreeList, { uuid }];
+    const itemAdded = await fromUuid(uuid);
+    const customType = getProperty(itemAdded, `flags.item-link-tree.customType`) ?? "";
+    const itemLeafs = [...this.itemTreeList, { uuid: uuid, customLink: customType }];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
     const property = `flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.itemLeafs}`;
@@ -208,6 +210,8 @@ export class ItemLinkTreeItem {
     // now re-render the item and actor sheets
     this.item.render();
     if (this.item.actor) this.item.actor.render();
+
+    Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
   }
 
   /**
@@ -225,6 +229,7 @@ export class ItemLinkTreeItem {
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     // const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
     const uuidToRemove = itemToDelete.uuid;
+    const itemRemoved = await fromUuid(uuidToRemove);
     const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
 
     const shouldDeleteLeaf =
@@ -241,6 +246,8 @@ export class ItemLinkTreeItem {
       this._itemTreeFlagMap?.delete(itemId);
       await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
     }
+
+    Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
     // MOD 4535992
     /*
     // Nothing more to do for unowned items.
