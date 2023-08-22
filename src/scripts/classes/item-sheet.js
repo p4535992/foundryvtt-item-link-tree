@@ -83,6 +83,8 @@ export class ItemLinkTreeItemSheet {
           img: itemTmp.img,
           uuid: itemTmp.uuid,
           id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
+          //   prefix: leaf.prefix,
+          //   suffix: leaf.suffix,
           customLink: leaf.customLink,
         };
         itemLeafsArrayTmp.push(i);
@@ -199,7 +201,7 @@ export class ItemLinkTreeItemSheet {
     // MOD 4535992
     /*
     //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
-    
+
     if (item.isOwned) {
       return item.sheet.render(true);
     }

@@ -1,5 +1,6 @@
 import { ItemLinkTreeItemSheet } from "./scripts/classes/item-sheet.js";
 import { _registerSettings } from "./scripts/classes/settings.js";
+import { ItemSheetLeafFeature, ItemSheetLeafFeatureInitialize } from "./scripts/sheet/ItemSheetLeafFeature.js";
 
 export class ItemLinkTree {
   static API = {};
@@ -36,6 +37,15 @@ export class ItemLinkTree {
   static preloadTemplates() {
     loadTemplates(Object.values(flattenObject(this.TEMPLATES)));
   }
+
+  static ItemSheetLeafFeatureInitialize() {
+    // Register  Item Sheet and make default
+    Items.registerSheet("dnd5e", ItemSheetLeafFeature, {
+      makeDefault: false,
+      label: "ItemSheetLeafFeature",
+      types: ["loot"], // TODO se non funziona questo allora si usa il tool
+    });
+  }
 }
 
 Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
@@ -48,9 +58,14 @@ Hooks.once("init", () => {
   ItemLinkTree.preloadTemplates();
 
   // ItemLinkTreeActorSheet.init();
+  ItemLinkTree.ItemSheetLeafFeatureInitialize();
 });
 
-Hooks.once("setup", _registerSettings);
+Hooks.once("setup", () => {
+  _registerSettings();
+});
 
-ItemLinkTreeItemSheet.init();
-// ItemLinkTreeActor.init();
+Hooks.once("ready", () => {
+  ItemLinkTreeItemSheet.init();
+  // ItemLinkTreeActor.init();
+});

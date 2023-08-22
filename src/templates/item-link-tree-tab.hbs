@@ -4,23 +4,18 @@
       <h3 class="item-name flexrow">
         {{localize 'Tree'}}
       </h3>
+      <!--
+      <div class="item-detail">
+        {{localize 'item-link-tree.prefix.label'}}
+      </div>
 
+      <div class="item-detail">
+        {{localize 'item-link-tree.suffix.label'}}
+      </div>
+      -->
       <div class="item-detail">
         {{localize 'item-link-tree.customLink.label'}}
       </div>
-      <!--
-      <div class="item-detail">
-        {{localize 'DND5E.ActionSave'}}
-      </div>
-
-      <div class="item-detail leaf-uses">
-        {{localize 'DND5E.Uses'}}
-      </div>
-
-      <div class="item-detail leaf-uses">
-        {{localize 'DND5E.Charges'}}
-      </div>
-      -->
 
       <div class="item-controls"></div>
 
@@ -37,28 +32,7 @@
         <div class="item-detail item-link-tree-item-detail">
           <span title="{{leaf.customLink}}">{{leaf.customLink}}</span>
         </div>
-        <!--
-        <div class="item-detail item-link-tree-item-detail">
-          {{#if leaf.labels.save}}
-          <span title="{{labels.save}}">{{labels.save}}</span>
-          {{/if}}
-        </div>
 
-        <div class="item-detail item-link-tree-item-detail">
-          {{#if (gt leaf.system.uses.max 0)}}
-          {{leaf.system.uses.max}}
-          <span class="sep">{{localize "DND5E.per"}}</span>
-          {{lookup @root/config.limitedUsePeriods leaf.system.uses.per}}
-          {{/if}}
-        </div>
-
-        <div class="item-detail item-link-tree-item-detail">
-          {{#if (gt leaf.system.consume.amount 0)}}
-          {{leaf.system.consume.amount}}
-          {{localize 'DND5E.Charges'}}
-          {{/if}}
-        </div>
-        -->
         <div class="item-controls flexrow context-menu item-link-tree-item-controls">
           {{#if @root/isOwner}}
           <a class="item-control configure-overrides"

@@ -21,6 +21,8 @@
   "item-link-tree.WARN_OWNED": "You are editing an owned Item's items, any changes made here will not be applied to the items on the owning actor.",
   "item-link-tree.tab.label": "Leafs",
   "item-link-tree.customLink.label": "Custom Link Type",
+  "item-link-tree.prefix.label": "Prefix",
+  "item-link-tree.suffix.label": "Suffix",
   "item-link-tree.CreateCustomLink": "Create Custom Link",
   "item-link-tree.SETTINGS.GM_ONLY.NAME": "Only GM can use the 'Leafs' tab",
   "item-link-tree.SETTINGS.GM_ONLY.TITLE": "If enable only the GM can see and edit the 'Leafs' Tab",

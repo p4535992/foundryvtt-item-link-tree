@@ -287,25 +287,42 @@ export class ItemLinkTreeItem {
 
     new Dialog({
       title: "Update Custom Link Type",
+      //   content: `
+      //       <form>
+      //         <div class="form-group">
+      //             <label>Prefix</label>
+      //             <input type='text' name='prefix' value='${currentLeaf.prefix ?? ""}'></input>
+      //         </div>
+      //         <div class="form-group">
+      //             <label>Suffix</label>
+      //             <input type='text' name='suffix' value='${currentLeaf.suffix ?? ""}'></input>
+      //         </div>
+      //         <div class="form-group">
+      //           <label>Custom Link Type</label>
+      //           <input type='text' name='customLink' value='${currentLeaf.customLink ?? ""}'></input>
+      //         </div>
+      //       </form>`,
       content: `
-          <form>
+            <form>
             <div class="form-group">
-              <label>Custom Link Type</label>
-              <input type='text' name='customLink' value='${currentLeaf.customLink ?? ""}'></input>
+                <label>Custom Link Type</label>
+                <input type='text' name='customLink' value='${currentLeaf.customLink ?? ""}'></input>
             </div>
-          </form>`,
+            </form>`,
       buttons: {
         update: {
           icon: "<i class='fas fa-check'></i>",
           label: `Update Custom Link Type`,
           callback: async (html) => {
-            let result = html.find(`input[name='customLink']`);
-            if (result.val() !== "") {
-              for (const leaf of newItemLeafs) {
-                if (leaf.uuid === uuidToUpdate) {
-                  leaf.customLink = result.val();
-                  break;
-                }
+            // let resultPrefix = html.find(`input[name='prefix']`);
+            // let resultSuffix = html.find(`input[name='suffix']`);
+            let resultCustomLink = html.find(`input[name='customLink']`);
+            for (const leaf of newItemLeafs) {
+              if (leaf.uuid === uuidToUpdate) {
+                // leaf.prefix = resultPrefix.val() ?? "";
+                // leaf.suffix = resultSuffix.val() ?? "";
+                leaf.customLink = resultCustomLink.val() ?? "";
+                break;
               }
             }
 
