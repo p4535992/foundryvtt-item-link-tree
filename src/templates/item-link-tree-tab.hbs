@@ -14,6 +14,10 @@
       </div>
       -->
       <div class="item-detail">
+        {{localize 'item-link-tree.shortDescriptionLink.label'}}
+      </div>
+
+      <div class="item-detail">
         {{localize 'item-link-tree.customLink.label'}}
       </div>
 
@@ -30,10 +34,16 @@
         </div>
 
         <div class="item-detail item-link-tree-item-detail">
+          <span title="{{leaf.shortDescriptionLink}}">{{leaf.shortDescriptionLink}}</span>
+        </div>
+
+        <div class="item-detail item-link-tree-item-detail">
           <span title="{{leaf.customLink}}">{{leaf.customLink}}</span>
         </div>
 
         <div class="item-controls flexrow context-menu item-link-tree-item-controls">
+          {{#if @root/playerCanOnlyView}}
+
           {{#if @root/isOwner}}
           <a class="item-control configure-overrides"
             data-tooltip="{{#unless @root/isOwned}}item-link-tree.ConfigureOverrides{{else}}item-link-tree.Configure{{/unless}}">
@@ -52,6 +62,8 @@
           <a class="item-control item-delete" data-tooltip="item-link-tree.RemoveLink">
             <i class="fas {{#if @root/isOwned}}fa-link-slash{{else}}fa-trash{{/if}}"></i>
           </a>
+          {{/if}}
+
           {{/if}}
 
           {{/if}}

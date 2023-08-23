@@ -25,7 +25,14 @@
   "item-link-tree.prefix.label": "Prefix",
   "item-link-tree.suffix.label": "Suffix",
   "item-link-tree.CreateCustomLink": "Create Custom Link",
-  "item-link-tree.SETTINGS.GM_ONLY.NAME": "Only GM can use the 'Leafs' tab",
+  "item-link-tree.SETTINGS.GM_ONLY.NAME": "Only GM can see and edit the 'Leafs' tab",
   "item-link-tree.SETTINGS.GM_ONLY.TITLE": "If enable only the GM can see and edit the 'Leafs' Tab",
-  "item-link-tree.SETTINGS.GM_ONLY.HINT": "If enable only the GM can see and edit the 'Leafs' Tab"
+  "item-link-tree.SETTINGS.GM_ONLY.HINT": "If enable only the GM can see and edit the 'Leafs' Tab",
+  "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.NAME": "Players can see but not edit the 'Leafs' tab",
+  "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.TITLE": "[YOU MUST DISABLE THE SETTING 'Only GM can see and edit the 'Leafs' tab'] If enable players can see but not edit the 'Leafs' Tab",
+  "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.HINT": "[YOU MUST DISABLE THE SETTING 'Only GM can see and edit the 'Leafs' tab'] If enable players can see but not edit 'Leafs' Tab",
+  "item-link-tree.isLeaf.label": "Is Leaf ?",
+  "item-link-tree.isLeafHint.label": "A boolean value useful for filter the items with a leaf integration, is not mandatory, but advisable to set",
+  "item-link-tree.shortDescription.label": "Short Description",
+  "item-link-tree.shortDescriptionLink.label": "Short Description Link"
 }

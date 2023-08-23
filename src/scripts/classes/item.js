@@ -1,4 +1,4 @@
-import { ItemLinkTree } from "../../module.js";
+import { ItemLinkTree } from "../ItemLinkTree.js";
 import { ItemLinkTreeItemSheet } from "./item-sheet.js";
 
 /**
@@ -198,8 +198,22 @@ export class ItemLinkTreeItem {
     }
     */
     const itemAdded = await fromUuid(uuid);
+
+    if (Hooks.call("item-link-tree.preAddLeafToItem", this.item, itemAdded) === false) {
+      ItemLinkTree.log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
+      return;
+    }
+
     const customType = getProperty(itemAdded, `flags.item-link-tree.customType`) ?? "";
-    const itemLeafs = [...this.itemTreeList, { uuid: uuid, customLink: customType }];
+    const shortDescription = getProperty(itemAdded, `flags.item-link-tree.shortDescription`) ?? "";
+    const itemLeafs = [
+      ...this.itemTreeList,
+      {
+        uuid: uuid,
+        customLink: customType,
+        shortDescriptionLink: shortDescription,
+      },
+    ];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
     const property = `flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.itemLeafs}`;
@@ -230,6 +244,14 @@ export class ItemLinkTreeItem {
     // const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
     const uuidToRemove = itemToDelete.uuid;
     const itemRemoved = await fromUuid(uuidToRemove);
+
+    if (Hooks.call("item-link-tree.preRemoveLeafFromItem", this.item, itemRemoved) === false) {
+      ItemLinkTree.log(
+        `AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`
+      );
+      return;
+    }
+
     const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
 
     const shouldDeleteLeaf =
@@ -248,25 +270,6 @@ export class ItemLinkTreeItem {
     }
 
     Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
-    // MOD 4535992
-    /*
-    // Nothing more to do for unowned items.
-    if (!this.item.isOwned) return;
-
-    // remove the item's `parentItem` flag
-    const treeItem = fromUuidSync(uuidToRemove);
-
-    // the other item has already been deleted, probably do nothing.
-    if (!treeItem) return;
-
-    const shouldDeleteLeaf = alsoDeleteEmbeddedLeaf && (await Dialog.confirm({
-      title: game.i18n.localize("item-link-tree.MODULE_NAME"),
-      content: game.i18n.localize("item-link-tree.WARN_ALSO_DELETE")
-    }));
-
-    if (shouldDeleteLeaf) return treeItem.delete();
-    else return treeItem.unsetFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.parentItem);
-    */
   }
 
   /**
@@ -292,7 +295,7 @@ export class ItemLinkTreeItem {
       }
     }
 
-    new Dialog({
+    new DiaItemLinkTree.log({
       title: "Update Custom Link Type",
       //   content: `
       //       <form>
@@ -313,6 +316,12 @@ export class ItemLinkTreeItem {
             <form>
             <div class="form-group">
                 <label>Custom Link Type</label>
+                <input type='text' name='shortDescriptionLink' value='${
+                  currentLeaf.shortDescriptionLink ?? ""
+                }'></input>
+            </div>
+            <div class="form-group">
+                <label>Custom Link Type</label>
                 <input type='text' name='customLink' value='${currentLeaf.customLink ?? ""}'></input>
             </div>
             </form>`,
@@ -324,11 +333,13 @@ export class ItemLinkTreeItem {
             // let resultPrefix = html.find(`input[name='prefix']`);
             // let resultSuffix = html.find(`input[name='suffix']`);
             let resultCustomLink = html.find(`input[name='customLink']`);
+            let resultShortDescriptionLink = html.find(`input[name='shortDescriptionLink']`);
             for (const leaf of newItemLeafs) {
               if (leaf.uuid === uuidToUpdate) {
                 // leaf.prefix = resultPrefix.val() ?? "";
                 // leaf.suffix = resultSuffix.val() ?? "";
                 leaf.customLink = resultCustomLink.val() ?? "";
+                leaf.shortDescriptionLink = resultShortDescriptionLink.val() ?? "";
                 break;
               }
             }

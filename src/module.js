@@ -1,71 +1,61 @@
+import API from "./scripts/API/api.js";
+import { ItemLinkTree } from "./scripts/ItemLinkTree.js";
 import { ItemLinkTreeItemSheet } from "./scripts/classes/item-sheet.js";
 import { _registerSettings } from "./scripts/classes/settings.js";
-import { ItemSheetLeafFeature, ItemSheetLeafFeatureInitialize } from "./scripts/sheet/ItemSheetLeafFeature.js";
-
-export class ItemLinkTree {
-  static API = {};
-
-  static MODULE_ID = "item-link-tree";
-
-  static SETTINGS = {};
-
-  static FLAGS = {
-    itemLeafs: "item-leafs",
-    // parentItem: "parent-item",
-  };
-
-  static TEMPLATES = {
-    treeTab: `modules/${this.MODULE_ID}/templates/item-link-tree-tab.hbs`,
-    // overrides: `modules/${this.MODULE_ID}/templates/item-link-tree-overrides-form.hbs`,
-  };
-
-  /**
-   * A console.log wrapper which checks if we are debugging before logging
-   */
-  static log(force, ...args) {
-    try {
-      const shouldLog = force || game.modules.get("_dev-mode")?.api?.getPackageDebugValue(this.MODULE_ID, "boolean");
-
-      if (shouldLog) {
-        console.log(this.MODULE_ID, "|", ...args);
-      }
-    } catch (e) {
-      console.error(e.message);
-    }
-  }
-
-  static preloadTemplates() {
-    loadTemplates(Object.values(flattenObject(this.TEMPLATES)));
-  }
-
-  static ItemSheetLeafFeatureInitialize() {
-    // Register  Item Sheet and make default
-    Items.registerSheet("dnd5e", ItemSheetLeafFeature, {
-      makeDefault: false,
-      label: "ItemSheetLeafFeature",
-      types: ["tool"],
-    });
-  }
-}
+import CONSTANTS from "./scripts/constants/constants.js";
 
 Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag(ItemLinkTree.MODULE_ID);
 });
 
 Hooks.once("init", () => {
-  ItemLinkTree.log(true, "Initialized");
-
   ItemLinkTree.preloadTemplates();
-
-  // ItemLinkTreeActorSheet.init();
   ItemLinkTree.ItemSheetLeafFeatureInitialize();
 });
 
 Hooks.once("setup", () => {
   _registerSettings();
+  setApi(API);
 });
 
 Hooks.once("ready", () => {
   ItemLinkTreeItemSheet.init();
-  // ItemLinkTreeActor.init();
 });
+
+// Add any additional hooks if necessary
+
+/**
+ * Initialization helper, to set API.
+ * @param api to set to game module.
+ */
+export function setApi(api) {
+  const data = game.modules.get(CONSTANTS.MODULE_ID);
+  data.api = api;
+}
+
+/**
+ * Returns the set API.
+ * @returns Api from games module.
+ */
+export function getApi() {
+  const data = game.modules.get(CONSTANTS.MODULE_ID);
+  return data.api;
+}
+
+/**
+ * Initialization helper, to set Socket.
+ * @param socket to set to game module.
+ */
+export function setSocket(socket) {
+  const data = game.modules.get(CONSTANTS.MODULE_ID);
+  data.socket = socket;
+}
+
+/*
+ * Returns the set socket.
+ * @returns Socket from games module.
+ */
+export function getSocket() {
+  const data = game.modules.get(CONSTANTS.MODULE_ID);
+  return data.socket;
+}

@@ -1,4 +1,5 @@
 import { ItemLinkTree } from "../../module.js";
+import CONSTANTS from "../constants/constants.js";
 
 // the item types that can NEVER have items in them.
 export const EXCLUDED_TYPES = ["class", "subclass", "background", "race", "spell", "loot"];
@@ -36,6 +37,16 @@ export function _registerSettings() {
     requiresReload: false,
   });
 
+  game.settings.register(ItemLinkTree.MODULE_ID, "playerCanOnlyView", {
+    name: "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.NAME",
+    hint: "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.HINT",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+    requiresReload: false,
+  });
+
   game.settings.registerMenu(ItemLinkTree.MODULE_ID, "itemTypeExclusion", {
     name: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
     hint: "item-link-tree.SETTINGS.ITEM_EXCLUSION.HINT",
@@ -57,7 +68,7 @@ class ItemLinkTree_TypeSettings extends FormApplication {
   }
 
   get template() {
-    return "modules/item-link-tree/templates/settingsMenu.hbs";
+    return `modules/${CONSTANTS.MODULE_ID}/templates/settingsMenu.hbs`;
   }
 
   async getData() {

@@ -1,4 +1,5 @@
-import { ItemLinkTree } from "../../module.js";
+import { ItemLinkTree } from "../ItemLinkTree.js";
+import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeItem } from "./item.js";
 
 /**
@@ -26,6 +27,10 @@ export class ItemLinkTreeItemSheet {
       if (!game.user.isGM && game.settings.get(ItemLinkTree.MODULE_ID, "gmOnly")) {
         return;
       }
+      if (!game.user.isGM && !game.settings.get(CONSTANTS.MODULE_ID, "playerCanOnlyView")) {
+        return;
+      }
+
       let include = false;
       try {
         include = !!game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
@@ -87,6 +92,7 @@ export class ItemLinkTreeItemSheet {
           //   prefix: leaf.prefix,
           //   suffix: leaf.suffix,
           customLink: leaf.customLink,
+          shortDescriptionLink: leaf.shortDescriptionLink,
         };
         itemLeafsArrayTmp.push(i);
       } else {
@@ -106,6 +112,7 @@ export class ItemLinkTreeItemSheet {
         limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
         abilities: CONFIG.DND5E.abilities,
       },
+      playerCanOnlyView: !game.user.isGM ? true : false,
       isOwner: this.item.isOwner,
       isOwned: this.item.isOwned,
     });

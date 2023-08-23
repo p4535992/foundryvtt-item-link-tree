@@ -9,7 +9,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
 
   /** @inheritdoc */
   get template() {
-    return `modules/${ItemLinkTree.MODULE_ID}/templates/leaf.hbs`;
+    return `modules/${ItemLinkTree.MODULE_ID}/templates/item-sheet-leaf`;
   }
 
   /** @override */
