@@ -112,7 +112,7 @@ export class ItemLinkTreeItemSheet {
         limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
         abilities: CONFIG.DND5E.abilities,
       },
-      playerCanOnlyView: !game.user.isGM ? true : false,
+      playerCanOnlyView: game.user.isGM ? true : false,
       isOwner: this.item.isOwner,
       isOwned: this.item.isOwned,
     });
@@ -150,8 +150,8 @@ export class ItemLinkTreeItemSheet {
     const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
     // MOD 4535992
     //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
-    const item = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
-
+    const itemLeaf = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
+    const item = await fromUuid(itemLeaf.uuid);
     ItemLinkTree.log(false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
       editable: !!item.isOwned && !!item.isOwner,

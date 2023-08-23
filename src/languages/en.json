@@ -19,7 +19,7 @@
   "item-link-tree.WARN_ALSO_DELETE": "This will delete the leaf item from the current item. Are you certain you want to delete the leaf item?",
   "item-link-tree.WARN_CANNOT_ADDREMOVE": "An Owned Item's items cannot be added to or removed from. These items have been added to the Actor's itembook Tab.",
   "item-link-tree.WARN_OWNED": "You are editing an owned Item's items, any changes made here will not be applied to the items on the owning actor.",
-  "item-link-tree.tab.label": "Leafs",
+  "item-link-tree.tab.label": "Leafs/Gem",
   "item-link-tree.customLink.label": "Custom Link Type",
   "item-link-tree.customType.label": "Custom Type",
   "item-link-tree.subType.label": "Sub Type",
@@ -35,5 +35,7 @@
   "item-link-tree.isLeaf.label": "Is Leaf ?",
   "item-link-tree.isLeafHint.label": "A boolean value useful for filter the items with a leaf integration, is not mandatory, but advisable to set",
   "item-link-tree.shortDescription.label": "Short Description",
-  "item-link-tree.shortDescriptionLink.label": "Short Description Link"
+  "item-link-tree.shortDescriptionLink.label": "Short Description Link",
+  "item-link-tree.dialog.warning.areyousuretoadd.name": "Are you sure you want to add the object ?",
+  "item-link-tree.dialog.warning.areyousuretoadd.hint": "The object (usually a gem) will be destroyed when the operation is completed, so be careful adventurer."
 }

@@ -1,4 +1,5 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
+import CONSTANTS from "../constants/constants.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
 import { ItemLinkTreeItemSheet } from "./item-sheet.js";
 
@@ -107,6 +108,17 @@ export class ItemLinkTreeItem {
     if (ItemLinkingHelpers.isItemLinked(itemAdded)) {
       itemBaseAdded = ItemLinkingHelpers.retrieveLinkedItem(itemAdded);
       uuidToAdd = itemBaseAdded.uuid;
+    }
+
+    if (!game.user.isGM) {
+      const shouldAddLeaf = await Dialog.confirm({
+        title: game.i18n.localize(`${CONSTANTS.MODULE_ID}.dialog.warning.areyousuretoadd.name`),
+        content: game.i18n.localize(`${CONSTANTS.MODULE_ID}.dialog.warning.areyousuretoadd.hint`),
+      });
+
+      if (!shouldAddLeaf) {
+        return false;
+      }
     }
 
     if (Hooks.call("item-link-tree.preAddLeafToItem", this.item, itemAdded) === false) {

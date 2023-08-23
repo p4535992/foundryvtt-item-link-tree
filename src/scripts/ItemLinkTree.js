@@ -1,4 +1,5 @@
 import CONSTANTS from "./constants/constants";
+import { ItemSheetLeafFeature } from "./sheet/ItemSheetLeafFeature";
 
 export class ItemLinkTree {
   static API = {};
