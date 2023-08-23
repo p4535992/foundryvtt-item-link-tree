@@ -1,4 +1,4 @@
-import { ItemLinkTree } from "../../module.js";
+import CONSTANTS from "../constants/constants.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
   static get defaultOptions() {
@@ -9,7 +9,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
 
   /** @inheritdoc */
   get template() {
-    return `modules/${ItemLinkTree.MODULE_ID}/templates/item-sheet-leaf`;
+    return `modules/${CONSTANTS.MODULE_ID}/templates/item-sheet-leaf.hbs`;
   }
 
   /** @override */
@@ -17,6 +17,11 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     const context = await super.getData(options);
     const item = context.item;
     const source = item.toObject();
+
+    let subTypeTypes = {
+      none: "",
+      gem: "Gem",
+    };
 
     // TODO to localize
     let customTypeTypes = {
@@ -29,7 +34,10 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     // Item rendering data
     foundry.utils.mergeObject(context, {
       customTypeTypes: customTypeTypes,
+      subTypeTypes: subTypeTypes,
       flags: item.flags,
+      isNotGM: !game.user.isGM,
+      isGM: game.user.isGM,
     });
     return context;
   }
@@ -40,20 +48,3 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     let item = this.item;
   }
 }
-
-// async function addEditorHeadline(app, html, data) {
-//     html
-//       .find(".tab[data-tab=description] .editor")
-//       .prepend(`<h2 class="details-headline">${game.i18n.localize("TIDY5E.ItemDetailsHeadline")}</h2>`);
-// }
-
-/* -------------------------------------------- */
-
-// export function ItemSheetLeafFeatureInitialize() {
-//   // Register  Item Sheet and make default
-//   Items.registerSheet("dnd5e", ItemSheetLeafFeature, { makeDefault: false, label: "ItemSheetLeafFeature" });
-// }
-
-// Hooks.on("renderItemSheetLeafFeature", (app, html, data) => {
-//     addEditorHeadline(app, html, data);
-// });

@@ -22,6 +22,7 @@
   "item-link-tree.tab.label": "Leafs",
   "item-link-tree.customLink.label": "Custom Link Type",
   "item-link-tree.customType.label": "Custom Type",
+  "item-link-tree.subType.label": "Sub Type",
   "item-link-tree.prefix.label": "Prefix",
   "item-link-tree.suffix.label": "Suffix",
   "item-link-tree.CreateCustomLink": "Create Custom Link",

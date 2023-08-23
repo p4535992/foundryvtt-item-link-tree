@@ -7,6 +7,7 @@ const CONSTANTS = {
     isLeaf: "isLeaf",
     customType: "customType",
     shortDescription: "shortDescription",
+    subType: "subType",
   },
 };
 

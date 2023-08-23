@@ -57,11 +57,21 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 # API
 
+The wiki for the API is [here](wiki/api.md)
+
 # Hooks
+
+### Hooks.call("item-link-tree.preAddLeafToItem", currentItem, itemAdded);
 
 ### Hooks.call("item-link-tree.postAddLeafToItem", currentItem, itemAdded);
 
+### Hooks.call("item-link-tree.preRemoveLeafFromItem", currentItem, itemRemoved);
+
 ### Hooks.call("item-link-tree.postRemoveLeafFromItem", currentItem, itemRemoved);
+
+### Hooks.call("item-link-tree.preUpdateLeafFromItem", item, itemToUpdate, oldLeafs);
+
+### Hooks.call("item-link-tree.postUpdateLeafFromItem", item, itemToUpdate, oldLeafs);
 
 
 
