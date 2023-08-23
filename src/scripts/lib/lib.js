@@ -1,5 +1,4 @@
 import CONSTANTS from "../constants/constants.js";
-import SETTINGS from "../constants/settings.js";
 
 // =================================
 // Logger Utility

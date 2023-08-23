@@ -1,4 +1,3 @@
-import { ItemLinkTree } from "../../module.js";
 import CONSTANTS from "../constants/constants.js";
 
 // the item types that can NEVER have items in them.
@@ -8,7 +7,7 @@ export function _registerSettings() {
   const TYPES = Item.TYPES.filter((t) => !EXCLUDED_TYPES.includes(t));
 
   for (const type of TYPES) {
-    game.settings.register(ItemLinkTree.MODULE_ID, `includeItemType${type.titleCase()}`, {
+    game.settings.register(CONSTANTS.MODULE_ID, `includeItemType${type.titleCase()}`, {
       scope: "world",
       config: false,
       type: Boolean,
@@ -17,7 +16,7 @@ export function _registerSettings() {
     });
   }
 
-  game.settings.register(ItemLinkTree.MODULE_ID, "sortOrder", {
+  game.settings.register(CONSTANTS.MODULE_ID, "sortOrder", {
     name: "item-link-tree.SETTINGS.SORT_ORDER.NAME",
     hint: "item-link-tree.SETTINGS.SORT_ORDER.HINT",
     scope: "world",
@@ -27,7 +26,7 @@ export function _registerSettings() {
     requiresReload: false,
   });
 
-  game.settings.register(ItemLinkTree.MODULE_ID, "gmOnly", {
+  game.settings.register(CONSTANTS.MODULE_ID, "gmOnly", {
     name: "item-link-tree.SETTINGS.GM_ONLY.NAME",
     hint: "item-link-tree.SETTINGS.GM_ONLY.HINT",
     scope: "world",
@@ -37,7 +36,7 @@ export function _registerSettings() {
     requiresReload: false,
   });
 
-  game.settings.register(ItemLinkTree.MODULE_ID, "playerCanOnlyView", {
+  game.settings.register(CONSTANTS.MODULE_ID, "playerCanOnlyView", {
     name: "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.NAME",
     hint: "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.HINT",
     scope: "world",
@@ -47,7 +46,7 @@ export function _registerSettings() {
     requiresReload: false,
   });
 
-  game.settings.registerMenu(ItemLinkTree.MODULE_ID, "itemTypeExclusion", {
+  game.settings.registerMenu(CONSTANTS.MODULE_ID, "itemTypeExclusion", {
     name: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
     hint: "item-link-tree.SETTINGS.ITEM_EXCLUSION.HINT",
     scope: "world",
@@ -60,7 +59,7 @@ export function _registerSettings() {
 
 class ItemLinkTree_TypeSettings extends FormApplication {
   get id() {
-    return `${ItemLinkTree.MODULE_ID}-item-type-exclusion-menu`;
+    return `${CONSTANTS.MODULE_ID}-item-type-exclusion-menu`;
   }
 
   get title() {
@@ -78,7 +77,7 @@ class ItemLinkTree_TypeSettings extends FormApplication {
     for (const type of TYPES) {
       const label = type.titleCase();
       data.types.push({
-        checked: game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${label}`),
+        checked: game.settings.get(CONSTANTS.MODULE_ID, `includeItemType${label}`),
         value: type,
         label,
       });
@@ -88,7 +87,7 @@ class ItemLinkTree_TypeSettings extends FormApplication {
 
   async _updateObject(event, formData) {
     Object.entries(formData).forEach(([type, bool]) => {
-      game.settings.set(ItemLinkTree.MODULE_ID, `includeItemType${type.titleCase()}`, bool);
+      game.settings.set(CONSTANTS.MODULE_ID, `includeItemType${type.titleCase()}`, bool);
     });
   }
 }
