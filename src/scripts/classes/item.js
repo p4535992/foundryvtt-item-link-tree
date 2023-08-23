@@ -1,6 +1,7 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
+import { warn } from "../lib/lib.js";
 import { ItemLinkTreeItemSheet } from "./item-sheet.js";
 
 /**
@@ -105,6 +106,10 @@ export class ItemLinkTreeItem {
     let uuidToAdd = providedUuid;
     const itemAdded = await fromUuid(uuidToAdd);
     let itemBaseAdded = itemAdded;
+    if (!itemAdded) {
+      warn(`Cannot find this item with uuid ${uuidToAdd}`);
+      return;
+    }
     if (ItemLinkingHelpers.isItemLinked(itemAdded)) {
       itemBaseAdded = ItemLinkingHelpers.retrieveLinkedItem(itemAdded);
       uuidToAdd = itemBaseAdded.uuid;
@@ -165,7 +170,7 @@ export class ItemLinkTreeItem {
     let uuidToRemove = itemToDelete.uuid;
     const itemRemoved = await fromUuid(uuidToRemove);
     let itemBaseRemoved = itemRemoved;
-    if (ItemLinkingHelpers.isItemLinked(itemRemoved)) {
+    if (itemRemoved && ItemLinkingHelpers.isItemLinked(itemRemoved)) {
       itemBaseRemoved = ItemLinkingHelpers.retrieveLinkedItem(itemRemoved);
       uuidToRemove = itemBaseRemoved.uuid;
     }

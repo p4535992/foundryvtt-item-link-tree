@@ -2,7 +2,7 @@
   "item-link-tree.CHARGES_HINT": "If this item will be cast using charges from the parent item, configure the number of charges above.",
   "item-link-tree.Configure": "Configure",
   "item-link-tree.ConfigureOverrides": "Configure Overrides",
-  "item-link-tree.Deleteitem": "Delete item",
+  "item-link-tree.DeleteLeaf": "Delete item leaf",
   "item-link-tree.LIMITED_HINT": "If this item has a number of uses per rest or similar innate limitations, configure the number of charges above.",
   "item-link-tree.MISSING_ITEM_DESCRIPTION": "This item's original item could not be found. Maybe it was deleted?",
   "item-link-tree.MISSING_ITEM": "Missing Item",
