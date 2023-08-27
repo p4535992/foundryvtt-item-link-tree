@@ -8,6 +8,11 @@ const CONSTANTS = {
     customType: "customType",
     shortDescription: "shortDescription",
     subType: "subType",
+    filterItemType: "filterItemType",
+  },
+  SYMBOLS: {
+    LEAF: "🍃",
+    GEM: "💎",
   },
 };
 

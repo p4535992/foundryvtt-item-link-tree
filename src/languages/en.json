@@ -37,5 +37,8 @@
   "item-link-tree.shortDescription.label": "Short Description",
   "item-link-tree.shortDescriptionLink.label": "Short Description Link",
   "item-link-tree.dialog.warning.areyousuretoadd.name": "Are you sure you want to add the object ?",
-  "item-link-tree.dialog.warning.areyousuretoadd.hint": "The object (usually a gem) will be destroyed when the operation is completed, so be careful adventurer."
+  "item-link-tree.dialog.warning.areyousuretoadd.hint": "The object (usually a gem) will be destroyed when the operation is completed, so be careful adventurer.",
+  "item-link-tree.gem.label": "Gemma",
+  "item-link-tree.leaf.label": "Foglia",
+  "item-link-tree.filterItemType.label": "Select an array of items for which you want the leaf applied separated by the ',' character (e.g. weapon, equipment, consumable, tool, loot, background, class, subclass, spell, feat, backpack). if empty all tiem types are applied."
 }

@@ -1,4 +1,5 @@
 import CONSTANTS from "../constants/constants.js";
+import { i18n } from "../lib/lib.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
   static get defaultOptions() {
@@ -20,7 +21,8 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
 
     let subTypeTypes = {
       none: "",
-      gem: "Gem",
+      gem: i18n(`item-link-tree.gem.label`),
+      leaf: i18n(`item-link-tree.leaf.label`),
     };
 
     // TODO to localize
@@ -30,6 +32,31 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
       bonus: "Bonus",
       effectAndBonus: "Effect and Bonus",
     };
+
+    let subType = item.getFlag(`item-link-tree`, `subType`) ?? "";
+    if (Array.isArray(subType)) {
+      subType = "";
+      setProperty(item.flags, `item-link-tree.subType`, subType);
+    }
+    if (subType) {
+      let symbol = "";
+      if (subType === "gem") {
+        symbol = CONSTANTS.SYMBOLS.GEM;
+      } else if (subType === "leaf") {
+        symbol = CONSTANTS.SYMBOLS.LEAF;
+      } else {
+        symbol = "";
+      }
+      let currentName = item.name
+        .replaceAll(symbol, "")
+        .replaceAll(CONSTANTS.SYMBOLS.GEM, "")
+        .replaceAll(CONSTANTS.SYMBOLS.LEAF, "")
+        .trim();
+      currentName = currentName + " ";
+      currentName += symbol.repeat(1);
+      currentName = currentName.trim();
+      setProperty(context.item, `name`, currentName);
+    }
 
     // Item rendering data
     foundry.utils.mergeObject(context, {
