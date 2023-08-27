@@ -38,19 +38,26 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
       subType = "";
       setProperty(item.flags, `item-link-tree.subType`, subType);
     }
+    let subTypeSymbol = "";
     if (subType) {
       let symbol = "";
       if (subType === "gem") {
         symbol = CONSTANTS.SYMBOLS.GEM;
       } else if (subType === "leaf") {
         symbol = CONSTANTS.SYMBOLS.LEAF;
+      } else if (subType === "none") {
+        symbol = CONSTANTS.SYMBOLS.NONE;
       } else {
         symbol = "";
       }
+
+      subTypeSymbol = symbol;
+
       let currentName = item.name
         .replaceAll(symbol, "")
         .replaceAll(CONSTANTS.SYMBOLS.GEM, "")
         .replaceAll(CONSTANTS.SYMBOLS.LEAF, "")
+        .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
         .trim();
       currentName = currentName + " ";
       currentName += symbol.repeat(1);
@@ -65,6 +72,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
       flags: item.flags,
       isNotGM: !game.user.isGM,
       isGM: game.user.isGM,
+      subTypeSymbol: subTypeSymbol,
     });
     return context;
   }

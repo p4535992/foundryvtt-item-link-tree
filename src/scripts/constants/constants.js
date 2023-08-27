@@ -11,6 +11,7 @@ const CONSTANTS = {
     filterItemType: "filterItemType",
   },
   SYMBOLS: {
+    NONE: "",
     LEAF: "🍃",
     GEM: "💎",
   },
