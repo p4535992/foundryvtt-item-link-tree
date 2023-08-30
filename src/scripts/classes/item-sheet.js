@@ -14,6 +14,18 @@ export class ItemLinkTreeItemSheet {
     this.item = app.item;
     this.sheetHtml = html;
     this.itemLinkTreeItem = new ItemLinkTreeItem(this.item);
+    this.hack(this.app);
+  }
+
+  hack(app) {
+    let tab = app._tabs?.length > 0 ? app._tabs[0] : null;
+    if (tab) {
+      app.setPosition = function (position = {}) {
+        // position.height = tab.isActive() && !position.height ? "auto" : position.height;
+        position.height = tab?.active === "tree" && !position.height ? "auto" : position.height;
+        return this.__proto__.__proto__.setPosition.apply(this, [position]);
+      };
+    }
   }
 
   /** MUTATED: All open ItemSheet have a cached instance of this class */
@@ -277,14 +289,24 @@ export class ItemLinkTreeItemSheet {
     treeTabHtml.on("click", ".item-create-custom-link", this._handleCreateCustomLinkClick.bind(this));
 
     // Register a DragDrop handler for adding new items to this item
-    const dragDrop = {
+    // const dragDrop = {
+    //   dragSelector: ".item",
+    //   dropSelector: ".item-link-tree-tab",
+    //   permissions: { drop: () => this.app.isEditable && !this.item.isOwned },
+    //   callbacks: { drop: this._dragEnd },
+    // };
+    // this.app.element[0]
+    //   .querySelector(dragDrop.dropSelector)
+    //   .addEventListener("drop", dragDrop.callbacks.drop.bind(this));
+
+    const dragDrop2 = {
       dragSelector: ".item",
-      dropSelector: ".item-link-tree-tab",
+      dropSelector: ".item-leaf-drag-content",
       permissions: { drop: () => this.app.isEditable && !this.item.isOwned },
       callbacks: { drop: this._dragEnd },
     };
     this.app.element[0]
-      .querySelector(dragDrop.dropSelector)
-      .addEventListener("drop", dragDrop.callbacks.drop.bind(this));
+      .querySelector(dragDrop2.dropSelector)
+      .addEventListener("drop", dragDrop2.callbacks.drop.bind(this));
   }
 }

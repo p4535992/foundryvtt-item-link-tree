@@ -19,3 +19,11 @@
 .item-link-tree-item-controls {
   border-left: 1px solid #c9c7b8;
 }
+
+.dnd5e.sheet.item .item-leaf-drag-content {
+  height: 70px;
+  text-align: center;
+  color: #828180;
+  line-height: 5;
+  border: 2px #828180 dashed;
+}
