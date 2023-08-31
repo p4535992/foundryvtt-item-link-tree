@@ -234,7 +234,7 @@ export class ItemLinkTreeItem {
       }
     }
 
-    new DiaItemLinkTree.log({
+    new Dialog({
       title: "Update Custom Link Type",
       //   content: `
       //       <form>
