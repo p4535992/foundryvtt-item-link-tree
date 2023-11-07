@@ -31,10 +31,10 @@ export class ItemLinkTreeHelpers {
               const icon = itemLeaf.img;
               const img = document.createElement("img");
               img.src = icon;
-              img.classList.add("item-image");
+              // img.classList.add("item-image");
               img.style.border = "none";
-              img.style.paddingRight = "5px";
-              img.style.paddingLeft = "5px";
+              img.style.marginRight = "5px";
+              img.style.marginLeft = "5px";
               img.style.height = "20px";
               img.style.width = "20px";
               img.dataset.tooltip = leaf.subType;
