@@ -1,5 +1,6 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
+import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
 import { log, warn } from "../lib/lib.js";
 import { ItemLinkTreeItemSheet } from "./ItemLinkTreeItemSheet.js";
@@ -131,6 +132,12 @@ export class ItemLinkTreeItem {
       return;
     }
 
+    const options = {
+      checkForItemLinking: ItemLinkingHelpers.isItemLinkingModuleActive(),
+      checkForBeaverCrafting: false,
+    };
+    ItemLinkTreeManager.managePreAddLeafToItem(this.item, itemAdded, options);
+
     const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
     const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
     const itemLeafs = [
@@ -153,6 +160,8 @@ export class ItemLinkTreeItem {
     if (this.item.actor) this.item.actor.render();
 
     Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+
+    ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
   }
 
   /**
@@ -180,6 +189,9 @@ export class ItemLinkTreeItem {
       return;
     }
 
+    const options = {};
+    ItemLinkTreeManager.managePreRemoveLeafFromItem(this.item, itemRemoved, options);
+
     const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
 
     const shouldDeleteLeaf =
@@ -198,6 +210,8 @@ export class ItemLinkTreeItem {
     }
 
     Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
+
+    ItemLinkTreeManager.managePostRemoveLeafFromItem(this.item, itemRemoved, options);
   }
 
   /**
@@ -219,6 +233,9 @@ export class ItemLinkTreeItem {
       log(`UpdateLeafFromItem completion was prevented by the 'item-link-tree.preUpdateLeafFromItem' hook.`);
       return;
     }
+
+    const options = {};
+    ItemLinkTreeManager.managePreUpdateLeafFromItem(this.item, itemUpdated, options);
 
     const newItemLeafs = deepClone(this.itemTreeList);
 
@@ -309,6 +326,8 @@ export class ItemLinkTreeItem {
             this.item.render();
 
             Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemToUpdate, this.itemTreeList);
+
+            ItemLinkTreeManager.managePostUpdateLeafFromItem(this.item, itemUpdated, options);
           },
         },
       },

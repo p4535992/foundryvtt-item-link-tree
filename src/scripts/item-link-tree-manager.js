@@ -7,18 +7,16 @@ import { log, warn } from "./lib/lib.js";
 
 export class ItemLinkTreeManager {
   static _cleanName(name) {
-    return (
-      name
-        // .replaceAll(CONSTANTS.SYMBOL_UPGRADE, "")
-        // .replaceAll(CONSTANTS.SYMBOL_GEM, "")
-        // .replaceAll(CONSTANTS.SYMBOL_LEAF, "")
-        // .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
-        .trim()
-    );
+    return name
+      .replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "")
+      .replaceAll(CONSTANTS.SYMBOLS.GEM, "")
+      .replaceAll(CONSTANTS.SYMBOLS.LEAF, "")
+      .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
+      .trim();
   }
 
-  static managePreAddLeafToItem(item, itemAdded, { checkForItemLinking = false, checkForBeaverCrafting = false }) {
-    if (checkForBeaverCrafting) {
+  static managePreAddLeafToItem(item, itemAdded, options) {
+    if (options.checkForBeaverCrafting) {
       const isCrafted = BeaverCraftingHelpers.isItemBeaverCrafted(item);
       if (!isCrafted) {
         warn(`You can't add the item because the target item is not crafted`, true);
@@ -30,7 +28,7 @@ export class ItemLinkTreeManager {
       warn(`You can't add the leaf because the target object at a quantity greater than 1 or equal to 0`, true);
       return false;
     }
-    if (checkForItemLinking) {
+    if (options.checkForItemLinking) {
       const isItemLinked = ItemLinkingHelpers.isItemLinked(item);
       if (!isItemLinked) {
         warn(`You can't add the leaf because the target object is not linked`, true);
@@ -86,11 +84,11 @@ export class ItemLinkTreeManager {
     return true;
   }
 
-  static async managePreRemoveLeafFromItem(item, itemRemoved) {
+  static async managePreRemoveLeafFromItem(item, itemRemoved, options) {
     // NOTHING FOR NOW
   }
 
-  static async managePostAddLeafToItem(item, itemAdded) {
+  static async managePostAddLeafToItem(item, itemAdded, options) {
     const actor = item.actor;
     if (!actor) {
       return;
@@ -127,7 +125,7 @@ export class ItemLinkTreeManager {
         for (const effectToAdd of effectsToAdd) {
           let foundedEffect = false;
           for (const effect of itemEffects) {
-            if (effect.name === effectToAdd.name) {
+            if (ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToAdd.name)) {
               foundedEffect = true;
               break;
             }
@@ -150,10 +148,10 @@ export class ItemLinkTreeManager {
 
     const leafs = API.getCollectionEffectAndBonus(item);
 
-    // let currentName = item.name.replaceAll(CONSTANTS.SYMBOL_UPGRADE, "").trim();
-    // currentName = currentName.replaceAll(CONSTANTS.SYMBOL_UPGRADE_OLD, "").trim();
+    // let currentName = item.name.replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "").trim();
+    // currentName = currentName.replaceAll(CONSTANTS.SYMBOLS.UPGRADE_OLD, "").trim();
     // currentName = currentName + " ";
-    // currentName += CONSTANTS.SYMBOL_UPGRADE.repeat(leafs.length);
+    // currentName += CONSTANTS.SYMBOLS.UPGRADE.repeat(leafs.length);
     // currentName = currentName.trim();
 
     let currentValuePrice = getProperty(item, `system.price.value`) ?? 0;
@@ -223,7 +221,7 @@ export class ItemLinkTreeManager {
     //}
   }
 
-  static async managePostRemoveLeafFromItem(item, itemRemoved) {
+  static async managePostRemoveLeafFromItem(item, itemRemoved, options) {
     const actor = item.actor;
     if (!actor) {
       return;
@@ -303,10 +301,10 @@ export class ItemLinkTreeManager {
 
     const leafs = API.getCollectionEffectAndBonus(item);
 
-    // let currentName = item.name.replaceAll(CONSTANTS.SYMBOL_UPGRADE, "").trim();
-    // currentName = currentName.replaceAll(CONSTANTS.SYMBOL_UPGRADE_OLD, "").trim();
+    // let currentName = item.name.replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "").trim();
+    // currentName = currentName.replaceAll(CONSTANTS.SYMBOLS.UPGRADE_OLD, "").trim();
     // currentName = currentName + " ";
-    // currentName += CONSTANTS.SYMBOL_UPGRADE.repeat(leafs.length);
+    // currentName += CONSTANTS.SYMBOLS.UPGRADE.repeat(leafs.length);
     // currentName = currentName.trim();
 
     let currentValuePrice = getProperty(item, `system.price.value`) ?? 0;
@@ -326,6 +324,14 @@ export class ItemLinkTreeManager {
       "system.price.value": newCurrentValuePriceGp,
       "system.price.denomination": "gp",
     });
+  }
+
+  static async managePreUpdateLeafFromItem(item, itemUpdated, options) {
+    // NOTHING FOR NOW
+  }
+
+  static async managePostUpdateLeafFromItem(item, itemUpdated, options) {
+    // NOTHING FOR NOW
   }
 
   //   static checkIfYouCanAddMoreGemsToItem(item) {
@@ -373,7 +379,7 @@ export class ItemLinkTreeManager {
   //       }
   //       default: {
   //         if (rarity) {
-  //           warn(`No quantity of gems is check for rarity '${rarity}'`);
+  //           warn(`No quantity of leafs is check for rarity '${rarity}'`);
   //         }
   //         canAddGem = false;
   //         break;

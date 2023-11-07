@@ -207,3 +207,18 @@ export function isEmptyObject(obj) {
     Object.keys(obj).length === 0; // || Object.getPrototypeOf(obj) === Object.prototype);
   return result;
 }
+
+export function parseAsArray(obj) {
+  if (!obj) {
+    return [];
+  }
+  let arr = [];
+  if (typeof obj === "string" || obj instanceof String) {
+    arr = obj.split(",");
+  } else if (obj.constructor === Array) {
+    arr = obj;
+  } else {
+    arr = [obj];
+  }
+  return arr;
+}

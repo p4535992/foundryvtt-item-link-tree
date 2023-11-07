@@ -161,10 +161,17 @@
             -->
             <div class="form-group">
                 <label>{{ localize "item-link-tree.subType.label" }}</label>
+                <input name="flags.item-link-tree.subType" type="text" value="{{flags.item-link-tree.subType}}" placeholder=""/>
+            </div>
+
+            <!--
+            <div class="form-group">
+                <label>{{ localize "item-link-tree.subType.label" }}</label>
                 <select name="flags.item-link-tree.subType" style="min-width: 60.5%!important">
                     {{selectOptions subTypeTypes selected=flags.item-link-tree.subType}}
                 </select>
             </div>
+            -->
 
             <div class="form-group">
                 <label>{{ localize "item-link-tree.customType.label" }}</label>

@@ -9,13 +9,13 @@ export class ItemLinkTree {
 
   // static SETTINGS = {};
 
-  static FLAGS = {
-    itemLeafs: CONSTANTS.FLAGS.itemLeafs,
-    // parentItem: CONSTANTS.FLAGS.parentItem,
-  };
+  // static FLAGS = {
+  //   itemLeafs: CONSTANTS.FLAGS.itemLeafs,
+  //   // parentItem: CONSTANTS.FLAGS.parentItem,
+  // };
 
   static TEMPLATES = {
-    treeTab: `modules/${this.MODULE_ID}/templates/item-link-tree-tab.hbs`,
+    treeTab: `modules/${CONSTANTS.MODULE_ID}/templates/item-link-tree-tab.hbs`,
     // overrides: `modules/${this.MODULE_ID}/templates/item-link-tree-overrides-form.hbs`,
   };
 

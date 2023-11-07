@@ -1,6 +1,10 @@
 import { warn } from "./lib";
 
 export class ItemLinkingHelpers {
+  static isItemLinkingModuleActive() {
+    return game.modules.get("item-linking")?.active;
+  }
+
   static isItemLinked(itemToCheck) {
     const isLinked = itemToCheck.getFlag("item-linking", "baseItem");
     if (isLinked) {

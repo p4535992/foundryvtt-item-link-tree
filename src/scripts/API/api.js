@@ -1,5 +1,5 @@
 import CONSTANTS from "../constants/constants.js";
-import { error, getItemSync } from "../lib/lib.js";
+import { error, getItemSync, parseAsArray } from "../lib/lib.js";
 
 const API = {
   getCollection(inAttributes) {
@@ -16,7 +16,10 @@ const API = {
   },
 
   getCollectionEffectAndBonus(item) {
-    const leafs = ItemLinkTreeHelpers.getCollection(item);
+    const options = {
+      item: item,
+    };
+    const leafs = this.getCollection(options);
     if (leafs?.length <= 0) {
       return [];
     }
@@ -37,7 +40,7 @@ const API = {
   isFilterByItemTypeOk(itemToCheck, itemType) {
     const filterItemType = itemToCheck.getFlag("item-link-tree", "filterItemType");
     if (filterItemType && itemType) {
-      const filterItemTypeArr = filterItemType.split(",") ?? [];
+      const filterItemTypeArr = parseAsArray(filterItemType);
       if (filterItemTypeArr.length > 0 && filterItemTypeArr.includes(itemType)) {
         return true;
       }

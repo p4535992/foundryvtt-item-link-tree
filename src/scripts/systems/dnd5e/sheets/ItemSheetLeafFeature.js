@@ -41,24 +41,22 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     }
     let subTypeSymbol = "";
     if (subType) {
-      let symbol = "";
-      if (subType === "gem") {
-        symbol = CONSTANTS.SYMBOLS.GEM;
-      } else if (subType === "leaf") {
-        symbol = CONSTANTS.SYMBOLS.LEAF;
-      } else if (subType === "none") {
-        symbol = CONSTANTS.SYMBOLS.NONE;
-      } else {
-        symbol = "";
-      }
-
-      subTypeSymbol = symbol;
-
-      let currentName = ItemLinkTreeManager._cleanName(item.name);
-      currentName = currentName + " ";
-      currentName += symbol.repeat(1);
-      currentName = currentName.trim();
-      setProperty(context.item, `name`, currentName);
+      // let symbol = "";
+      // if (subType === "gem") {
+      //   symbol = CONSTANTS.SYMBOLS.GEM;
+      // } else if (subType === "leaf") {
+      //   symbol = CONSTANTS.SYMBOLS.LEAF;
+      // } else if (subType === "none") {
+      //   symbol = CONSTANTS.SYMBOLS.NONE;
+      // } else {
+      //   symbol = "";
+      // }
+      // subTypeSymbol = symbol;
+      // let currentName = ItemLinkTreeManager._cleanName(item.name);
+      // currentName = currentName + " ";
+      // currentName += symbol.repeat(1);
+      // currentName = currentName.trim();
+      // setProperty(context.item, `name`, currentName);
     }
 
     // Item rendering data

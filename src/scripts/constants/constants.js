@@ -10,14 +10,11 @@ const CONSTANTS = {
     subType: "subType",
     filterItemType: "filterItemType",
   },
-  // SYMBOLS: {
-  //   NONE: "",
-  //   LEAF: "🍃",
-  //   GEM: "💎",
-  // },
-  FLAGS: {
-    itemLeafs: CONSTANTS.FLAGS.itemLeafs,
-    // parentItem: CONSTANTS.FLAGS.parentItem,
+  SYMBOLS: {
+    NONE: "",
+    LEAF: "🍃",
+    GEM: "💎",
+    UPGRADE: "💎",
   },
 };
 

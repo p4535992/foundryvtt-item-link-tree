@@ -307,7 +307,7 @@ export class ItemLinkTreeItemSheet {
       callbacks: { drop: this._dragEnd },
     };
     this.app.element[0]
-      .querySelector(dragDrop2.dropSelector)
-      .addEventListener("drop", dragDrop2.callbacks.drop.bind(this));
+      ?.querySelector(dragDrop2.dropSelector)
+      ?.addEventListener("drop", dragDrop2.callbacks.drop.bind(this));
   }
 }
