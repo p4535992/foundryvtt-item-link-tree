@@ -34,6 +34,8 @@
   "item-link-tree.SETTINGS.PLAYER_CAN_ONLY_VIEW.HINT": "[YOU MUST DISABLE THE SETTING 'Only GM can see and edit the 'Leafs' tab'] If enable players can see but not edit 'Leafs' Tab",
   "item-link-tree.isLeaf.label": "Is Leaf ?",
   "item-link-tree.isLeafHint.label": "A boolean value useful for filter the items with a leaf integration, is not mandatory, but advisable to set",
+  "item-link-tree.showImageIcon.label": "Show Image Icon ?",
+  "item-link-tree.showImageIconHint.label": "If enable it will show the icon image of this leaf on the invetory list of the actor sheet",
   "item-link-tree.transferEffect.label": "Transfer Effect ?",
   "item-link-tree.transferEffectHint.label": "Do you want to transfer effect to the parent item when added ?",
   "item-link-tree.transferBonus.label": "Transfer BAB Bonus ?",

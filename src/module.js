@@ -3,6 +3,7 @@ import { ItemLinkTree } from "./scripts/ItemLinkTree.js";
 import { ItemLinkTreeItemSheet } from "./scripts/classes/ItemLinkTreeItemSheet.js";
 import { _registerSettings } from "./scripts/classes/settings.js";
 import CONSTANTS from "./scripts/constants/constants.js";
+import { ItemLinkTreeHelpers } from "./scripts/lib/item-link-tree.js";
 
 Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag(CONSTANTS.MODULE_ID);
@@ -23,6 +24,10 @@ Hooks.once("ready", () => {
 });
 
 // Add any additional hooks if necessary
+
+Hooks.on("renderActorSheet", (app, html, data) => {
+  ItemLinkTreeHelpers.applyImagesOnInventory(app, html, data);
+});
 
 /**
  * Initialization helper, to set API.

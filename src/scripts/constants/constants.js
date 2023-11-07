@@ -9,6 +9,7 @@ const CONSTANTS = {
     shortDescription: "shortDescription",
     subType: "subType",
     filterItemType: "filterItemType",
+    showImageIcon: "showImageIcon",
   },
   SYMBOLS: {
     NONE: "",

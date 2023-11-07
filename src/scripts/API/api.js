@@ -49,6 +49,36 @@ const API = {
       return true;
     }
   },
+
+  hasSubtype(item, subtype) {
+    const options = {
+      item: item,
+    };
+    const leafs = this.getCollection(options);
+    if (leafs?.length <= 0) {
+      return false;
+    }
+
+    const leafsFilter = leafs.find((leaf) => {
+      return leaf.subType === subtype;
+    });
+    return !!leafsFilter;
+  },
+
+  // isShowImageIconEnabled(item) {
+  //   const options = {
+  //     item: item,
+  //   };
+  //   const leafs = this.getCollection(options);
+  //   if (leafs?.length <= 0) {
+  //     return false;
+  //   }
+
+  //   const leafsFilter = leafs.find((leaf) => {
+  //     return leaf.showImageIcon;
+  //   });
+  //   return !!leafsFilter;
+  // },
 };
 
 export default API;

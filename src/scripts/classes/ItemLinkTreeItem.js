@@ -138,6 +138,8 @@ export class ItemLinkTreeItem {
     };
     ItemLinkTreeManager.managePreAddLeafToItem(this.item, itemAdded, options);
 
+    const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
+    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
     const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
     const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
     const itemLeafs = [
@@ -146,6 +148,8 @@ export class ItemLinkTreeItem {
         uuid: uuidToAdd,
         customLink: customType,
         shortDescriptionLink: shortDescription,
+        subType: subType,
+        showImageIcon: showImageIcon,
       },
     ];
 

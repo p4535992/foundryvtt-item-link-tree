@@ -114,7 +114,7 @@
         <div class="tab details" data-group="primary" data-tab="details">
             <h3 class="form-header">{{localize "Details"}}</h3><!-- TODO loclaize -->
 
-            <div class="form-group stacked">
+            <div class="form-fields">
                 <label>{{ localize "item-link-tree.isLeafHint.label" }}</label>
                 <div class="form-fields">
                     <label class="checkbox">
@@ -123,6 +123,18 @@
                     </label>
                 </div>
             </div>
+
+            <div class="form-fields">
+                <label>{{ localize "item-link-tree.showImageIconHint.label" }}</label>
+                <div class="form-fields">
+                    <label class="checkbox">
+                        <input type="checkbox" name="flags.item-link-tree.showImageIcon" {{ checked flags.item-link-tree.showImageIcon }}>
+                        {{ localize "item-link-tree.showImageIcon.label" }}
+                    </label>
+                </div>
+            </div>
+
+            
             <!--
             <div class="form-group stacked">
                 <label>{{ localize "item-link-tree.transferEffectHint.label" }}</label>

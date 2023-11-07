@@ -1,6 +1,10 @@
 import { getItemSync } from "./lib";
 
 export class BabonusHelpers {
+  static isBabonusModuleActive() {
+    return game.modules.get("babonus")?.active;
+  }
+
   static retrieveBonusesFromItem(baseItem) {
     // returns a Collection of bonuses on the object.
     let bonusesInitial = game.modules.get("babonus").api.getCollection(baseItem);
