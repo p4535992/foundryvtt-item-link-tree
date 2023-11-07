@@ -1,5 +1,6 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
+import { log } from "../lib/lib.js";
 import { ItemLinkTreeItem } from "./item.js";
 
 /**
@@ -50,7 +51,7 @@ export class ItemLinkTreeItemSheet {
       if (!include) {
         return;
       }
-      ItemLinkTree.log(false, {
+      log("", false, {
         instances: this.instances,
       });
 
@@ -89,7 +90,7 @@ export class ItemLinkTreeItemSheet {
     //const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeItemMap).values()];
     const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeFlagMap).values()];
 
-    ItemLinkTree.log(false, "rendering list", itemLeafsArray);
+    log("", false, "rendering list", itemLeafsArray);
 
     const itemLeafsArrayTmp = [];
     // TOD made this better...
@@ -136,16 +137,16 @@ export class ItemLinkTreeItemSheet {
    */
   async _dragEnd(event) {
     if (!this.app.isEditable) return;
-    ItemLinkTree.log(false, "dragEnd", { event });
+    log("", false, "dragEnd", { event });
 
     const data = TextEditor.getDragEventData(event);
-    ItemLinkTree.log(false, "dragEnd", { data });
+    log("", false, "dragEnd", { data });
 
     if (data.type !== "Item") {
       return;
     }
     const item = await fromUuid(data.uuid);
-    ItemLinkTree.log(false, "dragEnd", { item });
+    log("", false, "dragEnd", { item });
 
     // MOD 4535992
     //if (item.type !== 'spell') return;
@@ -159,12 +160,12 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that opens the item's sheet
    */
   async _handleItemClick(event) {
-    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
+    const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
     // MOD 4535992
     //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
     const itemLeaf = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
     const item = await fromUuid(itemLeaf.uuid);
-    ItemLinkTree.log(false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
+    log("", false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
       editable: !!item.isOwned && !!item.isOwner,
     });
@@ -174,11 +175,11 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that removes the link between this item and the item
    */
   async _handleItemDeleteClick(event) {
-    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
+    const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
     // MOD 4535992
-    //ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemTreeItemMap);
-    ItemLinkTree.log(false, "deleting", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+    //log("",false, "deleting", itemId, this.itemLinkTreeItem.itemTreeItemMap);
+    log("", false, "deleting", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -189,9 +190,9 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that create the custom link type between this item and the item
    */
   async _handleCreateCustomLinkClick(event) {
-    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
+    const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    ItemLinkTree.log(false, "customLink", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+    log("", false, "customLink", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -202,11 +203,11 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that also Deletes the embedded item
    */
   async _handleItemDestroyClick(event) {
-    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
+    const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
     // MOD 4535992
-    //ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemTreeItemMap);
-    ItemLinkTree.log(false, "destroying", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+    //log("",false, "destroying", itemId, this.itemLinkTreeItem.itemTreeItemMap);
+    log("", false, "destroying", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -217,7 +218,7 @@ export class ItemLinkTreeItemSheet {
    * Event Handler that opens the item's sheet or config overrides, depending on if the item is owned
    */
   async _handleItemEditClick(event) {
-    const { itemId } = $(event.currentTarget).parents("[data-item-id]").data();
+    const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
     // MOD 4535992
     /*
@@ -240,7 +241,7 @@ export class ItemLinkTreeItemSheet {
    * This allows for less delay during the update -> renderItemSheet -> set tab cycle
    */
   renderLite() {
-    ItemLinkTree.log(false, "RENDERING");
+    log("", false, "RENDERING");
     // Update the nav menu
     const treeTabButton = $(
       '<a class="item" data-tab="tree">' + game.i18n.localize(`${ItemLinkTree.MODULE_ID}.tab.label`) + "</a>"

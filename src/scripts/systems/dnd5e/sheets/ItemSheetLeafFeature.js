@@ -1,5 +1,5 @@
-import CONSTANTS from "../constants/constants.js";
-import { i18n } from "../lib/lib.js";
+import CONSTANTS from "../../../constants/constants.js";
+import { i18n } from "../../../lib/lib.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
   static get defaultOptions() {

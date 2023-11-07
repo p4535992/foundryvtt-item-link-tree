@@ -1,7 +1,7 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { warn } from "../lib/lib.js";
+import { log, warn } from "../lib/lib.js";
 import { ItemLinkTreeItemSheet } from "./item-sheet.js";
 
 /**
@@ -59,10 +59,10 @@ export class ItemLinkTreeItem {
    * Update this class's understanding of the item items
    */
   async refresh() {
-    ItemLinkTree.log(false, "REFRESHING", this.itemTreeList);
+    log("", false, "REFRESHING", this.itemTreeList);
     this._getItemTreeFlagMap();
     // await this._getItemTreeItems();
-    ItemLinkTree.log(false, "REFRESHed");
+    log("", false, "REFRESHed");
   }
 
   /**
@@ -74,7 +74,7 @@ export class ItemLinkTreeItem {
     // original could be in a compendium or on an actor
     let original = await fromUuid(uuid);
 
-    ItemLinkTree.log(false, "original", original);
+    log("", false, "original", original);
 
     // return a fake 'empty' item if we could not create a childItem
     if (!original) {
@@ -127,7 +127,7 @@ export class ItemLinkTreeItem {
     }
 
     if (Hooks.call("item-link-tree.preAddLeafToItem", this.item, itemAdded) === false) {
-      ItemLinkTree.log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
+      log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
       return;
     }
 
@@ -176,9 +176,7 @@ export class ItemLinkTreeItem {
     }
 
     if (Hooks.call("item-link-tree.preRemoveLeafFromItem", this.item, itemRemoved) === false) {
-      ItemLinkTree.log(
-        `AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`
-      );
+      log(`AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`);
       return;
     }
 
@@ -218,9 +216,7 @@ export class ItemLinkTreeItem {
     const itemUpdated = await fromUuid(uuidToUpdate);
 
     if (Hooks.call("item-link-tree.preUpdateLeafFromItem", this.item, itemUpdated, this.itemTreeList) === false) {
-      ItemLinkTree.log(
-        `UpdateLeafFromItem completion was prevented by the 'item-link-tree.preUpdateLeafFromItem' hook.`
-      );
+      log(`UpdateLeafFromItem completion was prevented by the 'item-link-tree.preUpdateLeafFromItem' hook.`);
       return;
     }
 

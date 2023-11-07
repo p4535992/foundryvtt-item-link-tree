@@ -6,7 +6,7 @@ import { ItemLinkTree } from "../../module.js";
 export class ItemLinkTreeItemOverrides extends FormApplication {
   constructor(itemLinkTreeItem, itemBaseId) {
     const itemLeafFlagData = itemLinkTreeItem.itemTreeFlagMap.get(itemBaseId);
-    ItemLinkTree.log(false, { itemLeafFlagData });
+    log("", false, { itemLeafFlagData });
     // set the `object` of this FormApplication as the itemSpell data from the parent item's flags
     super(itemLeafFlagData?.changes ?? {});
 
@@ -60,13 +60,13 @@ export class ItemLinkTreeItemOverrides extends FormApplication {
       },
     };
 
-    ItemLinkTree.log(false, "getData", ret);
+    log("",false, "getData", ret);
 
     return ret;
   }
 
   async _updateObject(event, formData) {
-    ItemLinkTree.log(false, "_updateObject", event, formData);
+    log("", false, "_updateObject", event, formData);
 
     const formDataExpanded = foundry.utils.expandObject(formData);
 

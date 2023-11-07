@@ -7,43 +7,77 @@ import CONSTANTS from "../constants/constants.js";
 // export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3
 
-export function debug(msg, args = "") {
-  if (game.settings.get(CONSTANTS.MODULE_ID, SETTINGS.debug)) {
-    console.log(`DEBUG | ${CONSTANTS.MODULE_ID} | ${msg}`, args);
+export function debug(msg, ...args) {
+  try {
+    if (
+      game.settings.get(CONSTANTS.MODULE_ID, "debug") ||
+      game.modules.get("_dev-mode")?.api?.getPackageDebugValue(CONSTANTS.MODULE_ID, "boolean")
+    ) {
+      console.log(`DEBUG | ${CONSTANTS.MODULE_ID} | ${msg}`, ...args);
+    }
+  } catch (e) {
+    console.error(e.message);
   }
   return msg;
 }
 
-export function log(message) {
-  message = `${CONSTANTS.MODULE_ID} | ${message}`;
-  console.log(message.replace("<br>", "\n"));
+export function log(message, ...args) {
+  try {
+    message = `${CONSTANTS.MODULE_ID} | ${message}`;
+    console.log(message.replace("<br>", "\n"), ...args);
+  } catch (e) {
+    console.error(e.message);
+  }
   return message;
 }
 
-export function notify(message) {
-  message = `${CONSTANTS.MODULE_ID} | ${message}`;
-  ui.notifications?.notify(message);
-  console.log(message.replace("<br>", "\n"));
+export function notify(message, ...args) {
+  try {
+    message = `${CONSTANTS.MODULE_ID} | ${message}`;
+    ui.notifications?.notify(message);
+    console.log(message.replace("<br>", "\n"), ...args);
+  } catch (e) {
+    console.error(e.message);
+  }
   return message;
 }
 
-export function info(info, notify = false) {
-  info = `${CONSTANTS.MODULE_ID} | ${info}`;
-  if (notify) ui.notifications?.info(info);
-  console.log(info.replace("<br>", "\n"));
+export function info(info, notify = false, ...args) {
+  try {
+    info = `${CONSTANTS.MODULE_ID} | ${info}`;
+    if (notify) {
+      ui.notifications?.info(info);
+    }
+    console.log(info.replace("<br>", "\n"), ...args);
+  } catch (e) {
+    console.error(e.message);
+  }
   return info;
 }
 
-export function warn(warning, notify = false) {
-  warning = `${CONSTANTS.MODULE_ID} | ${warning}`;
-  if (notify) ui.notifications?.warn(warning);
-  console.warn(warning.replace("<br>", "\n"));
+export function warn(warning, notify = false, ...args) {
+  try {
+    warning = `${CONSTANTS.MODULE_ID} | ${warning}`;
+    if (notify) {
+      ui.notifications?.warn(warning);
+    }
+    console.warn(warning.replace("<br>", "\n"), ...args);
+  } catch (e) {
+    console.error(e.message);
+  }
   return warning;
 }
 
-export function error(error, notify = true) {
-  error = `${CONSTANTS.MODULE_ID} | ${error}`;
-  if (notify) ui.notifications?.error(error);
+export function error(error, notify = true, ...args) {
+  try {
+    error = `${CONSTANTS.MODULE_ID} | ${error}`;
+    if (notify) {
+      ui.notifications?.error(error);
+    }
+    console.error(error.replace("<br>", "\n"), ...args);
+  } catch (e) {
+    console.error(e.message);
+  }
   return new Error(error.replace("<br>", "\n"));
 }
 
@@ -59,7 +93,7 @@ export const i18nFormat = (key, data = {}) => {
   return game.i18n.format(key, data)?.trim();
 };
 
-// export const setDebugLevel = (debugText: string): void => {
+// export const setDebugLevel = (debugText): void => {
 //   debugEnabled = { none: 0, warn: 1, debug: 2, all: 3 }[debugText] || 0;
 //   // 0 = none, warnings = 1, debug = 2, all = 3
 //   if (debugEnabled >= 3) CONFIG.debug.hooks = true;
@@ -99,6 +133,74 @@ export function getUuid(target) {
   }
   const document = getDocument(target);
   return document?.uuid ?? false;
+}
+
+export function getItemSync(target, ignoreError) {
+  if (!target) {
+    throw error(`Item is undefined`, true, target);
+  }
+  if (target instanceof Item) {
+    return target;
+  }
+  // This is just a patch for compatibility with others modules
+  if (target.document) {
+    target = target.document;
+  }
+  if (target instanceof Item) {
+    return target;
+  }
+  if (stringIsUuid(target)) {
+    target = fromUuidSync(target);
+  } else {
+    target = game.items.get(target) ?? game.items.getName(target);
+  }
+  if (!target) {
+    if (ignoreError) {
+      warn(`Item is not found`, false, target);
+      return target;
+    } else {
+      throw error(`Item is not found`, true, target);
+    }
+  }
+  // Type checking
+  if (!(target instanceof Item)) {
+    throw error(`Invalid Item`, true, target);
+  }
+  return target;
+}
+
+export async function getItemAsync(target, ignoreError) {
+  if (!target) {
+    throw error(`Item is undefined`, true, target);
+  }
+  if (target instanceof Item) {
+    return target;
+  }
+  // This is just a patch for compatibility with others modules
+  if (target.document) {
+    target = target.document;
+  }
+  if (target instanceof Item) {
+    return target;
+  }
+  if (stringIsUuid(target)) {
+    target = await fromUuid(target);
+  } else {
+    target = game.items.get(target) ?? game.items.getName(target);
+  }
+  if (!target) {
+    if (ignoreError) {
+      warn(`Item is not found`, false, target);
+      return target;
+    } else {
+      throw error(`Item is not found`, true, target);
+    }
+  }
+  // Type checking
+  if (!(target instanceof Item)) {
+    throw error(`Invalid Item`, true, target);
+  }
+  return target;
 }
 
 export function isEmptyObject(obj) {
