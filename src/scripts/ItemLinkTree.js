@@ -3,11 +3,11 @@ import { warn } from "./lib/lib.js";
 import { ItemSheetLeafFeature } from "./systems/dnd5e/sheets/ItemSheetLeafFeature.js";
 
 export class ItemLinkTree {
-  static API = {};
+  // static API = {};
 
-  static MODULE_ID = CONSTANTS.MODULE_ID;
+  // static MODULE_ID = CONSTANTS.MODULE_ID;
 
-  static SETTINGS = {};
+  // static SETTINGS = {};
 
   static FLAGS = {
     itemLeafs: CONSTANTS.FLAGS.itemLeafs,

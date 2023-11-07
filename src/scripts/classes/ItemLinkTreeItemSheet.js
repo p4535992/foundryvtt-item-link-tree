@@ -1,7 +1,7 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
 import { log } from "../lib/lib.js";
-import { ItemLinkTreeItem } from "./item.js";
+import { ItemLinkTreeItem } from "./ItemLinkTreeItem.js";
 
 /**
  * A class made to make managing the operations for an Item sheet easier.
@@ -37,7 +37,7 @@ export class ItemLinkTreeItemSheet {
    */
   static init() {
     Hooks.on("renderItemSheet", (app, html) => {
-      if (!game.user.isGM && game.settings.get(ItemLinkTree.MODULE_ID, "gmOnly")) {
+      if (!game.user.isGM && game.settings.get(CONSTANTS.MODULE_ID, "gmOnly")) {
         return;
       }
       if (!game.user.isGM && !game.settings.get(CONSTANTS.MODULE_ID, "playerCanOnlyView")) {
@@ -46,7 +46,7 @@ export class ItemLinkTreeItemSheet {
 
       let include = false;
       try {
-        include = !!game.settings.get(ItemLinkTree.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
+        include = !!game.settings.get(CONSTANTS.MODULE_ID, `includeItemType${app.item.type.titleCase()}`);
       } catch {}
       if (!include) {
         return;
@@ -109,7 +109,7 @@ export class ItemLinkTreeItemSheet {
         };
         itemLeafsArrayTmp.push(i);
       } else {
-        console.warn(`${ItemLinkTree.MODULE_ID} | there is a wrong item uuid ${leaf}`);
+        console.warn(`${CONSTANTS.MODULE_ID} | there is a wrong item uuid ${leaf}`);
         const uuidToRemove = leaf.uuid;
         for (const [key, value] of this.itemLinkTreeItem.itemTreeFlagMap) {
           if (value.uuid === uuidToRemove) {
@@ -244,7 +244,7 @@ export class ItemLinkTreeItemSheet {
     log("", false, "RENDERING");
     // Update the nav menu
     const treeTabButton = $(
-      '<a class="item" data-tab="tree">' + game.i18n.localize(`${ItemLinkTree.MODULE_ID}.tab.label`) + "</a>"
+      '<a class="item" data-tab="tree">' + game.i18n.localize(`${CONSTANTS.MODULE_ID}.tab.label`) + "</a>"
     );
 
     let tabs = this.sheetHtml.find('.tabs[data-group="primary"]');

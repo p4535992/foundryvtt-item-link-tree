@@ -116,13 +116,6 @@ export function getDocument(target) {
   return target?.document ?? target;
 }
 
-export function getItem(target) {
-  if (stringIsUuid(target)) {
-    target = fromUuidSync(target);
-  }
-  return target;
-}
-
 export function stringIsUuid(inId) {
   return typeof inId === "string" && (inId.match(/\./g) || []).length && !inId.endsWith(".");
 }

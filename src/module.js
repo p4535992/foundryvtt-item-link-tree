@@ -1,11 +1,11 @@
 import API from "./scripts/API/api.js";
 import { ItemLinkTree } from "./scripts/ItemLinkTree.js";
-import { ItemLinkTreeItemSheet } from "./scripts/classes/item-sheet.js";
+import { ItemLinkTreeItemSheet } from "./scripts/classes/ItemLinkTreeItemSheet.js";
 import { _registerSettings } from "./scripts/classes/settings.js";
 import CONSTANTS from "./scripts/constants/constants.js";
 
 Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
-  registerPackageDebugFlag(ItemLinkTree.MODULE_ID);
+  registerPackageDebugFlag(CONSTANTS.MODULE_ID);
 });
 
 Hooks.once("init", () => {

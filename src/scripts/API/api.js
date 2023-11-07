@@ -1,5 +1,5 @@
 import CONSTANTS from "../constants/constants.js";
-import { error, getItem } from "../lib/lib.js";
+import { error, getItemSync } from "../lib/lib.js";
 
 const API = {
   getCollection(inAttributes) {
@@ -11,7 +11,7 @@ const API = {
       throw error("getCollection | inAttributes must be of type object");
     }
 
-    const item = getItem(inAttributes.item);
+    const item = getItemSync(inAttributes.item);
     return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs);
   },
 

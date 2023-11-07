@@ -1,54 +1,51 @@
 import CONSTANTS from "./constants/constants.js";
 import { BeaverCraftingHelpers } from "./lib/beavers-crafting-helpers.js";
 import { ItemPriceHelpers } from "./lib/item-price-helpers.js";
-import { API } from "./API/api.js";
+import API from "./API/api.js";
 import { ItemLinkingHelpers } from "./lib/item-linking-helper.js";
 import { log, warn } from "./lib/lib.js";
 
 export class ItemLinkTreeManager {
-  static _cleanLeafAndGem(name) {
-    return name
-      .replaceAll(CONSTANTS.SYMBOL_UPGRADE, "")
-      .replaceAll(CONSTANTS.SYMBOL_GEM, "")
-      .replaceAll(CONSTANTS.SYMBOL_LEAF, "")
-      .trim();
+  static _cleanName(name) {
+    return (
+      name
+        // .replaceAll(CONSTANTS.SYMBOL_UPGRADE, "")
+        // .replaceAll(CONSTANTS.SYMBOL_GEM, "")
+        // .replaceAll(CONSTANTS.SYMBOL_LEAF, "")
+        // .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
+        .trim()
+    );
   }
 
   static managePreAddLeafToItem(item, itemAdded, { checkForItemLinking = false, checkForBeaverCrafting = false }) {
     if (checkForBeaverCrafting) {
       const isCrafted = BeaverCraftingHelpers.isItemBeaverCrafted(item);
       if (!isCrafted) {
-        warn(`Non puoi aggiungere l'item perche' l'oggetto di destinazione non e' craftato`, true);
+        warn(`You can't add the item because the target item is not crafted`, true);
         return false;
       }
     }
     const quantityItem = item.system.quantity;
     if (quantityItem !== 1) {
-      warn(
-        `Non puoi aggiungere la gemma/foglia perche' l'oggetto di destinazione a una quantita' superiore a 1 o uguale a 0`,
-        true
-      );
+      warn(`You can't add the leaf because the target object at a quantity greater than 1 or equal to 0`, true);
       return false;
     }
     if (checkForItemLinking) {
       const isItemLinked = ItemLinkingHelpers.isItemLinked(item);
       if (!isItemLinked) {
-        warn(`Non puoi aggiungere la gemma/foglia perche' l'oggetto di destinazione non e' linkato`, true);
+        warn(`You can't add the leaf because the target object is not linked`, true);
         return false;
       }
     }
     const isItemLeaf = API.isItemLeaf(item);
     if (isItemLeaf) {
-      warn(`Non puoi aggiungere la gemma/foglia perche' l'oggetto di destinazione e' una gemma/foglia`, true);
+      warn(`You can't add the leaf because the target object is a leaf`, true);
       return false;
     }
 
     const isFilterByItemTypeOk = API.isFilterByItemTypeOk(itemAdded, item.type);
     if (!isFilterByItemTypeOk) {
-      warn(
-        `Non puoi aggiungere la gemma/foglia perche' l'oggetto di destinazione e' un tipo non supportato '${item.type}'`,
-        true
-      );
+      warn(`You can't add the leaf because the target object is an unsupported type '${item.type}'`, true);
       return false;
     }
 
@@ -56,10 +53,7 @@ export class ItemLinkTreeManager {
     for (const leaf of leafs) {
       const itemLeaf = fromUuidSync(leaf.uuid);
       if (itemLeaf && itemLeaf.name === itemAdded.name) {
-        warn(
-          `Non puoi aggiungere la gemma/foglia perche' l'oggetto di destinazione ha gia' una gemma/foglia di quel tipo`,
-          true
-        );
+        warn(`You can't add the leaf because the target object already has a leaf of that type`, true);
         return false;
       }
     }
@@ -67,12 +61,12 @@ export class ItemLinkTreeManager {
     if (!game.user.isGM) {
       const isItemAddedLinked = ItemLinkingHelpers.isItemLinked(itemAdded);
       if (!isItemAddedLinked) {
-        warn(`Non puoi aggiungere la gemma/foglia perche' non e' linkata`, true);
+        warn(`You can't add the leaf because it's not linked`, true);
         return false;
       }
       const quantityItemAdded = itemAdded.system.quantity;
       if (quantityItemAdded < 1) {
-        warn(`Non puoi aggiungere la gemma/foglia perche' la quantita' e' <= 1`, true);
+        warn(`You can't add the leaf because the amount is <= 1`, true);
         return false;
       }
     }
@@ -156,11 +150,11 @@ export class ItemLinkTreeManager {
 
     const leafs = API.getCollectionEffectAndBonus(item);
 
-    let currentName = item.name.replaceAll(CONSTANTS.SYMBOL_UPGRADE, "").trim();
-    currentName = currentName.replaceAll(CONSTANTS.SYMBOL_UPGRADE_OLD, "").trim();
-    currentName = currentName + " ";
-    currentName += CONSTANTS.SYMBOL_UPGRADE.repeat(leafs.length);
-    currentName = currentName.trim();
+    // let currentName = item.name.replaceAll(CONSTANTS.SYMBOL_UPGRADE, "").trim();
+    // currentName = currentName.replaceAll(CONSTANTS.SYMBOL_UPGRADE_OLD, "").trim();
+    // currentName = currentName + " ";
+    // currentName += CONSTANTS.SYMBOL_UPGRADE.repeat(leafs.length);
+    // currentName = currentName.trim();
 
     let currentValuePrice = getProperty(item, `system.price.value`) ?? 0;
     let currentDenomPrice = getProperty(item, `system.price.denomination`) ?? "gp";
@@ -175,7 +169,7 @@ export class ItemLinkTreeManager {
       newCurrentValuePriceGp = 0;
     }
     await item.update({
-      name: currentName,
+      // name: currentName,
       "system.price.value": newCurrentValuePriceGp,
       "system.price.denomination": "gp",
     });
@@ -198,8 +192,7 @@ export class ItemLinkTreeManager {
       for (const effectToRemove of itemEffects) {
         for (const effect of actorEffects) {
           if (
-            ItemLinkTreeManager._cleanLeafAndGem(effect.name) ===
-              ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name) &&
+            ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToRemove.name) &&
             effect.origin === item.uuid
           ) {
             log(`Removed effect from actor '${effect.name}'`, true);
@@ -217,8 +210,7 @@ export class ItemLinkTreeManager {
         if (
           effectToRemove.flags?.core?.sourceId &&
           effectToRemove.flags?.core?.sourceId.startsWith("Compendium") &&
-          ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name) ===
-            ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name)
+          ItemLinkTreeManager._cleanName(effectToRemove.name) === ItemLinkTreeManager._cleanName(effectToRemove.name)
         ) {
           log(`Removed effect from actor '${effectToRemove.name}'`, true);
           idsEffectActorToRemove2.push(effectToRemove.id);
@@ -278,10 +270,7 @@ export class ItemLinkTreeManager {
         const idsEffectItemToRemove = [];
         for (const effectToRemove of effectsToRemove) {
           for (const effect of itemEffects) {
-            if (
-              ItemLinkTreeManager._cleanLeafAndGem(effect.name) ===
-              ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name)
-            ) {
+            if (ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToRemove.name)) {
               // Non funziona  && effect.origin === itemRemoved.uuid
               log(`Removed effect from item '${effect.name}'`, true);
               idsEffectItemToRemove.push(effect.id);
@@ -296,8 +285,7 @@ export class ItemLinkTreeManager {
         for (const effectToRemove of effectsToRemove) {
           for (const effect of actorEffects) {
             if (
-              ItemLinkTreeManager._cleanLeafAndGem(effect.name) ===
-                ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name) &&
+              ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToRemove.name) &&
               effect.origin === item.uuid
             ) {
               log(`Removed effect from actor '${effect.name}'`, true);
@@ -315,11 +303,11 @@ export class ItemLinkTreeManager {
 
     const leafs = API.getCollectionEffectAndBonus(item);
 
-    let currentName = item.name.replaceAll(CONSTANTS.SYMBOL_UPGRADE, "").trim();
-    currentName = currentName.replaceAll(CONSTANTS.SYMBOL_UPGRADE_OLD, "").trim();
-    currentName = currentName + " ";
-    currentName += CONSTANTS.SYMBOL_UPGRADE.repeat(leafs.length);
-    currentName = currentName.trim();
+    // let currentName = item.name.replaceAll(CONSTANTS.SYMBOL_UPGRADE, "").trim();
+    // currentName = currentName.replaceAll(CONSTANTS.SYMBOL_UPGRADE_OLD, "").trim();
+    // currentName = currentName + " ";
+    // currentName += CONSTANTS.SYMBOL_UPGRADE.repeat(leafs.length);
+    // currentName = currentName.trim();
 
     let currentValuePrice = getProperty(item, `system.price.value`) ?? 0;
     let currentDenomPrice = getProperty(item, `system.price.denomination`) ?? "gp";
@@ -334,7 +322,7 @@ export class ItemLinkTreeManager {
       newCurrentValuePriceGp = 0;
     }
     await item.update({
-      name: currentName,
+      // name: currentName,
       "system.price.value": newCurrentValuePriceGp,
       "system.price.denomination": "gp",
     });

@@ -1,4 +1,5 @@
 import CONSTANTS from "../../../constants/constants.js";
+import { ItemLinkTreeManager } from "../../../item-link-tree-manager.js";
 import { i18n } from "../../../lib/lib.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
@@ -53,12 +54,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
 
       subTypeSymbol = symbol;
 
-      let currentName = item.name
-        .replaceAll(symbol, "")
-        .replaceAll(CONSTANTS.SYMBOLS.GEM, "")
-        .replaceAll(CONSTANTS.SYMBOLS.LEAF, "")
-        .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
-        .trim();
+      let currentName = ItemLinkTreeManager._cleanName(item.name);
       currentName = currentName + " ";
       currentName += symbol.repeat(1);
       currentName = currentName.trim();

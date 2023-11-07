@@ -2,7 +2,7 @@ import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
 import { log, warn } from "../lib/lib.js";
-import { ItemLinkTreeItemSheet } from "./item-sheet.js";
+import { ItemLinkTreeItemSheet } from "./ItemLinkTreeItemSheet.js";
 
 /**
  * Creates a fake temporary item as filler for when a UUID is unable to resolve an item
@@ -52,7 +52,7 @@ export class ItemLinkTreeItem {
    * Raw flag data
    */
   get itemTreeList() {
-    return this.item.getFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs) ?? [];
+    return this.item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs) ?? [];
   }
 
   /**
@@ -143,7 +143,7 @@ export class ItemLinkTreeItem {
     ];
 
     // this update should not re-render the item sheet because we need to wait until we refresh to do so
-    const property = `flags.${ItemLinkTree.MODULE_ID}.${ItemLinkTree.FLAGS.itemLeafs}`;
+    const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
     await this.item.update({ [property]: itemLeafs }, { render: false });
 
     await this.refresh();
@@ -191,10 +191,10 @@ export class ItemLinkTreeItem {
 
     if (shouldDeleteLeaf) {
       this._itemTreeFlagMap?.delete(itemId);
-      await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
+      await this.item.setFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs, newItemLeafs);
     } else if (!alsoDeleteEmbeddedLeaf) {
       this._itemTreeFlagMap?.delete(itemId);
-      await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
+      await this.item.setFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs, newItemLeafs);
     }
 
     Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
@@ -279,7 +279,7 @@ export class ItemLinkTreeItem {
               }
             }
 
-            // await this.item.setFlag(ItemLinkTree.MODULE_ID, ItemLinkTree.FLAGS.itemLeafs, newItemLeafs);
+            // await this.item.setFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs, newItemLeafs);
 
             // // Nothing more to do for unowned items.
             // if (!this.item.isOwned) return;
@@ -288,8 +288,8 @@ export class ItemLinkTreeItem {
             await this.item.update(
               {
                 flags: {
-                  [ItemLinkTree.MODULE_ID]: {
-                    [ItemLinkTree.FLAGS.itemLeafs]: newItemLeafs,
+                  [CONSTANTS.MODULE_ID]: {
+                    [CONSTANTS.FLAGS.itemLeafs]: newItemLeafs,
                   },
                 },
               },
@@ -337,8 +337,8 @@ export class ItemLinkTreeItem {
     await this.item.update(
       {
         flags: {
-          [ItemLinkTree.MODULE_ID]: {
-            [ItemLinkTree.FLAGS.itemLeafs]: newItemLeafsFlagValue,
+          [CONSTANTS.MODULE_ID]: {
+            [CONSTANTS.FLAGS.itemLeafs]: newItemLeafsFlagValue,
           },
         },
       },

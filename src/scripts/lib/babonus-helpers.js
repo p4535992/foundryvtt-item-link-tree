@@ -1,3 +1,5 @@
+import { getItemSync } from "./lib";
+
 export class BabonusHelpers {
   static retrieveBonusesFromItem(baseItem) {
     // returns a Collection of bonuses on the object.
@@ -18,7 +20,7 @@ export class BabonusHelpers {
   }
 
   static async deleteAllBonusFromItem(itemToCheck) {
-    itemToCheck = getItem(itemToCheck);
+    itemToCheck = getItemSync(itemToCheck);
     const collection = retrieveBonusesFromItem(itemToCheck);
     for (const bonus of collection) {
       await game.modules.get("babonus").api.deleteBonus(itemToCheck, bonus.id);
