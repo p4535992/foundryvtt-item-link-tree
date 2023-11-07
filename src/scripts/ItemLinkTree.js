@@ -1,4 +1,5 @@
 import CONSTANTS from "./constants/constants.js";
+import { warn } from "./lib/lib.js";
 import { ItemSheetLeafFeature } from "./systems/dnd5e/sheets/ItemSheetLeafFeature.js";
 
 export class ItemLinkTree {
@@ -30,6 +31,11 @@ export class ItemLinkTree {
         label: "ItemSheetLeafFeature",
         types: ["tool"],
       });
+    } else {
+      warn(
+        `No sheet is been prepared for this system please contacts the developer on the git project issues page`,
+        true
+      );
     }
   }
 }
