@@ -18,23 +18,33 @@ A module that allows specific items to be attached to other Items, Features, etc
 
 The module allows in a very general, but at the same time simple way to link objects together with custom references.
 
+There is an integration to transfer and cancel effects with DAE and/or bonuses with Babonus, allowing for replicating Downgrade and/or Upgrade mechanisms of items.
+
+There is also for those who use it an integration with the Item Linking module.
+
 This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval and license compatibility.
 
 I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/zhell)
 
 **NOTE: This module is been tested only on Dnd5e system**
 
-#### Example manage a chain of weapons
+#### Example manage a chain of weapons ?
 
 An 'example I have to connect 3 objects Longsword +1 , Longsword +2 and Longsword +3 in mod that are connected by the logical value "upgrade" because one is the superior version of the other.
 
 ![](wiki/exampe_superior.gif)
 
-#### Example manage a recipe
+#### Example manage a recipe ?
 
 We connect some ingredients to the final object
 
 ![](wiki/example_recipe.gif)
+
+#### Example apply a broken status on the weapon ?
+
+We apply a -5 on the attack of the item because is Broken...
+
+![]()
 
 ## Installation
 
@@ -52,6 +62,13 @@ To install this module manually:
 
 This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
+### DAE
+
+This module uses the [Dae](https://foundryvtt.com/packages/dae) library for wrapping core methods. It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
+
+### Babonus
+
+This module uses the [Babonus](https://foundryvtt.com/packages/babonus) library for wrapping core methods. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
 
 ## Known issue
 

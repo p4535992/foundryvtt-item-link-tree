@@ -145,7 +145,10 @@ export class ItemLinkTreeItem {
     const itemLeafs = [
       ...this.itemTreeList,
       {
+        name: itemBaseAdded.name,
+        img: itemBaseAdded.img,
         uuid: uuidToAdd,
+        id: itemBaseAdded.id ? itemBaseAdded.id : itemBaseAdded._id,
         customLink: customType,
         shortDescriptionLink: shortDescription,
         subType: subType,

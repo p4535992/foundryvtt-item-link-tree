@@ -1,4 +1,5 @@
 import CONSTANTS from "./constants/constants.js";
+import { ItemLinkTreeHelpers } from "./lib/item-link-tree.js";
 import { warn } from "./lib/lib.js";
 import { ItemSheetLeafFeature } from "./systems/dnd5e/sheets/ItemSheetLeafFeature.js";
 
@@ -24,18 +25,6 @@ export class ItemLinkTree {
   }
 
   static ItemSheetLeafFeatureInitialize() {
-    if (game.system.id === "dnd5e") {
-      // Register  Item Sheet and do not make default
-      Items.registerSheet("dnd5e", ItemSheetLeafFeature, {
-        makeDefault: false,
-        label: "ItemSheetLeafFeature",
-        types: ["tool"],
-      });
-    } else {
-      warn(
-        `No sheet is been prepared for this system please contacts the developer on the git project issues page`,
-        true
-      );
-    }
+    ItemLinkTreeHelpers.registerSheet();
   }
 }

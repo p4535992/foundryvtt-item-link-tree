@@ -106,6 +106,8 @@ export class ItemLinkTreeItemSheet {
           //   suffix: leaf.suffix,
           customLink: leaf.customLink,
           shortDescriptionLink: leaf.shortDescriptionLink,
+          subType: leaf.subType,
+          showImageIcon: leaf.showImageIcon,
         };
         itemLeafsArrayTmp.push(i);
       } else {
