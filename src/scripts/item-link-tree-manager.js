@@ -4,6 +4,8 @@ import { ItemPriceHelpers } from "./lib/item-price-helpers.js";
 import API from "./API/api.js";
 import { ItemLinkingHelpers } from "./lib/item-linking-helper.js";
 import { log, warn } from "./lib/lib.js";
+import { DaeHelpers } from "./lib/dae-helpers.js";
+import { BabonusHelpers } from "./lib/babonus-helpers.js";
 
 export class ItemLinkTreeManager {
   static _cleanName(name) {
@@ -98,20 +100,22 @@ export class ItemLinkTreeManager {
     // const suffix = getProperty(itemAdded, `flags.item-link-tree.suffix`) ?? "";
 
     if (customType === "bonus" || customType === "effectAndBonus") {
-      const bonuses = game.modules.get("babonus").api.getCollection(item) ?? [];
-      const bonusesToAdd = game.modules.get("babonus").api.getCollection(itemAdded) ?? [];
-      if (bonusesToAdd.size > 0) {
-        for (const bonusToAdd of bonusesToAdd) {
-          let foundedBonus = false;
-          for (const bonus of bonuses) {
-            if (bonus.name === bonusToAdd.name) {
-              foundedBonus = true;
-              break;
+      if (BabonusHelpers.isBabonusModuleActive()) {
+        const bonuses = game.modules.get("babonus").api.getCollection(item) ?? [];
+        const bonusesToAdd = game.modules.get("babonus").api.getCollection(itemAdded) ?? [];
+        if (bonusesToAdd.size > 0) {
+          for (const bonusToAdd of bonusesToAdd) {
+            let foundedBonus = false;
+            for (const bonus of bonuses) {
+              if (bonus.name === bonusToAdd.name) {
+                foundedBonus = true;
+                break;
+              }
             }
-          }
-          if (!foundedBonus) {
-            log(`Added bonus '${bonusToAdd.name}'`, true);
-            await game.modules.get("babonus").api.embedBabonus(item, bonusToAdd);
+            if (!foundedBonus) {
+              log(`Added bonus '${bonusToAdd.name}'`, true);
+              await game.modules.get("babonus").api.embedBabonus(item, bonusToAdd);
+            }
           }
         }
       }
@@ -183,7 +187,7 @@ export class ItemLinkTreeManager {
     }
 
     //if (game.settings.get(CONSTANTS.MODULE_ID, "patchDAE")) {
-    if (DAE && actor) {
+    if (DaeHelpers.isDaeModuleActive() && DAE && actor) {
       const itemEffects = item.effects ?? [];
       const actorEffects = actor.effects ?? [];
       const idsEffectActorToRemove = [];
@@ -231,14 +235,16 @@ export class ItemLinkTreeManager {
     // const suffix = getProperty(itemRemoved, `flags.item-link-tree.suffix`) ?? "";
 
     if (customType === "bonus" || customType === "effectAndBonus") {
-      const bonuses = game.modules.get("babonus").api.getCollection(item) ?? [];
-      const bonusesToRemove = game.modules.get("babonus").api.getCollection(itemRemoved) ?? [];
-      if (bonusesToRemove.size > 0) {
-        for (const bonusToRemove of bonusesToRemove) {
-          for (const bonus of bonuses) {
-            if (bonus.name === bonusToRemove.name) {
-              log(`Removed bonus '${bonus.name}'`, true);
-              await game.modules.get("babonus").api.deleteBonus(item, bonus.id);
+      if (BabonusHelpers.isBabonusModuleActive()) {
+        const bonuses = game.modules.get("babonus").api.getCollection(item) ?? [];
+        const bonusesToRemove = game.modules.get("babonus").api.getCollection(itemRemoved) ?? [];
+        if (bonusesToRemove.size > 0) {
+          for (const bonusToRemove of bonusesToRemove) {
+            for (const bonus of bonuses) {
+              if (bonus.name === bonusToRemove.name) {
+                log(`Removed bonus '${bonus.name}'`, true);
+                await game.modules.get("babonus").api.deleteBonus(item, bonus.id);
+              }
             }
           }
         }
@@ -250,7 +256,7 @@ export class ItemLinkTreeManager {
       const effectsToRemove = itemRemoved.effects ?? [];
       if (effectsToRemove.size > 0) {
         // TODO miglorare questo pezzo di codice
-        // if (DAE) {
+        // if (DaeHelpers.isDaeModuleActive() && DAE) {
         //   for (const effectToRemove of effectsToRemove) {
         //     for (const effect of effects) {
         //       if (ItemLinkTreeManager._cleanLeafAndGem(effect.name) === ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name)) {

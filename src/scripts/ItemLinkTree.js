@@ -1,5 +1,5 @@
 import CONSTANTS from "./constants/constants.js";
-import { ItemLinkTreeHelpers } from "./lib/item-link-tree.js";
+import { ItemLinkTreeHelpers } from "./lib/item-link-tree-helpers.js";
 import { warn } from "./lib/lib.js";
 import { ItemSheetLeafFeature } from "./systems/dnd5e/sheets/ItemSheetLeafFeature.js";
 

@@ -3,7 +3,7 @@ import { ItemLinkTree } from "./scripts/ItemLinkTree.js";
 import { ItemLinkTreeItemSheet } from "./scripts/classes/ItemLinkTreeItemSheet.js";
 import { _registerSettings } from "./scripts/classes/settings.js";
 import CONSTANTS from "./scripts/constants/constants.js";
-import { ItemLinkTreeHelpers } from "./scripts/lib/item-link-tree.js";
+import { ItemLinkTreeHelpers } from "./scripts/lib/item-link-tree-helpers.js";
 
 Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag(CONSTANTS.MODULE_ID);
