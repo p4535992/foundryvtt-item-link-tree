@@ -150,6 +150,8 @@ export class ItemLinkTreeManager {
       }
     }
 
+    // DO OTHER WITH EXTERNAL CODE
+    /*
     const leafs = API.getCollectionEffectAndBonus(item);
 
     // let currentName = item.name.replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "").trim();
@@ -185,7 +187,7 @@ export class ItemLinkTreeManager {
         await actor.deleteEmbeddedDocuments("Item", [itemAdded.id]);
       }
     }
-
+    */
     //if (game.settings.get(CONSTANTS.MODULE_ID, "patchDAE")) {
     if (DaeHelpers.isDaeModuleActive() && DAE && actor) {
       const itemEffects = item.effects ?? [];
@@ -305,6 +307,8 @@ export class ItemLinkTreeManager {
       }
     }
 
+    // DO OTHER WITH EXTERNAL CODE
+    /*
     const leafs = API.getCollectionEffectAndBonus(item);
 
     // let currentName = item.name.replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "").trim();
@@ -330,6 +334,7 @@ export class ItemLinkTreeManager {
       "system.price.value": newCurrentValuePriceGp,
       "system.price.denomination": "gp",
     });
+    */
   }
 
   static async managePreUpdateLeafFromItem(item, itemUpdated, options) {

@@ -166,9 +166,9 @@ export class ItemLinkTreeItem {
     this.item.render();
     if (this.item.actor) this.item.actor.render();
 
-    Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
-
     ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
+
+    Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
   }
 
   /**
@@ -216,9 +216,9 @@ export class ItemLinkTreeItem {
       await this.item.setFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs, newItemLeafs);
     }
 
-    Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
-
     ItemLinkTreeManager.managePostRemoveLeafFromItem(this.item, itemRemoved, options);
+
+    Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
   }
 
   /**
@@ -332,9 +332,9 @@ export class ItemLinkTreeItem {
             // now re-render the item sheets
             this.item.render();
 
-            Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemToUpdate, this.itemTreeList);
-
             ItemLinkTreeManager.managePostUpdateLeafFromItem(this.item, itemUpdated, options);
+
+            Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemToUpdate, this.itemTreeList);
           },
         },
       },

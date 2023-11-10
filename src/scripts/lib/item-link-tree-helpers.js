@@ -51,7 +51,7 @@ export class ItemLinkTreeHelpers {
           for (const leaf of API.getCollection({ item: item })) {
             if (leaf.showImageIcon) {
               const icon = leaf.img;
-              const tooltipText = leaf.shortDescriptionLink ? shortDescriptionLink : leaf.subType;
+              const tooltipText = leaf.shortDescriptionLink ? leaf.shortDescriptionLink : leaf.subType;
               const img = document.createElement("img");
               img.src = icon;
               // img.classList.add("item-image");

@@ -99,7 +99,7 @@ const API = {
       item: item,
     };
     const leafs = this.getCollection(options);
-    if (leafs?.length <= 0) {
+    if (!leafs || leafs?.length <= 0) {
       return false;
     }
 
@@ -114,7 +114,7 @@ const API = {
   //     item: item,
   //   };
   //   const leafs = this.getCollection(options);
-  //   if (leafs?.length <= 0) {
+  //   if (!leafs || leafs?.length <= 0) {
   //     return false;
   //   }
 
@@ -168,9 +168,9 @@ const API = {
     //     await this.item.setFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs, newItemLeafs);
     //   }
 
-    Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
-
     ItemLinkTreeManager.managePostRemoveLeafFromItem(itemLinkTree.item, itemRemoved, options);
+
+    Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
   },
 
   async addLeaf(item, itemLeaf) {
@@ -241,9 +241,9 @@ const API = {
     itemLinkTree.item.render();
     if (itemLinkTree.item.actor) itemLinkTree.item.actor.render();
 
-    Hooks.call("item-link-tree.postAddLeafToItem", itemLinkTree.item, itemAdded);
-
     ItemLinkTreeManager.managePostAddLeafToItem(itemLinkTree.item, itemAdded, options);
+
+    Hooks.call("item-link-tree.postAddLeafToItem", itemLinkTree.item, itemAdded);
   },
 };
 

@@ -44,7 +44,7 @@ We connect some ingredients to the final object
 
 We apply a -5 on the attack of the item because is Broken...
 
-![]()
+![](wiki/example_broken_condition.gif)
 
 ## Installation
 
