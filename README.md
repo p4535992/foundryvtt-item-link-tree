@@ -28,7 +28,7 @@ I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/z
 
 **NOTE: This module is been tested only on Dnd5e system**
 
-**NOTE: To help to use this module i created a custom item sheet for Tool type items on the Dnd5e system**
+**NOTE: To help to use this module i created as a example a custom item sheet for Tool type items on the Dnd5e system**
 
 #### Example manage a chain of weapons ?
 
