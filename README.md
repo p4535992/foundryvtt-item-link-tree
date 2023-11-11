@@ -28,6 +28,8 @@ I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/z
 
 **NOTE: This module is been tested only on Dnd5e system**
 
+**NOTE: To help to use this module i created a custom item sheet for Tool type items on the Dnd5e system**
+
 #### Example manage a chain of weapons ?
 
 An 'example I have to connect 3 objects Longsword +1 , Longsword +2 and Longsword +3 in mod that are connected by the logical value "upgrade" because one is the superior version of the other.
