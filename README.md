@@ -72,7 +72,7 @@ This module uses the [Dae](https://foundryvtt.com/packages/dae) module. It is a 
 
 This module uses the [Babonus](https://foundryvtt.com/packages/babonus) module. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
 
-### Item Liniking
+### Item Linking
 
 This module uses the [Item Linking](https://foundryvtt.com/packages/item-linking) module. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
 
