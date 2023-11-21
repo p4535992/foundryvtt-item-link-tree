@@ -18,9 +18,9 @@ A module that allows specific items to be attached to other Items, Features, etc
 
 The module allows in a very general, but at the same time simple way to link objects together with custom references.
 
-There is an integration to transfer and cancel effects with DAE and/or bonuses with Babonus, allowing for replicating Downgrade and/or Upgrade mechanisms of items.
+There is an integration to transfer and cancel effects with [Dae](https://foundryvtt.com/packages/dae) and/or bonuses with [Babonus](https://foundryvtt.com/packages/babonus), allowing for replicating Downgrade and/or Upgrade mechanisms of items.
 
-There is also for those who use it an integration with the Item Linking module.
+There is also for those who use it an integration with the [Item Linking](https://foundryvtt.com/packages/item-linking) module.
 
 This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval and license compatibility.
 
@@ -71,6 +71,11 @@ This module uses the [Dae](https://foundryvtt.com/packages/dae) module. It is a 
 ### Babonus
 
 This module uses the [Babonus](https://foundryvtt.com/packages/babonus) module. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
+
+### Item Liniking
+
+This module uses the [Item Linking](https://foundryvtt.com/packages/item-linking) module. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
+
 
 ## Known issue
 
