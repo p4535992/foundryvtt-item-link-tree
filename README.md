@@ -66,11 +66,11 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 ### DAE
 
-This module uses the [Dae](https://foundryvtt.com/packages/dae) library for wrapping core methods. It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
+This module uses the [Dae](https://foundryvtt.com/packages/dae) library. It is a optional dependency and it is recommended for the best experience and compatibility with other modules.
 
 ### Babonus
 
-This module uses the [Babonus](https://foundryvtt.com/packages/babonus) library for wrapping core methods. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
+This module uses the [Babonus](https://foundryvtt.com/packages/babonus) library. It is a optional  dependency and it is recommended for the best experience and compatibility with other modules.
 
 ## Known issue
 
