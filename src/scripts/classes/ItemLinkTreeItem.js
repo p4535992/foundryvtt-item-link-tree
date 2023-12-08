@@ -1,6 +1,7 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
+import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
 import { log, warn } from "../lib/lib.js";
 import { ItemLinkTreeItemSheet } from "./ItemLinkTreeItemSheet.js";
@@ -133,10 +134,18 @@ export class ItemLinkTreeItem {
     }
 
     const options = {
-      checkForItemLinking: ItemLinkingHelpers.isItemLinkingModuleActive(),
-      checkForBeaverCrafting: false,
+      checkForItemLinking:
+        ItemLinkingHelpers.isItemLinkingModuleActive() &&
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
+      checkForBeaverCrafting:
+        BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
     };
-    ItemLinkTreeManager.managePreAddLeafToItem(this.item, itemAdded, options);
+
+    const preResult = ItemLinkTreeManager.managePreAddLeafToItem(this.item, itemAdded, options);
+    if (!preResult) {
+      return;
+    }
 
     const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
     const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
@@ -166,7 +175,7 @@ export class ItemLinkTreeItem {
     this.item.render();
     if (this.item.actor) this.item.actor.render();
 
-    ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
+    await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
     Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
   }
@@ -216,7 +225,7 @@ export class ItemLinkTreeItem {
       await this.item.setFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs, newItemLeafs);
     }
 
-    ItemLinkTreeManager.managePostRemoveLeafFromItem(this.item, itemRemoved, options);
+    await ItemLinkTreeManager.managePostRemoveLeafFromItem(this.item, itemRemoved, options);
 
     Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
   }

@@ -51,5 +51,9 @@
   "item-link-tree.settings.customItemTabName.title": "Set a custom title for the tab item",
   "item-link-tree.settings.customItemTabName.hint": "Set a custom title for the tab item",
   "item-link-tree.settings.selectableSubtypes.title": "The subtypes to show to the the select on the sheet.",
-  "item-link-tree.settings.selectableSubtypes.hint": "The syntax for this is setting is avalue|alabel,bvalue|blabel, where every element separated from , is a option on the select subtype"
+  "item-link-tree.settings.selectableSubtypes.hint": "The syntax for this is setting is avalue|alabel,bvalue|blabel, where every element separated from , is a option on the select subtype",
+  "item-link-tree.settings.canAddLeafOnlyIfItemCrafted.title": "Can add leaf only to crafted items",
+  "item-link-tree.settings.canAddLeafOnlyIfItemCrafted.hint": "ONLY WITH THE MODULE 'beavers-crafting' present and active. The leaf will not be added if the element is not crafted.",
+  "item-link-tree.settings.canAddLeafOnlyIfItemLinked.title": "Can add leaf only to linked items",
+  "item-link-tree.settings.canAddLeafOnlyIfItemLinked.hint": "ONLY WITH THE MODULE 'item-linking' present and active. The leaf will not be added if the element is not linked."
 }

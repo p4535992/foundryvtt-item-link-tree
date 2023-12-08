@@ -1,6 +1,7 @@
 import API from "../API/api";
+import CONSTANTS from "../constants/constants";
 import { ItemSheetLeafFeature } from "../systems/dnd5e/sheets/ItemSheetLeafFeature";
-import { warn } from "./lib";
+import { getItemAsync, warn } from "./lib";
 
 export class ItemLinkTreeHelpers {
   static registerSheet() {
@@ -70,5 +71,23 @@ export class ItemLinkTreeHelpers {
         }
       }
     }
+  }
+
+  static async transferFlagsFromItemToItem(itemWherePutTheFlags, itemWithTheFlags) {
+    itemWherePutTheFlags = await getItemAsync(itemWherePutTheFlags);
+    itemWithTheFlags = await getItemAsync(itemWithTheFlags);
+    const currentFlags = getProperty(itemWherePutTheFlags, `flags.${CONSTANTS.MODULE_ID}`) ?? {};
+    const newFlags = getProperty(itemWithTheFlags, `flags.${CONSTANTS.MODULE_ID}`) ?? {};
+    const updatedFlags = mergeObject(currentFlags, newFlags);
+    await itemWherePutTheFlags.update(
+      {
+        flags: {
+          [CONSTANTS.MODULE_ID]: {
+            updatedFlags,
+          },
+        },
+      },
+      { render: false }
+    );
   }
 }

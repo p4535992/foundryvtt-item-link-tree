@@ -1,6 +1,9 @@
 import API from "../API/api";
 import { ItemLinkTreeManager } from "../item-link-tree-manager";
-import { getItemAsync } from "./lib";
+import { BabonusHelpers } from "./babonus-helpers";
+import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
+import { ItemLinkTreeHelpers } from "./item-link-tree-helpers";
+import { error, getItemAsync, log } from "./lib";
 
 export class UpgradeItemHelpers {
   // // Insert here the list of compendiums names for every macro "type"
@@ -10,34 +13,36 @@ export class UpgradeItemHelpers {
   //   };
 
   static removeItem = async (item) => {
-    const modify = item.system.quantity > 1;
-    if (modify) {
-      await item.update({ "system.quantity": item.system.quantity - 1 });
-    } else {
-      await item.delete();
-    }
+    // TODO add a multisystem integration
+    // const modify = item.system.quantity > 1;
+    // if (modify) {
+    //   await item.update({ "system.quantity": item.system.quantity - 1 });
+    // } else {
+    await item.delete();
+    // }
   };
 
   static addItem = async (actor, item, currentName, currentImage) => {
-    const oldItem = actor.items.contents.find((i) => {
-      // MOD 4535992
-      // return i.name === item.name && i.getFlag("beavers-crafting", "status");
-      // return i.name === currentName && BeaverCraftingHelpers.isItemBeaverCrafted(i);
-      return ItemLinkTreeManager._cleanName(i.name) === ItemLinkTreeManager._cleanName(currentName); // && BeaverCraftingHelpers.isItemBeaverCrafted(i);
-    });
-    if (oldItem) {
-      await oldItem.update({ "system.quantity": oldItem.system.quantity + 1 });
-      return oldItem;
-    } else {
-      const data = item.toObject();
-      // data.flags["beavers-crafting"] = { status: "updated" };
-      // MOD 4535992
-      data.name = currentName;
-      data.img = currentImage;
+    // TODO add a multisystem integration
+    // const oldItem = actor.items.contents.find((i) => {
+    //   // MOD 4535992
+    //   // return i.name === item.name && i.getFlag("beavers-crafting", "status");
+    //   // return i.name === currentName && BeaverCraftingHelpers.isItemBeaverCrafted(i);
+    //   return ItemLinkTreeManager._cleanName(i.name) === ItemLinkTreeManager._cleanName(currentName); // && BeaverCraftingHelpers.isItemBeaverCrafted(i);
+    // });
+    // if (oldItem) {
+    //   await oldItem.update({ "system.quantity": oldItem.system.quantity + 1 });
+    //   return oldItem;
+    // } else {
+    const data = item.toObject();
+    data.flags["beavers-crafting"] = { status: "updated" };
+    // MOD 4535992
+    data.name = currentName;
+    data.img = currentImage;
 
-      const items = await actor.createEmbeddedDocuments("Item", [data]);
-      return items[0];
-    }
+    const items = await actor.createEmbeddedDocuments("Item", [data]);
+    return items[0];
+    // }
   };
 
   // ------------------------------------ //
@@ -48,6 +53,7 @@ export class UpgradeItemHelpers {
   // target_bonus: number
 
   static async retrieveSuperiorItemAndReplaceOnActor(
+    item,
     crystal
     // type,
     // target_bonus,
@@ -56,8 +62,62 @@ export class UpgradeItemHelpers {
     // itemNewPrefix,
     // itemNewSuffix
   ) {
+    item = await getItemAsync(item);
+
+    if (item.system.quantity !== 1) {
+      throw error(`Could not find ${item.name} for doing the upgrade`, true);
+    }
+
+    const actorA = item.actor;
+    if (!actorA) {
+      throw error(`${game.user.name} please at least select a actor`, true);
+    }
+    // Type checking
+    if (!(actorA instanceof CONFIG.Actor.documentClass)) {
+      throw error(`Invalid actor`, true);
+    }
+
+    const itemsLeafsOriginalBase = [];
+    const leafsOriginalOnItem = API.getCollection({
+      item: item,
+    });
+    for (const up of leafsOriginalOnItem) {
+      try {
+        const itemUp = await getItemAsync(up.uuid);
+        if (itemUp) {
+          itemsLeafsOriginalBase.push(itemUp);
+        }
+      } catch (e) {}
+    }
+
     crystal = await getItemAsync(crystal);
-    const upgradeableItemsBase = API.getCollection({ item: crystal });
+
+    if (crystal.system.quantity !== 1) {
+      throw error(`Could not find ${crystal.name} for doing the upgrade`, true);
+    }
+
+    const actorB = item.actor;
+    if (!actorB) {
+      throw error(`${game.user.name} please at least select a actor`, true);
+    }
+    // Type checking
+    if (!(actorB instanceof CONFIG.Actor.documentClass)) {
+      throw error(`Invalid actor`, true);
+    }
+
+    if (actorA.id !== actorB.id) {
+      throw error(`Invalid actor source and actor target`, true);
+    }
+
+    const customType = getProperty(crystal, `flags.item-link-tree.customType`) ?? "";
+    if (customType !== "upgrade") {
+      throw error(`Invalid leaf customType for the upgrade of the item ${customType}`, true);
+    }
+
+    const upgradeableItemsBase = [];
+    const upgradeableItemsOnLeaf = API.getCollection({
+      item: crystal,
+    });
     for (const up of upgradeableItemsOnLeaf) {
       try {
         const itemUp = await getItemAsync(up.uuid);
@@ -72,7 +132,7 @@ export class UpgradeItemHelpers {
       throw error(`Invalid leaf for the upgrade of the item`, true);
     }
 
-    const actor = crystal.actor;
+    const actor = item.actor;
     if (!actor) {
       throw error(`${game.user.name} please at least select a actor`, true);
     }
@@ -90,7 +150,7 @@ export class UpgradeItemHelpers {
     //   throw error(`The macro was called with an invalid argument "target_bonus": ${target_bonus}`, true);
     // }
 
-    if (!(upgradeableItemsBase > 0)) {
+    if (!upgradeableItemsBase || upgradeableItemsBase?.length === 0) {
       throw error(`The macro was called with an invalid argument "itemUpgraded": ${upgradeableItemsBase}`, true);
     }
 
@@ -136,20 +196,21 @@ export class UpgradeItemHelpers {
     // const itemKeys = Object.keys(mappedItems);
 
     // ------------------------------------ //
-    const upgradeableItems = actor.items.contents.filter((i) => {
-      // MOD 4535992
-      //return itemKeys.includes(i.name) && i.getFlag("beavers-crafting", "status")
-      if (!ItemLinkingHelpers.isItemLinked(i)) {
-        // warn(`The item ${i.name}|${i.uuid} is not linked`);
-        return false;
-      }
-      const baseItem = ItemLinkingHelpers.retrieveLinkedItem(i);
-      if (!baseItem) {
-        // warn(`The item ${i.name}|${i.uuid} is linked but not item is founded`);
-        return false;
-      }
-      return itemKeys.includes(baseItem.name);
-    });
+    // const upgradeableItems = actor.items.contents.filter((i) => {
+    //   // MOD 4535992
+    //   //return itemKeys.includes(i.name) && i.getFlag("beavers-crafting", "status")
+    //   if (!ItemLinkingHelpers.isItemLinked(i)) {
+    //     // warn(`The item ${i.name}|${i.uuid} is not linked`);
+    //     return false;
+    //   }
+    //   const baseItem = ItemLinkingHelpers.retrieveLinkedItem(i);
+    //   if (!baseItem) {
+    //     // warn(`The item ${i.name}|${i.uuid} is linked but not item is founded`);
+    //     return false;
+    //   }
+    //   return itemKeys.includes(baseItem.name);
+    // });
+    const upgradeableItems = upgradeableItemsBase; //[item];
 
     if (upgradeableItems.length === 0) {
       throw error(`${actor.name} does not have any upgradeable`, true);
@@ -161,11 +222,15 @@ export class UpgradeItemHelpers {
     const content = /*html*/ `
           <form autocomplete="off">
               <div>
-                  Select an ${type} to upgrade.
+                  Select the upgraded item to generate.
               </div>
               <hr/>
               <div class="form-group">
-                  <label>Item</label>
+                  <label>Item to Upgrade</label>
+                  <span>1 ${item.name}</span>
+              </div>
+              <div class="form-group">
+                  <label>Item Upgraded</label>
                   <select id="item" name="item">
                   {{#each upgradeableItems}}
                       <option value="{{_id}}">{{name}}</option>
@@ -180,30 +245,43 @@ export class UpgradeItemHelpers {
       `;
 
     new Dialog({
-      title: `${actor.name}: Upgrade ${type.titleCase()} ${target_bonus}`,
+      title: `Use '${crystal.name}' and upgraded '${item.name}'`,
       content: Handlebars.compile(content)({
         upgradeableItems,
       }),
       buttons: {
         yes: {
           icon: `<i class="fas fa-hand-holding-medical"></i>`,
-          label: "Are you sure to perform the upgrade ? Ii is a not turning back action for the item",
+          label: "Are you sure to perform the upgrade ? <b>It is a not turning back action for the item.</b>",
           callback: async (html) => {
-            const item = actor.items.get(html.find("#item")[0].value);
-            if (!item) {
+            let targetItemId = html.find("#item")[0].value;
+
+            let targetItem = upgradeableItems.find((i) => i.id === targetItemId);
+
+            if (!targetItem) {
               throw error(`Could not find the item to upgrade`, true);
             }
-            if (crystal.system.quantity < 1 || crystal.parent !== actor) {
-              throw error(`Could not find ${crystal.name} to upgrade`, true);
-            }
-            const targetItem = mappedItems[item.name];
 
-            let currentName = weaponMain.name; //manageNewName(weaponMain.name, itemNewName, itemNewPrefix, itemNewSuffix);
-            let currentImage = weaponMain.img;
+            // const targetItem = mappedItems[item.name];
+
+            // TODO ADD SOME CUSTOMIZATION FOR NAME AND NAME ???
+            let currentName = targetItem.name; //manageNewName(weaponMain.name, itemNewName, itemNewPrefix, itemNewSuffix);
+            let currentImage = targetItem.img;
             // if (itemNewImage) {
             //   currentImage = itemNewImage;
             // }
-            await UpgradeItemHelpers.addItem(actor, targetItem, currentName, currentImage);
+            targetItem = await UpgradeItemHelpers.addItem(actor, targetItem, currentName, currentImage);
+            // const options = {
+            //   checkForItemLinking:
+            //     ItemLinkingHelpers.isItemLinkingModuleActive() &&
+            //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
+            //   checkForBeaverCrafting:
+            //     BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
+            //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
+            // };
+            for (const l of itemsLeafsOriginalBase) {
+              await API.addLeaf(targetItem, l);
+            }
 
             await UpgradeItemHelpers.removeItem(item);
             await UpgradeItemHelpers.removeItem(crystal);

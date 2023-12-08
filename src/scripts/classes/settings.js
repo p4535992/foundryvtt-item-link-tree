@@ -75,6 +75,26 @@ export function _registerSettings() {
     default: "gem|Gem,leaf|Leaf,crystal|Crystal",
     requiresReload: false,
   });
+
+  game.settings.register(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted", {
+    name: "item-link-tree.settings.canAddLeafOnlyIfItemCrafted.title",
+    hint: "item-link-tree.settings.canAddLeafOnlyIfItemCrafted.hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: false,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked", {
+    name: "item-link-tree.settings.canAddLeafOnlyIfItemLinked.title",
+    hint: "item-link-tree.settings.canAddLeafOnlyIfItemLinked.hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: false,
+  });
 }
 
 class ItemLinkTree_TypeSettings extends FormApplication {

@@ -30,4 +30,26 @@ export class BabonusHelpers {
       await game.modules.get("babonus").api.deleteBonus(itemToCheck, bonus.id);
     }
   }
+
+  static async transferBonusFromItemToItem(itemWherePutTheBonus, itemWithTheBonus) {
+    if (BabonusHelpers.isBabonusModuleActive()) {
+      const bonuses = game.modules.get("babonus").api.getCollection(itemWherePutTheBonus) ?? [];
+      const bonusesToAdd = game.modules.get("babonus").api.getCollection(itemWithTheBonus) ?? [];
+      if (bonusesToAdd.size > 0) {
+        for (const bonusToAdd of bonusesToAdd) {
+          let foundedBonus = false;
+          for (const bonus of bonuses) {
+            if (bonus.name === bonusToAdd.name) {
+              foundedBonus = true;
+              break;
+            }
+          }
+          if (!foundedBonus) {
+            log(`Added bonus '${bonusToAdd.name}'`, true);
+            await game.modules.get("babonus").api.embedBabonus(item, bonusToAdd);
+          }
+        }
+      }
+    }
+  }
 }

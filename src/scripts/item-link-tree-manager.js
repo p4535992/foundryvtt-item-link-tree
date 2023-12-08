@@ -5,6 +5,7 @@ import { ItemLinkingHelpers } from "./lib/item-linking-helper.js";
 import { log, warn } from "./lib/lib.js";
 import { DaeHelpers } from "./lib/dae-helpers.js";
 import { BabonusHelpers } from "./lib/babonus-helpers.js";
+import { UpgradeItemHelpers } from "./lib/upgrade-item-helper.js";
 // import { ItemPriceHelpers } from "./lib/item-price-helpers.js";
 
 export class ItemLinkTreeManager {
@@ -40,8 +41,13 @@ export class ItemLinkTreeManager {
     }
     const isItemLeaf = API.isItemLeaf(item);
     if (isItemLeaf) {
-      warn(`You can't add the leaf because the target object is a leaf`, true);
-      return false;
+      const customType = getProperty(item, `flags.item-link-tree.customType`) ?? "";
+      if (customType === "upgrade") {
+        // IS OK IF IS A UPGRADE
+      } else {
+        warn(`You can't add the leaf because the target object is a leaf`, true);
+        return false;
+      }
     }
 
     const isFilterByItemTypeOk = API.isFilterByItemTypeOk(itemAdded, item.type);
@@ -99,7 +105,10 @@ export class ItemLinkTreeManager {
     const customType = getProperty(itemAdded, `flags.item-link-tree.customType`) ?? "";
     // const prefix = getProperty(itemAdded, `flags.item-link-tree.prefix`) ?? "";
     // const suffix = getProperty(itemAdded, `flags.item-link-tree.suffix`) ?? "";
-
+    if (customType === "upgrade") {
+      await API.upgradeItem(item, itemAdded);
+      return;
+    }
     if (customType === "bonus" || customType === "effectAndBonus") {
       if (BabonusHelpers.isBabonusModuleActive()) {
         const bonuses = game.modules.get("babonus").api.getCollection(item) ?? [];
