@@ -55,6 +55,26 @@ export function _registerSettings() {
     label: "item-link-tree.SETTINGS.ITEM_EXCLUSION.NAME",
     restricted: true,
   });
+
+  game.settings.register(CONSTANTS.MODULE_ID, "customItemTabName", {
+    name: "item-link-tree.settings.customItemTabName.title",
+    hint: "item-link-tree.settings.customItemTabName.hint",
+    scope: "world",
+    config: true,
+    type: String,
+    default: "",
+    requiresReload: false,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_ID, "selectableSubtypes", {
+    name: "item-link-tree.settings.selectableSubtypes.title",
+    hint: "item-link-tree.settings.selectableSubtypes.hint",
+    scope: "world",
+    config: true,
+    type: String,
+    default: "gem|Gem,leaf|Leaf,crystal|Crystal",
+    requiresReload: false,
+  });
 }
 
 class ItemLinkTree_TypeSettings extends FormApplication {

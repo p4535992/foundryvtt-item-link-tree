@@ -48,7 +48,7 @@ export class ItemLinkTreeHelpers {
 
         const leafs = API.getCollection({ item: item });
         if (leafs) {
-          for (const leaf of API.getCollection({ item: item })) {
+          for (const leaf of leafs) {
             if (leaf.showImageIcon) {
               const icon = leaf.img;
               const tooltipText = leaf.shortDescriptionLink ? leaf.shortDescriptionLink : leaf.subType;

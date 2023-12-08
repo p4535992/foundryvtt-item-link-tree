@@ -208,13 +208,13 @@ export function isEmptyObject(obj) {
   return result;
 }
 
-export function parseAsArray(obj) {
+export function parseAsArray(obj, separator = ",") {
   if (!obj) {
     return [];
   }
   let arr = [];
   if (typeof obj === "string" || obj instanceof String) {
-    arr = obj.split(",");
+    arr = obj.split(separator ?? ",");
   } else if (obj.constructor === Array) {
     arr = obj;
   } else {

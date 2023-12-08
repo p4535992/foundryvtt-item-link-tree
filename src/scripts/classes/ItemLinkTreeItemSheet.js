@@ -244,10 +244,11 @@ export class ItemLinkTreeItemSheet {
    */
   renderLite() {
     log("", false, "RENDERING");
+    const titleTab = game.settings.get(CONSTANTS.MODULE_ID, "customItemTabName")
+      ? game.settings.get(CONSTANTS.MODULE_ID, "customItemTabName")
+      : game.i18n.localize(`${CONSTANTS.MODULE_ID}.tab.label`);
     // Update the nav menu
-    const treeTabButton = $(
-      '<a class="item" data-tab="tree">' + game.i18n.localize(`${CONSTANTS.MODULE_ID}.tab.label`) + "</a>"
-    );
+    const treeTabButton = $('<a class="item" data-tab="tree">' + titleTab + "</a>");
 
     let tabs = this.sheetHtml.find('.tabs[data-group="primary"]');
 

@@ -1,6 +1,6 @@
 import CONSTANTS from "../../../constants/constants.js";
 import { ItemLinkTreeManager } from "../../../item-link-tree-manager.js";
-import { i18n } from "../../../lib/lib.js";
+import { i18n, parseAsArray } from "../../../lib/lib.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
   static get defaultOptions() {
@@ -20,11 +20,20 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     const item = context.item;
     const source = item.toObject();
 
-    let subTypeTypes = {
-      none: "",
-      gem: i18n(`item-link-tree.gem.label`),
-      leaf: i18n(`item-link-tree.leaf.label`),
-    };
+    const subtypesSettings = parseAsArray(game.settings.get(CONSTANTS.MODULE_ID, "selectableSubtypes") ?? []);
+    let subTypeTypes = {};
+    subTypeTypes["none"] = "";
+    for (const typeOpt of subtypesSettings) {
+      const opt = parseAsArray(typeOpt, "|");
+      const value = opt[0];
+      const label = i18n(opt[1]);
+      subTypeTypes[value] = label;
+    }
+    // let subTypeTypes = {
+    //   none: "",
+    //   gem: i18n(`item-link-tree.gem.label`),
+    //   leaf: i18n(`item-link-tree.leaf.label`),
+    // };
 
     // TODO to localize
     let customTypeTypes = {
@@ -32,6 +41,7 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
       effect: "Effect",
       bonus: "Bonus",
       effectAndBonus: "Effect and Bonus",
+      upgrade: "Upgrade",
     };
 
     let subType = item.getFlag(`item-link-tree`, `subType`) ?? "";

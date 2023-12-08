@@ -47,5 +47,9 @@
   "item-link-tree.gem.label": "Gem",
   "item-link-tree.leaf.label": "Leaf",
   "item-link-tree.filterItemType.label": "Select an array of items for which you want the leaf applied separated by the ',' character (e.g. weapon, equipment, consumable, tool, loot, background, class, subclass, spell, feat, backpack). if empty all tiem types are applied.",
-  "item-link-tree.label.sheetDragContent": "Drag leafs here"
+  "item-link-tree.label.sheetDragContent": "Drag leafs here",
+  "item-link-tree.settings.customItemTabName.title": "Set a custom title for the tab item",
+  "item-link-tree.settings.customItemTabName.hint": "Set a custom title for the tab item",
+  "item-link-tree.settings.selectableSubtypes.title": "The subtypes to show to the the select on the sheet.",
+  "item-link-tree.settings.selectableSubtypes.hint": "The syntax for this is setting is avalue|alabel,bvalue|blabel, where every element separated from , is a option on the select subtype"
 }

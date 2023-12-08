@@ -73,6 +73,36 @@ const API = {
     return leafsFilter;
   },
 
+  getCollectionByFeature(inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error("getCollectionByType | inAttributes must be of type array");
+    }
+    const [features] = inAttributes ?? [];
+    const leafs = ItemLinkTreeHelpers.getCollection(item);
+    if (leafs?.length <= 0) {
+      return [];
+    }
+    const leafsFilter = leafs.filter((leaf) => {
+      return features.includes(leaf.customLink);
+    });
+    return leafsFilter;
+  },
+
+  getCollectionByType(inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error("getCollectionByType | inAttributes must be of type array");
+    }
+    const [types] = inAttributes ?? [];
+    const leafs = ItemLinkTreeHelpers.getCollection(item);
+    if (leafs?.length <= 0) {
+      return [];
+    }
+    const leafsFilter = leafs.filter((leaf) => {
+      return types.includes(leaf.subType);
+    });
+    return leafsFilter;
+  },
+
   isItemLeaf(itemToCheck) {
     const isLeaf = itemToCheck.getFlag("item-link-tree", "isLeaf");
     if (isLeaf) {
