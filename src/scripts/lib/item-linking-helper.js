@@ -6,6 +6,9 @@ export class ItemLinkingHelpers {
   }
 
   static isItemLinked(itemToCheck) {
+    if (!ItemLinkingHelpers.isItemLinkingModuleActive()) {
+      return false;
+    }
     const isLinked = itemToCheck.getFlag("item-linking", "baseItem");
     if (isLinked) {
       return true;
@@ -14,6 +17,10 @@ export class ItemLinkingHelpers {
   }
 
   static retrieveLinkedItem(itemToCheck) {
+    if (!ItemLinkingHelpers.isItemLinkingModuleActive()) {
+      warn(`The module 'item-linking' is not active`);
+      return;
+    }
     if (!ItemLinkingHelpers.isItemLinked(itemToCheck)) {
       warn(`The item ${itemToCheck.name}|${itemToCheck.uuid} is not linked`);
       return;

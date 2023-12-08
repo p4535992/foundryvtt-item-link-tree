@@ -151,6 +151,16 @@ export class ItemLinkTreeItem {
     const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
     const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
     const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+
+    // Ignore any flag update if is a upgrade
+    if (customType === "upgrade") {
+      await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
+
+      Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+
+      return;
+    }
+
     const itemLeafs = [
       ...this.itemTreeList,
       {
