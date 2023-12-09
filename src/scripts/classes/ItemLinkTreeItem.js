@@ -154,10 +154,13 @@ export class ItemLinkTreeItem {
 
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
-      await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
+      try {
+        await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-      Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
-
+        await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+      } catch (e) {
+        throw e;
+      }
       return;
     }
 
@@ -187,7 +190,7 @@ export class ItemLinkTreeItem {
 
     await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-    Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+    await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
   }
 
   /**
@@ -237,7 +240,7 @@ export class ItemLinkTreeItem {
 
     await ItemLinkTreeManager.managePostRemoveLeafFromItem(this.item, itemRemoved, options);
 
-    Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
+    await Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
   }
 
   /**
@@ -293,7 +296,7 @@ export class ItemLinkTreeItem {
       content: `
             <form>
             <div class="form-group">
-                <label>Custom Link Type</label>
+                <label>Short Description Link</label>
                 <input type='text' name='shortDescriptionLink' value='${
                   currentLeaf.shortDescriptionLink ?? ""
                 }'></input>
@@ -353,7 +356,7 @@ export class ItemLinkTreeItem {
 
             ItemLinkTreeManager.managePostUpdateLeafFromItem(this.item, itemUpdated, options);
 
-            Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemToUpdate, this.itemTreeList);
+            await Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemToUpdate, this.itemTreeList);
           },
         },
       },

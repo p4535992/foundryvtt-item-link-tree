@@ -93,6 +93,7 @@
         "compatibility": {}
       }
     ],
+    "recommends": [],
     "conflicts": []
   }
 }

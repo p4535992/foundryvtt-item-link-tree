@@ -138,7 +138,10 @@ export function getItemSync(target, ignoreError) {
   // This is just a patch for compatibility with others modules
   if (target.document) {
     target = target.document;
+  } else if (target.uuid) {
+    target = target.uuid;
   }
+
   if (target instanceof Item) {
     return target;
   }
@@ -172,7 +175,10 @@ export async function getItemAsync(target, ignoreError) {
   // This is just a patch for compatibility with others modules
   if (target.document) {
     target = target.document;
+  } else if (target.uuid) {
+    target = target.uuid;
   }
+
   if (target instanceof Item) {
     return target;
   }
@@ -221,4 +227,17 @@ export function parseAsArray(obj, separator = ",") {
     arr = [obj];
   }
   return arr;
+}
+
+/**
+ * @href https://stackoverflow.com/questions/55601062/using-an-async-function-in-array-find
+ * @param {*} arr
+ * @param {*} asyncCallback
+ * @returns
+ */
+export async function findAsync(arr, asyncCallback) {
+  const promises = arr.map(asyncCallback);
+  const results = await Promise.all(promises);
+  const index = results.findIndex((result) => result);
+  return arr[index];
 }

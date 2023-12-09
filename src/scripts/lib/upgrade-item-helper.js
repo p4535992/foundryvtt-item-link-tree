@@ -1,9 +1,13 @@
 import API from "../API/api";
+import { ItemLinkTreeItem } from "../classes/ItemLinkTreeItem";
+import CONSTANTS from "../constants/constants";
 import { ItemLinkTreeManager } from "../item-link-tree-manager";
 import { BabonusHelpers } from "./babonus-helpers";
 import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
+import { DaeHelpers } from "./dae-helpers";
 import { ItemLinkTreeHelpers } from "./item-link-tree-helpers";
-import { error, getItemAsync, log } from "./lib";
+import { ItemLinkingHelpers } from "./item-linking-helper";
+import { error, findAsync, getItemAsync, getItemSync, log } from "./lib";
 
 export class UpgradeItemHelpers {
   // // Insert here the list of compendiums names for every macro "type"
@@ -54,7 +58,7 @@ export class UpgradeItemHelpers {
 
   static async retrieveSuperiorItemAndReplaceOnActor(
     item,
-    crystal
+    originalCrystal
     // type,
     // target_bonus,
     // itemNewName,
@@ -78,8 +82,9 @@ export class UpgradeItemHelpers {
     }
 
     const itemsLeafsOriginalBase = [];
-    const leafsOriginalOnItem = API.getCollection({
+    const leafsOriginalOnItem = API.getCollectionByFeature({
       item: item,
+      features: ["", "bonus", "effect", "effectAndBonus"],
     });
     for (const up of leafsOriginalOnItem) {
       try {
@@ -90,13 +95,42 @@ export class UpgradeItemHelpers {
       } catch (e) {}
     }
 
-    crystal = await getItemAsync(crystal);
+    originalCrystal = await getItemAsync(originalCrystal);
 
-    if (crystal.system.quantity !== 1) {
-      throw error(`Could not find ${crystal.name} for doing the upgrade`, true);
+    if (originalCrystal.system.quantity !== 1) {
+      throw error(`Could not find ${originalCrystal.name} for doing the upgrade`, true);
+    }
+    let crystal = originalCrystal;
+    if (ItemLinkingHelpers.isItemLinked(crystal)) {
+      crystal = ItemLinkingHelpers.retrieveLinkedItem(crystal);
+      crystal = await getItemAsync(crystal);
     }
 
-    const actorB = item.actor;
+    const upgradeSources =
+      API.getCollectionByFeature({
+        item: crystal,
+        features: ["source"],
+      }) ?? [];
+    const isCurrentItemASource = await findAsync(upgradeSources, async (i) => {
+      //await upgradeSources.find(async (i) => {
+      let iTmp = await getItemAsync(i.uuid);
+      if (ItemLinkingHelpers.isItemLinked(iTmp)) {
+        iTmp = ItemLinkingHelpers.retrieveLinkedItem(iTmp);
+        iTmp = await getItemAsync(iTmp.uuid);
+      }
+      let iTmp2 = await getItemAsync(item);
+      if (ItemLinkingHelpers.isItemLinked(item)) {
+        iTmp2 = ItemLinkingHelpers.retrieveLinkedItem(item);
+        iTmp2 = await getItemAsync(iTmp2.uuid);
+      }
+      // TODO control by name is enough ??
+      return ItemLinkTreeManager._cleanName(iTmp.name) === ItemLinkTreeManager._cleanName(iTmp2.name);
+    });
+    if (!isCurrentItemASource) {
+      throw error(`The item '${item.name}' cannot be upgraded because is not set as a source`);
+    }
+
+    const actorB = originalCrystal.actor;
     if (!actorB) {
       throw error(`${game.user.name} please at least select a actor`, true);
     }
@@ -115,8 +149,9 @@ export class UpgradeItemHelpers {
     }
 
     const upgradeableItemsBase = [];
-    const upgradeableItemsOnLeaf = API.getCollection({
+    const upgradeableItemsOnLeaf = API.getCollectionByFeature({
       item: crystal,
+      excludes: ["source"],
     });
     for (const up of upgradeableItemsOnLeaf) {
       try {
@@ -279,12 +314,44 @@ export class UpgradeItemHelpers {
             //     BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
             //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
             // };
+
+            // for (const l of itemsLeafsOriginalBase) {
+            //   await API.addLeaf(targetItem, l) ?? [];
+            // }
+
+            const arrItemLeafsFinal = [];
             for (const l of itemsLeafsOriginalBase) {
-              await API.addLeaf(targetItem, l);
+              const arrItemLeafs = (await API.prepareItemsLeafsFromAddLeaf(targetItem, l)) ?? [];
+              if (arrItemLeafs?.length > 0) {
+                arrItemLeafsFinal.push(...arrItemLeafs);
+              }
             }
 
+            // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
+            await BabonusHelpers.transferBonusFromItemToItem(targetItem, item);
+            await DaeHelpers.transferEffectsFromItemToItem(targetItem, item);
+
+            const itemLinkTree = new ItemLinkTreeItem(targetItem);
+
+            const itemLeafs = [
+              ...itemLinkTree.itemTreeList, // Only for the prepare action
+              ...arrItemLeafsFinal,
+            ];
+
+            //this update should not re-render the item sheet because we need to wait until we refresh to do so
+            const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
+            await itemLinkTree.item.update({ [property]: itemLeafs }, { render: false });
+
+            await itemLinkTree.refresh();
+
+            // now re-render the item and actor sheets
+            await itemLinkTree.item.render();
+            if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
+
             await UpgradeItemHelpers.removeItem(item);
-            await UpgradeItemHelpers.removeItem(crystal);
+            await UpgradeItemHelpers.removeItem(originalCrystal);
+
+            await DaeHelpers.fixTransferEffect(actorA, targetItem);
 
             log(`Item upgraded with success! ${item.name} -> ${targetItem.name}`);
             ChatMessage.create({

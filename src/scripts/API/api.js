@@ -22,7 +22,7 @@ const API = {
       warn(`No Item found`, true, inAttributes);
       return;
     }
-    return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs);
+    return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs) ?? [];
   },
 
   retrieveLeaf(inAttributes) {
@@ -79,14 +79,22 @@ const API = {
     if (typeof inAttributes !== "object") {
       throw error("getCollectionBySubType | inAttributes must be of type object");
     }
-    const item = inAttributes;
+    const item = inAttributes.item;
     const features = inAttributes.features ?? [];
-    const leafs = ItemLinkTreeHelpers.getCollection(item);
+    const excludes = inAttributes.excludes ?? [];
+    const leafs = this.getCollection(item);
     if (leafs?.length <= 0) {
       return [];
     }
     const leafsFilter = leafs.filter((leaf) => {
-      return features.includes(leaf.customLink);
+      let result = true;
+      if (features.length > 0) {
+        result = features.includes(leaf.customLink);
+      }
+      if (excludes.length > 0) {
+        result = !excludes.includes(leaf.customLink);
+      }
+      return result;
     });
     return leafsFilter;
   },
@@ -95,14 +103,22 @@ const API = {
     if (typeof inAttributes !== "object") {
       throw error("getCollectionBySubType | inAttributes must be of type object");
     }
-    const item = inAttributes;
+    const item = inAttributes.item;
     const types = inAttributes.types ?? [];
-    const leafs = ItemLinkTreeHelpers.getCollection(item);
+    const excludes = inAttributes.excludes ?? [];
+    const leafs = this.getCollection(item);
     if (leafs?.length <= 0) {
       return [];
     }
     const leafsFilter = leafs.filter((leaf) => {
-      return types.includes(leaf.subType);
+      let result = true;
+      if (types.length > 0) {
+        result = types.includes(leaf.subType);
+      }
+      if (excludes.length > 0) {
+        result = !excludes.includes(leaf.subType);
+      }
+      return result;
     });
     return leafsFilter;
   },
@@ -217,7 +233,7 @@ const API = {
 
     await ItemLinkTreeManager.managePostRemoveLeafFromItem(itemLinkTree.item, itemRemoved, options);
 
-    Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
+    await Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
   },
 
   async addLeaf(item, itemLeaf) {
@@ -275,10 +291,13 @@ const API = {
 
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
-      await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
+      try {
+        await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-      Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
-
+        await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+      } catch (e) {
+        throw e;
+      }
       return;
     }
 
@@ -302,13 +321,80 @@ const API = {
 
     await itemLinkTree.refresh();
 
-    // now re-render the item and actor sheets
-    itemLinkTree.item.render();
-    if (itemLinkTree.item.actor) itemLinkTree.item.actor.render();
-
     await ItemLinkTreeManager.managePostAddLeafToItem(itemLinkTree.item, itemAdded, options);
 
-    Hooks.call("item-link-tree.postAddLeafToItem", itemLinkTree.item, itemAdded);
+    await Hooks.call("item-link-tree.postAddLeafToItem", itemLinkTree.item, itemAdded);
+
+    // now re-render the item and actor sheets
+    await itemLinkTree.item.render();
+    if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
+  },
+
+  async prepareItemsLeafsFromAddLeaf(item, itemLeaf) {
+    item = await getItemAsync(item);
+    itemLeaf = await getItemAsync(itemLeaf);
+
+    // MUTATED if this is an owned item
+    // let uuidToAdd = providedUuid;
+    // const itemAdded = await fromUuid(uuidToAdd);
+    const itemAdded = await getItemAsync(itemLeaf);
+    let itemBaseAdded = itemAdded;
+    if (!itemAdded) {
+      warn(`Cannot find this item with uuid ${itemLeaf}`);
+      return;
+    }
+    let uuidToAdd = itemAdded.uuid;
+    if (ItemLinkingHelpers.isItemLinked(itemAdded)) {
+      itemBaseAdded = ItemLinkingHelpers.retrieveLinkedItem(itemAdded);
+      uuidToAdd = itemBaseAdded.uuid;
+    }
+
+    if (Hooks.call("item-link-tree.preAddLeafToItem", item, itemAdded) === false) {
+      log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
+      return;
+    }
+
+    const options = {
+      checkForItemLinking:
+        ItemLinkingHelpers.isItemLinkingModuleActive() &&
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
+      checkForBeaverCrafting:
+        BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
+    };
+    const preResult = ItemLinkTreeManager.managePreAddLeafToItem(item, itemAdded, options);
+    if (!preResult) {
+      return;
+    }
+
+    const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
+    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
+    const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
+    const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+
+    // Ignore any flag update if is a upgrade
+    if (customType === "upgrade") {
+      return;
+    }
+
+    const itemLeafs = [
+      {
+        name: itemBaseAdded.name,
+        img: itemBaseAdded.img,
+        uuid: uuidToAdd,
+        id: itemBaseAdded.id ? itemBaseAdded.id : itemBaseAdded._id,
+        customLink: customType,
+        shortDescriptionLink: shortDescription,
+        subType: subType,
+        showImageIcon: showImageIcon,
+      },
+    ];
+
+    // await ItemLinkTreeManager.managePostAddLeafToItem(item, itemAdded, options);
+
+    await Hooks.call("item-link-tree.postAddLeafToItem", item, itemAdded);
+
+    return itemLeafs;
   },
 };
 

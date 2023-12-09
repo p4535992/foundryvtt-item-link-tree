@@ -1,4 +1,4 @@
-import { getItemSync } from "./lib";
+import { getItemSync, log } from "./lib";
 
 export class BabonusHelpers {
   static isBabonusModuleActive() {
@@ -45,8 +45,9 @@ export class BabonusHelpers {
             }
           }
           if (!foundedBonus) {
-            log(`Added bonus '${bonusToAdd.name}'`, true);
-            await game.modules.get("babonus").api.embedBabonus(item, bonusToAdd);
+            //log(`Added bonus '${bonusToAdd.name}'`, true);
+            // await game.modules.get("babonus").api.embedBabonus(item, bonusToAdd);
+            await game.modules.get("babonus").api.copyBonus(itemWithTheBonus, itemWherePutTheBonus, bonusToAdd.id);
           }
         }
       }
