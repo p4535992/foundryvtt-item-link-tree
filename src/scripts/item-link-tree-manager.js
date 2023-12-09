@@ -106,6 +106,9 @@ export class ItemLinkTreeManager {
   static async managePostAddLeafToItem(item, itemAdded, options) {
     const actor = item.actor;
     if (!actor) {
+      if (itemAdded) {
+        itemAdded = await ItemLinkingHelpers.setLinkedItem(itemAdded, itemAdded);
+      }
       return;
     }
     const customType = getProperty(itemAdded, `flags.item-link-tree.customType`) ?? "";
@@ -240,6 +243,8 @@ export class ItemLinkTreeManager {
         await actor.deleteEmbeddedDocuments("ActiveEffect", idsEffectActorToRemove2);
       }
     }
+
+    itemAdded = await ItemLinkingHelpers.setLinkedItem(itemAdded, itemAdded);
     //}
   }
 

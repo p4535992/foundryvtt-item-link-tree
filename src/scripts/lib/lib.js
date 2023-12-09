@@ -128,7 +128,7 @@ export function getUuid(target) {
   return document?.uuid ?? false;
 }
 
-export function getItemSync(target, ignoreError) {
+export function getItemSync(target, ignoreError = false, ignoreName = true) {
   if (!target) {
     throw error(`Item is undefined`, true, target);
   }
@@ -148,7 +148,10 @@ export function getItemSync(target, ignoreError) {
   if (stringIsUuid(target)) {
     target = fromUuidSync(target);
   } else {
-    target = game.items.get(target) ?? game.items.getName(target);
+    target = game.items.get(target);
+    if (!target && !ignoreName) {
+      target = game.items.getName(target);
+    }
   }
   if (!target) {
     if (ignoreError) {
@@ -165,7 +168,7 @@ export function getItemSync(target, ignoreError) {
   return target;
 }
 
-export async function getItemAsync(target, ignoreError) {
+export async function getItemAsync(target, ignoreError = false, ignoreName = true) {
   if (!target) {
     throw error(`Item is undefined`, true, target);
   }
@@ -185,7 +188,10 @@ export async function getItemAsync(target, ignoreError) {
   if (stringIsUuid(target)) {
     target = await fromUuid(target);
   } else {
-    target = game.items.get(target) ?? game.items.getName(target);
+    target = game.items.get(target);
+    if (!target && !ignoreName) {
+      target = game.items.getName(target);
+    }
   }
   if (!target) {
     if (ignoreError) {

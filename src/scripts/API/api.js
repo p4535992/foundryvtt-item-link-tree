@@ -70,7 +70,13 @@ const API = {
       return;
     }
     const leafsFilter = leafs.filter((leaf) => {
-      return leaf.customLink === "bonus" || leaf.customLink === "effect" || leaf.customLink === "effectAndBonus";
+      // Aggiungo anche la stringa vuota per strani casi d'uso
+      return (
+        leaf.customLink === "" ||
+        leaf.customLink === "bonus" ||
+        leaf.customLink === "effect" ||
+        leaf.customLink === "effectAndBonus"
+      );
     });
     return leafsFilter;
   },
@@ -135,6 +141,15 @@ const API = {
     const isLeaf = itemToCheck.getFlag("item-link-tree", "isLeaf");
     const subtype = itemToCheck.getFlag("item-link-tree", "subType");
     if (isLeaf && subtype === subTypeToCheck) {
+      return true;
+    }
+    return false;
+  },
+
+  isItemLeafByFeature(itemToCheck, customTypeToCheck) {
+    const isLeaf = itemToCheck.getFlag("item-link-tree", "isLeaf");
+    const customType = itemToCheck.getFlag("item-link-tree", "customType");
+    if (isLeaf && customType === customTypeToCheck) {
       return true;
     }
     return false;
@@ -294,7 +309,7 @@ const API = {
       try {
         await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-        await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+        // await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
       } catch (e) {
         throw e;
       }
@@ -331,8 +346,8 @@ const API = {
   },
 
   async prepareItemsLeafsFromAddLeaf(item, itemLeaf) {
-    item = await getItemAsync(item);
-    itemLeaf = await getItemAsync(itemLeaf);
+    const itemI = await getItemAsync(item);
+    const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     // MUTATED if this is an owned item
     // let uuidToAdd = providedUuid;
@@ -362,7 +377,7 @@ const API = {
         BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
         game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
     };
-    const preResult = ItemLinkTreeManager.managePreAddLeafToItem(item, itemAdded, options);
+    const preResult = ItemLinkTreeManager.managePreAddLeafToItem(itemI, itemAdded, options);
     if (!preResult) {
       return;
     }
@@ -378,6 +393,7 @@ const API = {
     }
 
     const itemLeafs = [
+      ...itemLinkTree.itemTreeList,
       {
         name: itemBaseAdded.name,
         img: itemBaseAdded.img,
@@ -390,11 +406,15 @@ const API = {
       },
     ];
 
-    // await ItemLinkTreeManager.managePostAddLeafToItem(item, itemAdded, options);
+    // this update should not re-render the item sheet because we need to wait until we refresh to do so
+    const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
+    await itemI.update({ [property]: itemLeafs });
 
-    await Hooks.call("item-link-tree.postAddLeafToItem", item, itemAdded);
+    // await ItemLinkTreeManager.managePostAddLeafToItem(itemI, itemAdded, options);
 
-    return itemLeafs;
+    await Hooks.call("item-link-tree.postAddLeafToItem", itemI, itemAdded);
+
+    //return itemLeafs;
   },
 };
 

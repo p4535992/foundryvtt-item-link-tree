@@ -88,11 +88,14 @@ export class UpgradeItemHelpers {
     });
     for (const up of leafsOriginalOnItem) {
       try {
-        const itemUp = await getItemAsync(up.uuid);
+        let itemUp = await getItemAsync(up);
         if (itemUp) {
+          itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           itemsLeafsOriginalBase.push(itemUp);
         }
-      } catch (e) {}
+      } catch (e) {
+        throw error(e);
+      }
     }
 
     originalCrystal = await getItemAsync(originalCrystal);
@@ -113,15 +116,15 @@ export class UpgradeItemHelpers {
       }) ?? [];
     const isCurrentItemASource = await findAsync(upgradeSources, async (i) => {
       //await upgradeSources.find(async (i) => {
-      let iTmp = await getItemAsync(i.uuid);
+      let iTmp = await getItemAsync(i);
       if (ItemLinkingHelpers.isItemLinked(iTmp)) {
         iTmp = ItemLinkingHelpers.retrieveLinkedItem(iTmp);
-        iTmp = await getItemAsync(iTmp.uuid);
+        iTmp = await getItemAsync(iTmp);
       }
       let iTmp2 = await getItemAsync(item);
       if (ItemLinkingHelpers.isItemLinked(item)) {
         iTmp2 = ItemLinkingHelpers.retrieveLinkedItem(item);
-        iTmp2 = await getItemAsync(iTmp2.uuid);
+        iTmp2 = await getItemAsync(iTmp2);
       }
       // TODO control by name is enough ??
       return ItemLinkTreeManager._cleanName(iTmp.name) === ItemLinkTreeManager._cleanName(iTmp2.name);
@@ -155,11 +158,14 @@ export class UpgradeItemHelpers {
     });
     for (const up of upgradeableItemsOnLeaf) {
       try {
-        const itemUp = await getItemAsync(up.uuid);
+        let itemUp = await getItemAsync(up);
         if (itemUp) {
+          itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           upgradeableItemsBase.push(itemUp);
         }
-      } catch (e) {}
+      } catch (e) {
+        throw error(e);
+      }
     }
 
     // Type checking
@@ -331,7 +337,10 @@ export class UpgradeItemHelpers {
             await BabonusHelpers.transferBonusFromItemToItem(targetItem, item);
             await DaeHelpers.transferEffectsFromItemToItem(targetItem, item);
             // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
+            // TODO not sure about this
+            targetItem = await ItemLinkingHelpers.setLinkedItem(targetItem, targetItem);
 
+            /*
             const itemLinkTree = new ItemLinkTreeItem(targetItem);
 
             const itemLeafs = [
@@ -342,12 +351,13 @@ export class UpgradeItemHelpers {
             //this update should not re-render the item sheet because we need to wait until we refresh to do so
             const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
             await itemLinkTree.item.update({ [property]: itemLeafs }, { render: false });
-
+            
             await itemLinkTree.refresh();
 
             // now re-render the item and actor sheets
             await itemLinkTree.item.render();
             if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
+            */
 
             await UpgradeItemHelpers.removeItem(item);
             await UpgradeItemHelpers.removeItem(originalCrystal);

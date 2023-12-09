@@ -3,7 +3,7 @@ import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { log, warn } from "../lib/lib.js";
+import { getItemAsync, log, warn } from "../lib/lib.js";
 import { ItemLinkTreeItemSheet } from "./ItemLinkTreeItemSheet.js";
 
 /**
@@ -157,7 +157,7 @@ export class ItemLinkTreeItem {
       try {
         await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-        await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+        // await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
       } catch (e) {
         throw e;
       }
@@ -256,7 +256,10 @@ export class ItemLinkTreeItem {
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     // const uuidToUpdate = this.item.isOwned ? itemToUpdate.uuid : itemToUpdate.getFlag("core", "sourceId");
     const uuidToUpdate = itemToUpdateLeaf.uuid;
-    const itemUpdated = await fromUuid(uuidToUpdate);
+    const itemUpdated = await getItemAsync(uuidToUpdate, true);
+    if (!itemUpdated) {
+      return;
+    }
 
     if (Hooks.call("item-link-tree.preUpdateLeafFromItem", this.item, itemUpdated, this.itemTreeList) === false) {
       log(`UpdateLeafFromItem completion was prevented by the 'item-link-tree.preUpdateLeafFromItem' hook.`);
@@ -356,7 +359,7 @@ export class ItemLinkTreeItem {
 
             ItemLinkTreeManager.managePostUpdateLeafFromItem(this.item, itemUpdated, options);
 
-            await Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemToUpdate, this.itemTreeList);
+            await Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemUpdated, this.itemTreeList);
           },
         },
       },
