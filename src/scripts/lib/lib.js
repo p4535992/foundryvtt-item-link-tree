@@ -138,7 +138,8 @@ export function getItemSync(target, ignoreError = false, ignoreName = true) {
   // This is just a patch for compatibility with others modules
   if (target.document) {
     target = target.document;
-  } else if (target.uuid) {
+  }
+  if (target.uuid) {
     target = target.uuid;
   }
 
@@ -156,14 +157,19 @@ export function getItemSync(target, ignoreError = false, ignoreName = true) {
   if (!target) {
     if (ignoreError) {
       warn(`Item is not found`, false, target);
-      return target;
+      return;
     } else {
       throw error(`Item is not found`, true, target);
     }
   }
   // Type checking
   if (!(target instanceof Item)) {
-    throw error(`Invalid Item`, true, target);
+    if (ignoreError) {
+      warn(`Invalid Item`, true, target);
+      return;
+    } else {
+      throw error(`Invalid Item`, true, target);
+    }
   }
   return target;
 }
@@ -178,7 +184,8 @@ export async function getItemAsync(target, ignoreError = false, ignoreName = tru
   // This is just a patch for compatibility with others modules
   if (target.document) {
     target = target.document;
-  } else if (target.uuid) {
+  }
+  if (target.uuid) {
     target = target.uuid;
   }
 
@@ -196,14 +203,19 @@ export async function getItemAsync(target, ignoreError = false, ignoreName = tru
   if (!target) {
     if (ignoreError) {
       warn(`Item is not found`, false, target);
-      return target;
+      return;
     } else {
       throw error(`Item is not found`, true, target);
     }
   }
   // Type checking
   if (!(target instanceof Item)) {
-    throw error(`Invalid Item`, true, target);
+    if (ignoreError) {
+      warn(`Invalid Item`, true, target);
+      return;
+    } else {
+      throw error(`Invalid Item`, true, target);
+    }
   }
   return target;
 }

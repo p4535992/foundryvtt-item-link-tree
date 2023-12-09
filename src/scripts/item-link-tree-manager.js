@@ -107,7 +107,7 @@ export class ItemLinkTreeManager {
     const actor = item.actor;
     if (!actor) {
       if (itemAdded) {
-        itemAdded = await ItemLinkingHelpers.setLinkedItem(itemAdded, itemAdded);
+        // itemAdded = await ItemLinkingHelpers.setLinkedItem(itemAdded, itemAdded);
       }
       return;
     }
@@ -244,7 +244,7 @@ export class ItemLinkTreeManager {
       }
     }
 
-    itemAdded = await ItemLinkingHelpers.setLinkedItem(itemAdded, itemAdded);
+    // itemAdded = await ItemLinkingHelpers.setLinkedItem(itemAdded, itemAdded);
     //}
   }
 

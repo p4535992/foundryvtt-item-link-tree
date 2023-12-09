@@ -90,7 +90,7 @@ export class UpgradeItemHelpers {
       try {
         let itemUp = await getItemAsync(up);
         if (itemUp) {
-          itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
+          // itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           itemsLeafsOriginalBase.push(itemUp);
         }
       } catch (e) {
@@ -160,7 +160,7 @@ export class UpgradeItemHelpers {
       try {
         let itemUp = await getItemAsync(up);
         if (itemUp) {
-          itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
+          // itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           upgradeableItemsBase.push(itemUp);
         }
       } catch (e) {
