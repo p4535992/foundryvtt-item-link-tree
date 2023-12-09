@@ -330,6 +330,7 @@ export class UpgradeItemHelpers {
             // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
             await BabonusHelpers.transferBonusFromItemToItem(targetItem, item);
             await DaeHelpers.transferEffectsFromItemToItem(targetItem, item);
+            // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
 
             const itemLinkTree = new ItemLinkTreeItem(targetItem);
 

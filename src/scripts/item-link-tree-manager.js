@@ -68,12 +68,18 @@ export class ItemLinkTreeManager {
     if (!game.user.isGM) {
       const isItemAddedLinked = ItemLinkingHelpers.isItemLinked(itemAdded);
       if (!isItemAddedLinked) {
-        warn(`You can't add the leaf because it's not linked`, true);
-        return false;
+        // Ignore check for leaf already present...
+        const isItemLeaf2 = API.isItemLeaf(itemAdded);
+        if (isItemLeaf2) {
+          // DO NOTHING
+        } else {
+          warn(`You can't add the leaf because it's not linked`, true);
+          return false;
+        }
       }
       const quantityItemAdded = itemAdded.system.quantity;
-      if (quantityItemAdded < 1) {
-        warn(`You can't add the leaf because the amount is <= 1`, true);
+      if (quantityItemAdded !== 1) {
+        warn(`You can't add the leaf because the amount is != 1`, true);
         return false;
       }
     }
