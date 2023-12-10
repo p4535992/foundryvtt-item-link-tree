@@ -7,7 +7,7 @@ import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { DaeHelpers } from "./dae-helpers";
 import { ItemLinkTreeHelpers } from "./item-link-tree-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { error, findAsync, getItemAsync, getItemSync, log } from "./lib";
+import { error, findAsync, getItemAsync, getItemSync, info, log } from "./lib";
 
 export class UpgradeItemHelpers {
   // // Insert here the list of compendiums names for every macro "type"
@@ -365,8 +365,12 @@ export class UpgradeItemHelpers {
             await DaeHelpers.fixTransferEffect(actorA, targetItem);
 
             log(`Item upgraded with success! ${item.name} -> ${targetItem.name}`);
+            info(`Oggetto migliorato con successo! ${item.name} -> ${targetItem.name}`, true);
             ChatMessage.create({
-              content: `<b>${actor.name}</b> inserted a <b>${crystal.name}</b> and upgraded 1 <b>${item.name}</b> into a <b>${targetItem.name}</b>`,
+              content: `<div style="text-align: center;">
+        <img src="https://media.discordapp.net/attachments/1016086779796918362/1145841095335485620/dmkal_a_square_image_of_a_gem_floating_on_a_black_canvas_bright_e8c49697-b113-4bae-95cf-980c6bd05ba9.png?width=671&height=671" alt="Image" style="max-width: 100%;">
+        <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${item.name}</strong> in una <strong>${targetItem.name}</strong></p>
+    </div>`,
             });
           },
         },

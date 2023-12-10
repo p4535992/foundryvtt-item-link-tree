@@ -206,6 +206,7 @@ export class ItemLinkTreeItem {
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     // const uuidToRemove = this.item.isOwned ? itemToDelete.uuid : itemToDelete.getFlag("core", "sourceId");
     let uuidToRemove = itemToDelete.uuid;
+    let idToRemove = itemToDelete.id;
     const itemRemoved = await fromUuid(uuidToRemove);
     let itemBaseRemoved = itemRemoved;
     if (itemRemoved && ItemLinkingHelpers.isItemLinked(itemRemoved)) {
@@ -221,7 +222,8 @@ export class ItemLinkTreeItem {
     const options = {};
     ItemLinkTreeManager.managePreRemoveLeafFromItem(this.item, itemRemoved, options);
 
-    const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
+    // const newItemLeafs = this.itemTreeList.filter(({ uuid }) => uuid !== uuidToRemove);
+    const newItemLeafs = this.itemTreeList.filter(({ id }) => id !== idToRemove);
 
     const shouldDeleteLeaf =
       alsoDeleteEmbeddedLeaf &&
