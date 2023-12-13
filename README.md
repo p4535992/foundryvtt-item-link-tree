@@ -85,18 +85,24 @@ The wiki for the API is [here](wiki/api.md)
 
 # Hooks
 
-### Hooks.call("item-link-tree.preAddLeafToItem", currentItem, itemAdded);
+### Hooks.call("item-link-tree.preAddLeafToItem", currentItem, itemAdded) => boolean
 
-### Hooks.call("item-link-tree.postAddLeafToItem", currentItem, itemAdded);
+### Hooks.call("item-link-tree.postAddLeafToItem", currentItem, itemAdded) => Promise<void>
 
-### Hooks.call("item-link-tree.preRemoveLeafFromItem", currentItem, itemRemoved);
 
-### Hooks.call("item-link-tree.postRemoveLeafFromItem", currentItem, itemRemoved);
+### Hooks.call("item-link-tree.preRemoveLeafFromItem", currentItem, itemRemoved) => boolean
 
-### Hooks.call("item-link-tree.preUpdateLeafFromItem", item, itemToUpdate, oldLeafs);
+### Hooks.call("item-link-tree.postRemoveLeafFromItem", currentItem, itemRemoved) => Promise<void>
 
-### Hooks.call("item-link-tree.postUpdateLeafFromItem", item, itemToUpdate, oldLeafs);
 
+### Hooks.call("item-link-tree.preUpdateLeafFromItem", item, itemToUpdate, oldLeafs) => boolean
+
+### Hooks.call("item-link-tree.postUpdateLeafFromItem", item, itemToUpdate, oldLeafs) => Promise<void>
+
+
+### Hooks.call("item-link-tree.preUpgradeAdditionalCost", actor, currentItem, itemUpgraded) => number
+
+### Hooks.call("item-link-tree.postUpgradeAdditionalCost", actor, currentItem, itemUpgraded) => Promise<void>
 
 
 # Build

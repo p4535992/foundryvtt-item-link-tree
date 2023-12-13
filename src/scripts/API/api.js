@@ -64,8 +64,8 @@ const API = {
     return leafs;
   },
 
-  getCollectionEffectAndBonus(item) {
-    const leafs = this.getCollection(item);
+  getCollectionEffectAndBonus(itemWithLeafs) {
+    const leafs = this.getCollection(itemWithLeafs);
     if (!leafs || leafs?.length <= 0) {
       return;
     }
@@ -85,10 +85,10 @@ const API = {
     if (typeof inAttributes !== "object") {
       throw error("getCollectionBySubType | inAttributes must be of type object");
     }
-    const item = inAttributes.item;
+    const itemWithLeafs = inAttributes.item;
     const features = inAttributes.features ?? [];
     const excludes = inAttributes.excludes ?? [];
-    const leafs = this.getCollection(item);
+    const leafs = this.getCollection(itemWithLeafs);
     if (leafs?.length <= 0) {
       return [];
     }
@@ -109,10 +109,10 @@ const API = {
     if (typeof inAttributes !== "object") {
       throw error("getCollectionBySubType | inAttributes must be of type object");
     }
-    const item = inAttributes.item;
+    const itemWithLeafs = inAttributes.item;
     const types = inAttributes.types ?? [];
     const excludes = inAttributes.excludes ?? [];
-    const leafs = this.getCollection(item);
+    const leafs = this.getCollection(itemWithLeafs);
     if (leafs?.length <= 0) {
       return [];
     }
@@ -129,26 +129,52 @@ const API = {
     return leafsFilter;
   },
 
-  isItemLeaf(itemToCheck) {
-    const isLeaf = itemToCheck.getFlag("item-link-tree", "isLeaf");
+  getCollectionUpgradableItems(inAttributes) {
+    if (typeof inAttributes !== "object") {
+      throw error("getCollectionBySubType | inAttributes must be of type object");
+    }
+    const itemWithLeafs = inAttributes.item;
+    const nameReference = inAttributes.name ?? [];
+    const excludes = inAttributes.excludes ?? [];
+    const leafs = this.getCollection(itemWithLeafs);
+    if (leafs?.length <= 0) {
+      return [];
+    }
+    const leafsFilter = leafs.filter((leaf) => {
+      let result = false;
+      let arrValidSources = parseAsArray(leaf.shortDescriptionLink);
+      if (arrValidSources.length > 0) {
+        result = arrValidSources.includes(nameReference);
+      }
+      if (excludes.length > 0) {
+        const difference = arrValidSources.filter((x) => !excludes.has(x));
+        result = difference.length > 0;
+      }
+      return result;
+    });
+    return leafsFilter;
+  },
+
+  isItemLeaf(itemLeafToCheck) {
+    const isLeaf = itemLeafToCheck.getFlag("item-link-tree", "isLeaf");
     if (isLeaf) {
       return true;
     }
     return false;
   },
 
-  isItemLeafBySubType(itemToCheck, subTypeToCheck) {
-    const isLeaf = itemToCheck.getFlag("item-link-tree", "isLeaf");
-    const subtype = itemToCheck.getFlag("item-link-tree", "subType");
+  isItemLeafBySubType(itemLeafToCheck, subTypeToCheck) {
+    const isLeaf = itemLeafToCheck.getFlag("item-link-tree", "isLeaf");
+    const subtype = itemLeafToCheck.getFlag("item-link-tree", "subType");
     if (isLeaf && subtype === subTypeToCheck) {
       return true;
     }
     return false;
   },
 
-  isItemLeafByFeature(itemToCheck, customTypeToCheck) {
-    const isLeaf = itemToCheck.getFlag("item-link-tree", "isLeaf");
-    const customType = itemToCheck.getFlag("item-link-tree", "customType");
+  isItemLeafByFeature(itemLeafToCheck, customTypeToCheck) {
+    const isLeaf = itemLeafToCheck.getFlag("item-link-tree", "isLeaf");
+    const customType = itemLeafToCheck.getFlag("item-link-tree", "customType");
     if (isLeaf && customType === customTypeToCheck) {
       return true;
     }
@@ -168,9 +194,9 @@ const API = {
     }
   },
 
-  hasSubtype(item, subtype) {
+  hasSubtype(itemWithLeafs, subtype) {
     const options = {
-      item: item,
+      item: itemWithLeafs,
     };
     const leafs = this.getCollection(options);
     if (!leafs || leafs?.length <= 0) {

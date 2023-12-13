@@ -7,9 +7,22 @@ import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { DaeHelpers } from "./dae-helpers";
 import { ItemLinkTreeHelpers } from "./item-link-tree-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { error, findAsync, getItemAsync, getItemSync, info, log } from "./lib";
+import { error, getItemAsync, getItemSync, info, isRealNumber, log } from "./lib";
 
 export class UpgradeItemHelpers {
+  /**
+   * @href https://stackoverflow.com/questions/55601062/using-an-async-function-in-array-find
+   * @param {*} arr
+   * @param {*} asyncCallback
+   * @returns
+   */
+  static async _findAsync(arr, asyncCallback) {
+    const promises = arr.map(asyncCallback);
+    const results = await Promise.all(promises);
+    const index = results.findIndex((result) => result);
+    return arr[index];
+  }
+
   // // Insert here the list of compendiums names for every macro "type"
   // const COMPENDIUM = {
   //     armor: ["ArmaturePG"],
@@ -121,7 +134,7 @@ export class UpgradeItemHelpers {
         item: baseLinkedCrystal,
         features: ["source"],
       }) ?? [];
-    const isCurrentItemASource = await findAsync(upgradeSources, async (i) => {
+    const isCurrentItemASource = await UpgradeItemHelpers._findAsync(upgradeSources, async (i) => {
       //await upgradeSources.find(async (i) => {
       let iTmp = await getItemAsync(i);
       if (ItemLinkingHelpers.isItemLinked(iTmp)) {
@@ -159,9 +172,14 @@ export class UpgradeItemHelpers {
     }
 
     const upgradeableItemsBase = [];
-    let upgradeableItemsOnLeaf = API.getCollectionByFeature({
+    // let upgradeableItemsOnLeaf = API.getCollectionByFeature({
+    //   item: baseLinkedCrystal,
+    //   excludes: ["source"],
+    // });
+    let upgradeableItemsOnLeaf = API.getCollectionUpgradableItems({
       item: baseLinkedCrystal,
-      excludes: ["source"],
+      name: baseLinkedItem.name,
+      excludes: [],
     });
     for (const up of upgradeableItemsOnLeaf) {
       try {
@@ -171,7 +189,6 @@ export class UpgradeItemHelpers {
           itemUp = await getItemAsync(itemUp);
         }
         if (itemUp) {
-          // itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           upgradeableItemsBase.push(itemUp);
         }
       } catch (e) {
@@ -284,13 +301,14 @@ export class UpgradeItemHelpers {
               <div class="form-group">
                   <label>Item Upgraded</label>
                   <select id="item" name="item">
+                  <option selected=selected value="">Select a upgrade</option>
                   {{#each upgradeableItems}}
                       <option value="{{_id}}">{{name}}</option>
                   {{/each}}
                   </select>
               </div>
               <div class="form-group">
-                  <label>Cost</label>
+                  <label>Item used:</label>
                   <span>1 ${baseLinkedCrystal.name}</span>
               </div>
           </form>
@@ -311,78 +329,107 @@ export class UpgradeItemHelpers {
             let targetItem = upgradeableItems.find((i) => i.id === targetItemId);
 
             if (!targetItem) {
-              throw error(`Could not find the item to upgrade`, true);
+              throw error(`Could not find the item to upgrade, you must select at least a item for the upgrade`, true);
             }
 
             // const targetItem = mappedItems[item.name];
 
-            // TODO ADD SOME CUSTOMIZATION FOR NAME AND NAME ???
-            let currentName = targetItem.name; //manageNewName(weaponMain.name, itemNewName, itemNewPrefix, itemNewSuffix);
-            let currentImage = targetItem.img;
-            // if (itemNewImage) {
-            //   currentImage = itemNewImage;
-            // }
-            targetItem = await UpgradeItemHelpers.addItem(actor, targetItem, currentName, currentImage);
-            // const options = {
-            //   checkForItemLinking:
-            //     ItemLinkingHelpers.isItemLinkingModuleActive() &&
-            //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
-            //   checkForBeaverCrafting:
-            //     BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
-            //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
-            // };
-
-            // for (const l of itemsLeafsOriginalBase) {
-            //   await API.addLeaf(targetItem, l) ?? [];
-            // }
-
-            const arrItemLeafsFinal = [];
-            for (const l of itemsLeafsOriginalBase) {
-              const arrItemLeafs = (await API.prepareItemsLeafsFromAddLeaf(targetItem, l)) ?? [];
-              if (arrItemLeafs?.length > 0) {
-                arrItemLeafsFinal.push(...arrItemLeafs);
-              }
+            let additionalCost = 0;
+            let additionalCostFromHook = Hooks.call(
+              "item-link-tree.preUpgradeAdditionalCost",
+              actor,
+              originalItem,
+              targetItem
+            );
+            if (isRealNumber(additionalCostFromHook) && additionalCostFromHook > 0) {
+              additionalCost = additionalCostFromHook;
             }
+            new Dialog({
+              title: `There is a additional cost for this:`,
+              content: `
+                  <div class="form-group">
+                  <label>Additional cost :</label>
+                  <span>${additionalCost}</span>
+              </div>`,
+              buttons: {
+                yes: {
+                  icon: `<i class="fas fa-hand-holding-medical"></i>`,
+                  label: "Are you sure to perform the upgrade ? <b>It is a not turning back action for the item.</b>",
+                  callback: async (html) => {
+                    await Hooks.call("item-link-tree.preUpgradeAdditionalCost", actor, originalItem, targetItem);
 
-            // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
-            await BabonusHelpers.transferBonusFromItemToItem(targetItem, originalItem);
-            await DaeHelpers.transferEffectsFromItemToItem(targetItem, originalItem);
-            // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
-            // TODO not sure about this
-            targetItem = await ItemLinkingHelpers.setLinkedItem(targetItem, targetItem);
+                    // TODO ADD SOME CUSTOMIZATION FOR NAME AND NAME ???
+                    let currentName = targetItem.name; //manageNewName(weaponMain.name, itemNewName, itemNewPrefix, itemNewSuffix);
+                    let currentImage = targetItem.img;
+                    // if (itemNewImage) {
+                    //   currentImage = itemNewImage;
+                    // }
+                    targetItem = await UpgradeItemHelpers.addItem(actor, targetItem, currentName, currentImage);
+                    // const options = {
+                    //   checkForItemLinking:
+                    //     ItemLinkingHelpers.isItemLinkingModuleActive() &&
+                    //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
+                    //   checkForBeaverCrafting:
+                    //     BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
+                    //     game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
+                    // };
 
-            /*
-            const itemLinkTree = new ItemLinkTreeItem(targetItem);
+                    // for (const l of itemsLeafsOriginalBase) {
+                    //   await API.addLeaf(targetItem, l) ?? [];
+                    // }
 
-            const itemLeafs = [
-              ...itemLinkTree.itemTreeList, // Only for the prepare action
-              ...arrItemLeafsFinal,
-            ];
+                    const arrItemLeafsFinal = [];
+                    for (const l of itemsLeafsOriginalBase) {
+                      const arrItemLeafs = (await API.prepareItemsLeafsFromAddLeaf(targetItem, l)) ?? [];
+                      if (arrItemLeafs?.length > 0) {
+                        arrItemLeafsFinal.push(...arrItemLeafs);
+                      }
+                    }
 
-            //this update should not re-render the item sheet because we need to wait until we refresh to do so
-            const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
-            await itemLinkTree.item.update({ [property]: itemLeafs }, { render: false });
-            
-            await itemLinkTree.refresh();
+                    // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
+                    await BabonusHelpers.transferBonusFromItemToItem(targetItem, originalItem);
+                    await DaeHelpers.transferEffectsFromItemToItem(targetItem, originalItem);
+                    // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
+                    // TODO not sure about this
+                    targetItem = await ItemLinkingHelpers.setLinkedItem(targetItem, targetItem);
 
-            // now re-render the item and actor sheets
-            await itemLinkTree.item.render();
-            if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
-            */
+                    /*
+                    const itemLinkTree = new ItemLinkTreeItem(targetItem);
 
-            await UpgradeItemHelpers.removeItem(originalItem);
-            await UpgradeItemHelpers.removeItem(originalCrystal);
+                    const itemLeafs = [
+                      ...itemLinkTree.itemTreeList, // Only for the prepare action
+                      ...arrItemLeafsFinal,
+                    ];
 
-            await DaeHelpers.fixTransferEffect(actorA, targetItem);
+                    //this update should not re-render the item sheet because we need to wait until we refresh to do so
+                    const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
+                    await itemLinkTree.item.update({ [property]: itemLeafs }, { render: false });
+                    
+                    await itemLinkTree.refresh();
 
-            log(`Item upgraded with success! ${originalItem.name} -> ${targetItem.name}`);
-            info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
-            ChatMessage.create({
-              content: `<div style="text-align: center;">
-        <img src="https://media.discordapp.net/attachments/1016086779796918362/1145841095335485620/dmkal_a_square_image_of_a_gem_floating_on_a_black_canvas_bright_e8c49697-b113-4bae-95cf-980c6bd05ba9.png?width=671&height=671" alt="Image" style="max-width: 100%;">
-        <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${originalItem.name}</strong> in una <strong>${targetItem.name}</strong></p>
-    </div>`,
-            });
+                    // now re-render the item and actor sheets
+                    await itemLinkTree.item.render();
+                    if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
+                    */
+
+                    await UpgradeItemHelpers.removeItem(originalItem);
+                    await UpgradeItemHelpers.removeItem(originalCrystal);
+
+                    await DaeHelpers.fixTransferEffect(actorA, targetItem);
+
+                    log(`Item upgraded with success! ${originalItem.name} -> ${targetItem.name}`);
+                    info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
+                    ChatMessage.create({
+                      content: `<div style="text-align: center;">
+                <img src="https://media.discordapp.net/attachments/1016086779796918362/1145841095335485620/dmkal_a_square_image_of_a_gem_floating_on_a_black_canvas_bright_e8c49697-b113-4bae-95cf-980c6bd05ba9.png?width=671&height=671" alt="Image" style="max-width: 100%;">
+                <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${originalItem.name}</strong> in una <strong>${targetItem.name}</strong></p>
+              </div>`,
+                    });
+                  },
+                },
+              },
+              default: "yes",
+            }).render(true);
           },
         },
       },

@@ -247,15 +247,6 @@ export function parseAsArray(obj, separator = ",") {
   return arr;
 }
 
-/**
- * @href https://stackoverflow.com/questions/55601062/using-an-async-function-in-array-find
- * @param {*} arr
- * @param {*} asyncCallback
- * @returns
- */
-export async function findAsync(arr, asyncCallback) {
-  const promises = arr.map(asyncCallback);
-  const results = await Promise.all(promises);
-  const index = results.findIndex((result) => result);
-  return arr[index];
+export function isRealNumber(inNumber) {
+  return !isNaN(inNumber) && typeof inNumber === "number" && isFinite(inNumber);
 }
