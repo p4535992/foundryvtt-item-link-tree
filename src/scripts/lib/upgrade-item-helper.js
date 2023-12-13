@@ -57,7 +57,7 @@ export class UpgradeItemHelpers {
   // target_bonus: number
 
   static async retrieveSuperiorItemAndReplaceOnActor(
-    item,
+    originalItem,
     originalCrystal
     // type,
     // target_bonus,
@@ -66,13 +66,19 @@ export class UpgradeItemHelpers {
     // itemNewPrefix,
     // itemNewSuffix
   ) {
-    item = await getItemAsync(item);
+    originalItem = await getItemAsync(originalItem);
 
-    if (item.system.quantity !== 1) {
-      throw error(`Could not find ${item.name} for doing the upgrade`, true);
+    // TODO MAKE MULTISYSTEM
+    if (originalItem.system.quantity !== 1) {
+      throw error(`Could not find ${originalItem.name} for doing the upgrade`, true);
+    }
+    let baseLinkedItem = originalItem;
+    if (ItemLinkingHelpers.isItemLinked(baseLinkedItem)) {
+      baseLinkedItem = ItemLinkingHelpers.retrieveLinkedItem(baseLinkedItem);
+      baseLinkedItem = await getItemAsync(baseLinkedItem);
     }
 
-    const actorA = item.actor;
+    const actorA = originalItem.actor;
     if (!actorA) {
       throw error(`${game.user.name} please at least select a actor`, true);
     }
@@ -83,7 +89,7 @@ export class UpgradeItemHelpers {
 
     const itemsLeafsOriginalBase = [];
     const leafsOriginalOnItem = API.getCollectionByFeature({
-      item: item,
+      item: originalItem,
       features: ["", "bonus", "effect", "effectAndBonus"],
     });
     for (const up of leafsOriginalOnItem) {
@@ -100,18 +106,19 @@ export class UpgradeItemHelpers {
 
     originalCrystal = await getItemAsync(originalCrystal);
 
+    // TODO MAKE MULTISYSTEM
     if (originalCrystal.system.quantity !== 1) {
       throw error(`Could not find ${originalCrystal.name} for doing the upgrade`, true);
     }
-    let crystal = originalCrystal;
-    if (ItemLinkingHelpers.isItemLinked(crystal)) {
-      crystal = ItemLinkingHelpers.retrieveLinkedItem(crystal);
-      crystal = await getItemAsync(crystal);
+    let baseLinkedCrystal = originalCrystal;
+    if (ItemLinkingHelpers.isItemLinked(baseLinkedCrystal)) {
+      baseLinkedCrystal = ItemLinkingHelpers.retrieveLinkedItem(baseLinkedCrystal);
+      baseLinkedCrystal = await getItemAsync(baseLinkedCrystal);
     }
 
     const upgradeSources =
       API.getCollectionByFeature({
-        item: crystal,
+        item: baseLinkedCrystal,
         features: ["source"],
       }) ?? [];
     const isCurrentItemASource = await findAsync(upgradeSources, async (i) => {
@@ -121,16 +128,16 @@ export class UpgradeItemHelpers {
         iTmp = ItemLinkingHelpers.retrieveLinkedItem(iTmp);
         iTmp = await getItemAsync(iTmp);
       }
-      let iTmp2 = await getItemAsync(item);
-      if (ItemLinkingHelpers.isItemLinked(item)) {
-        iTmp2 = ItemLinkingHelpers.retrieveLinkedItem(item);
-        iTmp2 = await getItemAsync(iTmp2);
-      }
+      // let iTmp2 = await getItemAsync(originalItem);
+      // if (ItemLinkingHelpers.isItemLinked(originalItem)) {
+      //   iTmp2 = ItemLinkingHelpers.retrieveLinkedItem(originalItem);
+      //   iTmp2 = await getItemAsync(iTmp2);
+      // }
       // TODO control by name is enough ??
-      return ItemLinkTreeManager._cleanName(iTmp.name) === ItemLinkTreeManager._cleanName(iTmp2.name);
+      return ItemLinkTreeManager._cleanName(iTmp.name) === ItemLinkTreeManager._cleanName(baseLinkedItem.name);
     });
     if (!isCurrentItemASource) {
-      throw error(`The item '${item.name}' cannot be upgraded because is not set as a source`);
+      throw error(`The item '${originalItem.name}' cannot be upgraded because is not set as a source`);
     }
 
     const actorB = originalCrystal.actor;
@@ -146,19 +153,23 @@ export class UpgradeItemHelpers {
       throw error(`Invalid actor source and actor target`, true);
     }
 
-    const customType = getProperty(crystal, `flags.item-link-tree.customType`) ?? "";
+    const customType = getProperty(baseLinkedCrystal, `flags.item-link-tree.customType`) ?? "";
     if (customType !== "upgrade") {
       throw error(`Invalid leaf customType for the upgrade of the item ${customType}`, true);
     }
 
     const upgradeableItemsBase = [];
-    const upgradeableItemsOnLeaf = API.getCollectionByFeature({
-      item: crystal,
+    let upgradeableItemsOnLeaf = API.getCollectionByFeature({
+      item: baseLinkedCrystal,
       excludes: ["source"],
     });
     for (const up of upgradeableItemsOnLeaf) {
       try {
         let itemUp = await getItemAsync(up);
+        if (ItemLinkingHelpers.isItemLinked(itemUp)) {
+          itemUp = ItemLinkingHelpers.retrieveLinkedItem(itemUp);
+          itemUp = await getItemAsync(itemUp);
+        }
         if (itemUp) {
           // itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           upgradeableItemsBase.push(itemUp);
@@ -169,11 +180,11 @@ export class UpgradeItemHelpers {
     }
 
     // Type checking
-    if (!(crystal instanceof CONFIG.Item.documentClass)) {
+    if (!(baseLinkedCrystal instanceof CONFIG.Item.documentClass)) {
       throw error(`Invalid leaf for the upgrade of the item`, true);
     }
 
-    const actor = item.actor;
+    const actor = originalItem.actor;
     if (!actor) {
       throw error(`${game.user.name} please at least select a actor`, true);
     }
@@ -268,7 +279,7 @@ export class UpgradeItemHelpers {
               <hr/>
               <div class="form-group">
                   <label>Item to Upgrade</label>
-                  <span>1 ${item.name}</span>
+                  <span>1 ${originalItem.name}</span>
               </div>
               <div class="form-group">
                   <label>Item Upgraded</label>
@@ -280,13 +291,13 @@ export class UpgradeItemHelpers {
               </div>
               <div class="form-group">
                   <label>Cost</label>
-                  <span>1 ${crystal.name}</span>
+                  <span>1 ${baseLinkedCrystal.name}</span>
               </div>
           </form>
       `;
 
     new Dialog({
-      title: `Use '${crystal.name}' and upgraded '${item.name}'`,
+      title: `Use '${baseLinkedCrystal.name}' and upgraded '${originalItem.name}'`,
       content: Handlebars.compile(content)({
         upgradeableItems,
       }),
@@ -334,8 +345,8 @@ export class UpgradeItemHelpers {
             }
 
             // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
-            await BabonusHelpers.transferBonusFromItemToItem(targetItem, item);
-            await DaeHelpers.transferEffectsFromItemToItem(targetItem, item);
+            await BabonusHelpers.transferBonusFromItemToItem(targetItem, originalItem);
+            await DaeHelpers.transferEffectsFromItemToItem(targetItem, originalItem);
             // await ItemLinkTreeHelpers.transferFlagsFromItemToItem(targetItem, item);
             // TODO not sure about this
             targetItem = await ItemLinkingHelpers.setLinkedItem(targetItem, targetItem);
@@ -359,17 +370,17 @@ export class UpgradeItemHelpers {
             if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
             */
 
-            await UpgradeItemHelpers.removeItem(item);
+            await UpgradeItemHelpers.removeItem(originalItem);
             await UpgradeItemHelpers.removeItem(originalCrystal);
 
             await DaeHelpers.fixTransferEffect(actorA, targetItem);
 
-            log(`Item upgraded with success! ${item.name} -> ${targetItem.name}`);
-            info(`Oggetto migliorato con successo! ${item.name} -> ${targetItem.name}`, true);
+            log(`Item upgraded with success! ${originalItem.name} -> ${targetItem.name}`);
+            info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
             ChatMessage.create({
               content: `<div style="text-align: center;">
         <img src="https://media.discordapp.net/attachments/1016086779796918362/1145841095335485620/dmkal_a_square_image_of_a_gem_floating_on_a_black_canvas_bright_e8c49697-b113-4bae-95cf-980c6bd05ba9.png?width=671&height=671" alt="Image" style="max-width: 100%;">
-        <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${item.name}</strong> in una <strong>${targetItem.name}</strong></p>
+        <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${originalItem.name}</strong> in una <strong>${targetItem.name}</strong></p>
     </div>`,
             });
           },
