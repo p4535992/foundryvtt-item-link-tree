@@ -100,9 +100,9 @@ The wiki for the API is [here](wiki/api.md)
 ### Hooks.call("item-link-tree.postUpdateLeafFromItem", item, itemToUpdate, oldLeafs) => Promise<void>
 
 
-### Hooks.call("item-link-tree.preUpgradeAdditionalCost", actor, currentItem, itemUpgraded) => number
+### Hooks.call("item-link-tree.preUpgradeAdditionalCost", actor, currentItem, itemUpgraded, additionalCost) => boolean
 
-### Hooks.call("item-link-tree.postUpgradeAdditionalCost", actor, currentItem, itemUpgraded) => Promise<void>
+### Hooks.call("item-link-tree.postUpgradeAdditionalCost", actor, currentItem, itemUpgraded, additionalCost) => Promise<void>
 
 
 # Build

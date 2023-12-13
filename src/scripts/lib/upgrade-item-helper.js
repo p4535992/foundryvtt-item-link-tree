@@ -335,12 +335,15 @@ export class UpgradeItemHelpers {
             // const targetItem = mappedItems[item.name];
 
             let additionalCost = 0;
-            let additionalCostFromHook = Hooks.call(
+            let optionsAdditionalCost = {};
+            Hooks.call(
               "item-link-tree.preUpgradeAdditionalCost",
               actor,
               originalItem,
-              targetItem
+              targetItem,
+              optionsAdditionalCost
             );
+            let additionalCostFromHook = optionsAdditionalCost.additionalCost;
             if (isRealNumber(additionalCostFromHook) && additionalCostFromHook > 0) {
               additionalCost = additionalCostFromHook;
             }
@@ -356,7 +359,15 @@ export class UpgradeItemHelpers {
                   icon: `<i class="fas fa-hand-holding-medical"></i>`,
                   label: "Are you sure to perform the upgrade ? <b>It is a not turning back action for the item.</b>",
                   callback: async (html) => {
-                    await Hooks.call("item-link-tree.preUpgradeAdditionalCost", actor, originalItem, targetItem);
+                    let optionsAdditionalCost = {};
+                    optionsAdditionalCost.additionalCost = additionalCost;
+                    await Hooks.call(
+                      "item-link-tree.postUpgradeAdditionalCost",
+                      actor,
+                      originalItem,
+                      targetItem,
+                      optionsAdditionalCost
+                    );
 
                     // TODO ADD SOME CUSTOMIZATION FOR NAME AND NAME ???
                     let currentName = targetItem.name; //manageNewName(weaponMain.name, itemNewName, itemNewPrefix, itemNewSuffix);
