@@ -24,7 +24,9 @@ There is also for those who use it an integration with the [Item Linking](https:
 
 This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval and license compatibility.
 
-I strongly urge you to tip him, to his kofi account: [Ko-fi](https://ko-fi.com/zhell)
+**Note: This module is a personal only use module forked from [Item with spells](https://github.com/krbz999/foundryvtt-item-link-tree) made for a personal use case, which I make available to all with [krbz999 (aka Zhell)](https://github.com/krbz999/) approval and license compatibility. If you want to support more modules of this kind, I invite you to go and support his [Ko-fi](https://ko-fi.com/zhell)**
+
+### and if you feel generous you can to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
 **NOTE: This module is been tested only on Dnd5e system**
 
