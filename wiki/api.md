@@ -21,3 +21,10 @@ game.modules.get('item-link-tree').api.getCollection({
 ```
 
 
+
+
+
+game.modules.get('item-link-tree').api.upgradeItemGeneratorHelpers(
+  armor: ["ArmaturePG"],
+  weapon: ["ArmiPG"],
+);

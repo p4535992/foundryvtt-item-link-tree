@@ -3,7 +3,18 @@ import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { debug, error, getItemAsync, getItemSync, info, parseAsArray, warn } from "../lib/lib.js";
+import {
+  debug,
+  error,
+  getItemAsync,
+  getItemSync,
+  info,
+  isRealBooleanOrElseNull,
+  isRealNumber,
+  parseAsArray,
+  warn,
+} from "../lib/lib.js";
+import { UpgradeItemGeneratorHelpers } from "../lib/upgrade-item-generator-helpers.js";
 import { UpgradeItemHelpers } from "../lib/upgrade-item-helper.js";
 
 const API = {
@@ -277,7 +288,7 @@ const API = {
     await Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
   },
 
-  async addLeaf(item, itemLeaf) {
+  async addLeaf(item, itemLeaf, leafOptions = {}) {
     const itemI = await getItemAsync(item);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
@@ -325,10 +336,14 @@ const API = {
       return;
     }
 
-    const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
-    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
-    const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
-    const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+    const subType = leafOptions.subType ?? getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
+    const showImageIcon = isRealBooleanOrElseNull(leafOptions.showImageIcon)
+      ? leafOptions.showImageIcon
+      : getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? false;
+    const customType = leafOptions.customType ?? getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
+    const shortDescription =
+      leafOptions.shortDescriptionLink ?? getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+    const customLink = leafOptions.customLink;
 
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
@@ -349,7 +364,7 @@ const API = {
         img: itemBaseAdded.img,
         uuid: uuidToAdd,
         id: itemBaseAdded.id ? itemBaseAdded.id : itemBaseAdded._id,
-        customLink: customType,
+        customLink: customLink ?? customType,
         shortDescriptionLink: shortDescription,
         subType: subType,
         showImageIcon: showImageIcon,
@@ -409,9 +424,10 @@ const API = {
     }
 
     const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
-    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
+    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? false;
     const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
     const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+    const customLink = null;
 
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
@@ -425,7 +441,7 @@ const API = {
         img: itemBaseAdded.img,
         uuid: uuidToAdd,
         id: itemBaseAdded.id ? itemBaseAdded.id : itemBaseAdded._id,
-        customLink: customType,
+        customLink: customLink ?? customType,
         shortDescriptionLink: shortDescription,
         subType: subType,
         showImageIcon: showImageIcon,
@@ -441,6 +457,10 @@ const API = {
     await Hooks.call("item-link-tree.postAddLeafToItem", itemI, itemAdded);
 
     //return itemLeafs;
+  },
+
+  async upgradeItemGeneratorHelpers(compendiumsLabels) {
+    return await UpgradeItemGeneratorHelpers.generateItemUpgradeCompendiums(compendiumsLabels);
   },
 };
 

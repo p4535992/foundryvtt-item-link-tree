@@ -250,3 +250,11 @@ export function parseAsArray(obj, separator = ",") {
 export function isRealNumber(inNumber) {
   return !isNaN(inNumber) && typeof inNumber === "number" && isFinite(inNumber);
 }
+
+export function isRealBoolean(inBoolean) {
+  return String(inBoolean) === "true" || String(inBoolean) === "false";
+}
+
+export function isRealBooleanOrElseNull(inBoolean) {
+  return isRealBoolean(inBoolean) ? inBoolean : null;
+}

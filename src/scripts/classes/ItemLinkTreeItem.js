@@ -148,9 +148,10 @@ export class ItemLinkTreeItem {
     }
 
     const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
-    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? "";
+    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? false;
     const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
     const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+    const customLink = null;
 
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
@@ -171,7 +172,7 @@ export class ItemLinkTreeItem {
         img: itemBaseAdded.img,
         uuid: uuidToAdd,
         id: itemBaseAdded.id ? itemBaseAdded.id : itemBaseAdded._id,
-        customLink: customType,
+        customLink: customLink ?? customType,
         shortDescriptionLink: shortDescription,
         subType: subType,
         showImageIcon: showImageIcon,

@@ -1,4 +1,4 @@
-### 0.0.2 [BREAKING CHANGES]
+### 0.0.13 [BREAKING CHANGES]
 
 - Rewrite a lot of code
 - Add new hooks

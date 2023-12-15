@@ -5,8 +5,6 @@ import { ItemLinkingHelpers } from "./lib/item-linking-helper.js";
 import { log, warn } from "./lib/lib.js";
 import { DaeHelpers } from "./lib/dae-helpers.js";
 import { BabonusHelpers } from "./lib/babonus-helpers.js";
-import { UpgradeItemHelpers } from "./lib/upgrade-item-helper.js";
-// import { ItemPriceHelpers } from "./lib/item-price-helpers.js";
 
 export class ItemLinkTreeManager {
   static _cleanName(name) {
