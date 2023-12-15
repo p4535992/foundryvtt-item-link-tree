@@ -361,13 +361,20 @@ export class UpgradeItemHelpers {
                   callback: async (html) => {
                     let optionsAdditionalCost = {};
                     optionsAdditionalCost.additionalCost = additionalCost;
-                    await Hooks.call(
-                      "item-link-tree.postUpgradeAdditionalCost",
-                      actor,
-                      originalItem,
-                      targetItem,
-                      optionsAdditionalCost
-                    );
+                    optionsAdditionalCost.originalCrystal = originalCrystal;
+
+                    if (
+                      Hooks.call(
+                        "item-link-tree.preUpgrade",
+                        actor,
+                        originalItem,
+                        targetItem,
+                        optionsAdditionalCost
+                      ) === false
+                    ) {
+                      log(`The upgrade of the item completion was prevented by the 'item-link-tree.preUpgrade' hook.`);
+                      return;
+                    }
 
                     // TODO ADD SOME CUSTOMIZATION FOR NAME AND NAME ???
                     let currentName = targetItem.name; //manageNewName(weaponMain.name, itemNewName, itemNewPrefix, itemNewSuffix);
@@ -436,6 +443,14 @@ export class UpgradeItemHelpers {
                 <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${originalItem.name}</strong> in una <strong>${targetItem.name}</strong></p>
               </div>`,
                     });
+
+                    await Hooks.call(
+                      "item-link-tree.postUpgrade",
+                      actor,
+                      originalItem,
+                      targetItem,
+                      optionsAdditionalCost
+                    );
                   },
                 },
               },

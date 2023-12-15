@@ -3,7 +3,7 @@ import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { error, getItemAsync, getItemSync, parseAsArray, warn } from "../lib/lib.js";
+import { debug, error, getItemAsync, getItemSync, info, parseAsArray, warn } from "../lib/lib.js";
 import { UpgradeItemHelpers } from "../lib/upgrade-item-helper.js";
 
 const API = {
