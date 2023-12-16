@@ -7,10 +7,15 @@ export class BeaverCraftingHelpers {
 
   static isItemBeaverCrafted(item) {
     const status = item.getFlag("beavers-crafting", "status");
+    // For retrocompatibility
     if (status === "created") {
       return true;
     }
+    // For retrocompatibility
     if (status === "updated") {
+      return true;
+    }
+    if (status) {
       return true;
     }
     return false;
@@ -24,9 +29,7 @@ export class BeaverCraftingHelpers {
     }
     const status = item.getFlag("beavers-crafting", "status");
     if (!status) {
-      await item.setFlag(`beavers-crafting`, `status`, "created");
-    } else {
-      await item.setFlag(`beavers-crafting`, `status`, "updated");
+      await item.setFlag(`beavers-crafting`, `status`, true);
     }
   }
 

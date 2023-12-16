@@ -52,7 +52,7 @@ export class UpgradeItemHelpers {
     //   return oldItem;
     // } else {
     const data = item.toObject();
-    data.flags["beavers-crafting"] = { status: "updated" };
+    data.flags["beavers-crafting"] = { status: true };
     // MOD 4535992
     data.name = currentName;
     data.img = currentImage;

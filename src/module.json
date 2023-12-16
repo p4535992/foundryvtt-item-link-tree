@@ -2,7 +2,7 @@
   "id": "item-link-tree",
   "title": "Items Link Tree",
   "description": "A module that allows specific items to be attached to other Items, Features, etc  for Build a tree hierarchy for your items to link together and use the logic you create to do weird things with other modules.",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "authors": [
     {
       "name": "Andrew Krigline",
@@ -92,8 +92,8 @@
   },
   "manifestPlusVersion": "1.2.1",
   "url": "https://github.com/p4535992/foundryvtt-item-link-tree",
-  "manifest": "https://github.com/p4535992/foundryvtt-item-link-tree/releases/download/0.0.13/module.json",
-  "download": "https://github.com/p4535992/foundryvtt-item-link-tree/releases/download/0.0.13/module.zip",
+  "manifest": "https://github.com/p4535992/foundryvtt-item-link-tree/releases/download/0.0.14/module.json",
+  "download": "https://github.com/p4535992/foundryvtt-item-link-tree/releases/download/0.0.14/module.zip",
   "readme": "https://github.com/p4535992/foundryvtt-item-link-tree/blob/master/README.md",
   "changelog": "https://github.com/p4535992/foundryvtt-item-link-tree/blob/master/CHANGELOG.md",
   "bugs": "https://github.com/p4535992/foundryvtt-item-link-tree/issues",

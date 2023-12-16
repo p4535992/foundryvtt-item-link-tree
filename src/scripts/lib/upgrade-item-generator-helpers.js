@@ -200,16 +200,16 @@ export class UpgradeItemGeneratorHelpers {
 
   static crystalMap = new Map([
     ["none", "icons/commodities/gems/gem-cluster-blue-white.webp"],
-    ["background", null],
-    ["backpack", null],
-    ["base", null],
-    ["class", null],
+    ["background", "icons/commodities/gems/gem-cluster-blue-white.webp"],
+    ["backpack", "icons/commodities/gems/gem-cluster-blue-white.webp"],
+    ["base", "icons/commodities/gems/gem-cluster-blue-white.webp"],
+    ["class", "icons/commodities/gems/gem-cluster-blue-white.webp"],
     ["consumable", "icons/commodities/gems/gem-faceted-rough-green.webp"],
     ["equipment", "icons/commodities/gems/gem-faceted-rough-purple.webp"],
-    ["feat", null],
+    ["feat", "icons/commodities/gems/gem-cluster-blue-white.webp"],
     ["loot", "icons/commodities/gems/gem-faceted-rough-yellow.webp"],
-    ["spell", null],
-    ["subclass", null],
+    ["spell", "icons/commodities/gems/gem-cluster-blue-white.webp"],
+    ["subclass", "icons/commodities/gems/gem-cluster-blue-white.webp"],
     ["tool", "icons/commodities/gems/gem-faceted-rough-blue.webp"],
     ["weapon", "icons/commodities/gems/gem-faceted-rough-red.webp"],
   ]);
