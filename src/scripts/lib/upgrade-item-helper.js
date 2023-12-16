@@ -43,7 +43,7 @@ export class UpgradeItemHelpers {
     // TODO add a multisystem integration
     // const oldItem = actor.items.contents.find((i) => {
     //   // MOD 4535992
-    //   // return i.name === item.name && i.getFlag("beavers-crafting", "status");
+    //   // return i.name === item.name && i.getFlag("beavers-crafting", "isCrafted");
     //   // return i.name === currentName && BeaverCraftingHelpers.isItemBeaverCrafted(i);
     //   return ItemLinkTreeManager._cleanName(i.name) === ItemLinkTreeManager._cleanName(currentName); // && BeaverCraftingHelpers.isItemBeaverCrafted(i);
     // });
@@ -52,7 +52,7 @@ export class UpgradeItemHelpers {
     //   return oldItem;
     // } else {
     const data = item.toObject();
-    data.flags["beavers-crafting"] = { status: true };
+    data.flags["beavers-crafting"] = { isCrafted: true };
     // MOD 4535992
     data.name = currentName;
     data.img = currentImage;
@@ -268,7 +268,7 @@ export class UpgradeItemHelpers {
     // ------------------------------------ //
     // const upgradeableItems = actor.items.contents.filter((i) => {
     //   // MOD 4535992
-    //   //return itemKeys.includes(i.name) && i.getFlag("beavers-crafting", "status")
+    //   //return itemKeys.includes(i.name) && i.getFlag("beavers-crafting", "isCrafted")
     //   if (!ItemLinkingHelpers.isItemLinked(i)) {
     //     // warn(`The item ${i.name}|${i.uuid} is not linked`);
     //     return false;

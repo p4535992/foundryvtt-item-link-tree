@@ -6,7 +6,9 @@ export class BeaverCraftingHelpers {
   }
 
   static isItemBeaverCrafted(item) {
+    // NOTE: is a boolean now
     const status = item.getFlag("beavers-crafting", "status");
+    const isCrafted = item.getFlag("beavers-crafting", "isCrafted");
     // For retrocompatibility
     if (status === "created") {
       return true;
@@ -15,7 +17,7 @@ export class BeaverCraftingHelpers {
     if (status === "updated") {
       return true;
     }
-    if (status) {
+    if (isCrafted) {
       return true;
     }
     return false;
@@ -27,9 +29,11 @@ export class BeaverCraftingHelpers {
       warn(`I could not find the item with reference ${itemOrItemUuid}`);
       return;
     }
-    const status = item.getFlag("beavers-crafting", "status");
-    if (!status) {
-      await item.setFlag(`beavers-crafting`, `status`, true);
+    // NOTE: is a boolean now
+    const isCrafted = item.getFlag("beavers-crafting", "isCrafted");
+    await item.unsetFlag("beavers-crafting", "status");
+    if (!isCrafted) {
+      await item.setFlag(`beavers-crafting`, `isCrafted`, true);
     }
   }
 
@@ -39,6 +43,10 @@ export class BeaverCraftingHelpers {
       warn(`I could not find the item with reference ${itemOrItemUuid}`);
       return;
     }
-    await item.unsetFlag("beavers-crafting", "status");
+    const status = item.getFlag("beavers-crafting", "status");
+    if (status) {
+      await item.unsetFlag("beavers-crafting", "status");
+    }
+    await item.unsetFlag("beavers-crafting", "isCrafted");
   }
 }
