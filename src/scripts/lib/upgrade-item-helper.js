@@ -220,7 +220,8 @@ export class UpgradeItemHelpers {
     // }
 
     if (!upgradeableItemsBase || upgradeableItemsBase?.length === 0) {
-      throw error(`The macro was called with an invalid argument "itemUpgraded": ${upgradeableItemsBase}`, true);
+      //throw error(`The macro was called with an invalid argument "itemUpgraded": ${upgradeableItemsBase}`, true);
+      throw error(`No upgradable item is been found for the item '${originalItem.name}'`, true);
     }
 
     // const base_bonus = target_bonus - 1;

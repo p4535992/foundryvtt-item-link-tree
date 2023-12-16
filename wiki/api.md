@@ -23,8 +23,9 @@ game.modules.get('item-link-tree').api.getCollection({
 
 
 
+// TODO  DOCUMENTATION
 
-game.modules.get('item-link-tree').api.upgradeItemGeneratorHelpers(
-  armor: ["ArmaturePG"],
+game.modules.get('item-link-tree').api.upgradeItemGeneratorHelpers({
+  equipment: ["ArmaturePG"],
   weapon: ["ArmiPG"],
-);
+});

@@ -20,6 +20,17 @@ export class UpgradeItemGeneratorHelpers {
   //   const bonuses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   // }
 
+  static _compareByName(a, b) {
+    const propertyKey = "name";
+    if (getProperty(a, propertyKey) < getProperty(b, propertyKey)) {
+      return -1;
+    }
+    if (getProperty(a, propertyKey) > getProperty(b, propertyKey)) {
+      return 1;
+    }
+    return 0;
+  }
+
   static generateItemUpgradeCompendiums(compendiumsRecords) {
     for (const [key, values] of Object.entries(compendiumsRecords)) {
       UpgradeItemGeneratorHelpers._retrieveItemTreeUpgradeByBonus(values, key, undefined);
@@ -62,53 +73,58 @@ export class UpgradeItemGeneratorHelpers {
     const compendiumItems = (await Promise.all(promisesDocuments)).flat();
 
     const rgx = new RegExp(`(.+) \\+\\d+`);
-    const itemsListBaseToCheck = compendiumItems
-      .map((i) => {
-        const match = i.name.match(rgx);
-        if (!match) {
-          return i;
-        }
-      })
-      .filter((item) => !!item);
+    const itemsListBaseToCheck =
+      compendiumItems
+        .map((i) => {
+          const match = i.name?.match(rgx);
+          if (!match) {
+            return i;
+          }
+        })
+        .filter((item) => !!item)
+        .sort(UpgradeItemGeneratorHelpers._compareByName) ?? [];
     // const mappedItems = Object.fromEntries(itemsList);
     // const itemKeys = Object.keys(mappedItems);
     // const targetItem = mappedItems[item.name];
-    const mappedItems = itemsListBaseToCheck;
 
-    for (const mappedItem of mappedItems) {
-      const currentName = mappedItem.name.trim();
+    for (const mappedItem of itemsListBaseToCheck) {
+      const currentName = mappedItem.name?.trim();
       const currentImage = mappedItem.img;
       const currentItemType = mappedItem.type;
 
       const itemsListByNamePrefix =
         compendiumItems
           .map((i) => {
-            const match = currentName.startsWith(i.name.trim());
+            const match = i.name?.trim().startsWith(currentName.trim());
             if (match) {
               return i;
             }
           })
-          .filter((item) => !!item) ?? [];
+          .filter((item) => !!item)
+          .sort(UpgradeItemGeneratorHelpers._compareByName) ?? [];
 
       const rgx2 = new RegExp(`(.+) \\+\\d+`);
-      const itemsListBaseToCheck = compendiumItems
-        .map((i) => {
-          const match = i.name.match(rgx2);
-          if (!match) {
-            return i;
-          }
-        })
-        .filter((item) => !!item);
+      const itemsListOptionByName =
+        compendiumItems
+          .map((i) => {
+            const match = i.name?.match(rgx2) && i.name?.trim().startsWith(currentName.trim());
+            if (match) {
+              return i.name;
+            }
+          })
+          .filter((item) => !!item)
+          .sort(UpgradeItemGeneratorHelpers._compareByName) ?? [];
 
       const options = {};
       const document = await Item.create(
         {
-          name: "Crystal " + currentName + " ",
+          name: "Crystal " + currentName + " " + CONSTANTS.SYMBOLS.CRYSTAL,
           img:
-            UpgradeItemGeneratorHelpers.crystalMap[currentItemType] || UpgradeItemGeneratorHelpers.crystalMap["none"],
-          type: currentItemType,
+            UpgradeItemGeneratorHelpers.crystalMap.get(currentItemType) ||
+            UpgradeItemGeneratorHelpers.crystalMap.get("none"),
+          type: "tool",
           system: {
-            description: `A crystal for upgrade some item`,
+            description: `A crystal for upgrade some item based on '${currentName}'`,
             price: {
               value: 5,
               denomination: "gp",
@@ -117,29 +133,84 @@ export class UpgradeItemGeneratorHelpers {
             weight: 0.5,
             rarity: "uncommon",
           },
+          flags: {
+            [`${CONSTANTS.MODULE_ID}`]: {
+              [`${CONSTANTS.FLAGS.customType}`]: "upgrade",
+              [`${CONSTANTS.FLAGS.filterItemType}`]: currentItemType,
+              [`${CONSTANTS.FLAGS.isLeaf}`]: true,
+              [`${CONSTANTS.FLAGS.shortDescription}`]: null,
+              [`${CONSTANTS.FLAGS.showImageIcon}`]: false,
+              [`${CONSTANTS.FLAGS.subType}`]: "crystal",
+            },
+          },
         },
         options
       );
+
       for (const itemTmp of itemsListByNamePrefix) {
-        const leafOptions = {
-          name: itemTmp.name,
-          img: itemTmp.img,
-          uuid: itemTmp.uuid,
-          id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
-          customLink: currentName === itemTmp.name.trim() ? "source" : null,
-          shortDescriptionLink: currentName === itemTmp.name.trim() ? "" : currentName,
-          subType: null,
-          showImageIcon: false,
-        };
-        API.addLeaf(document, itemTmp, leafOptions);
+        if (currentName.trim() === itemTmp.name?.trim()) {
+          const leafOptions = {
+            name: itemTmp.name.trim(),
+            img: itemTmp.img,
+            uuid: itemTmp.uuid,
+            id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
+            customLink: "source",
+            shortDescriptionLink: currentName === itemTmp.name?.trim() ? null : currentName,
+            subType: null,
+            showImageIcon: false,
+          };
+          await API.prepareItemsLeafsFromAddLeaf(document, itemTmp, leafOptions);
+        } else if (itemsListOptionByName.includes(itemTmp.name.trim())) {
+          const bonuses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+          let currentBonus = 0;
+          for (const bonus of bonuses) {
+            if (itemTmp.name?.trim() === String(currentName + " +" + bonus).trim()) {
+              currentBonus = bonus;
+              break;
+            }
+          }
+          const leafOptions = {
+            name: itemTmp.name.trim(),
+            img: itemTmp.img,
+            uuid: itemTmp.uuid,
+            id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
+            customLink: "source",
+            shortDescriptionLink:
+              currentBonus == 1 ? currentName.trim() : String(currentName + " +" + (currentBonus - 1)).trim(),
+            subType: null,
+            showImageIcon: false,
+          };
+          await API.prepareItemsLeafsFromAddLeaf(document, itemTmp, leafOptions);
+        } else {
+          const leafOptions = {
+            name: itemTmp.name.trim(),
+            img: itemTmp.img,
+            uuid: itemTmp.uuid,
+            id: itemTmp.id ? itemTmp.id : itemTmp._id, // Strange use case for compendium
+            customLink: "source",
+            shortDescriptionLink: currentName === itemTmp.name?.trim() ? null : currentName,
+            subType: null,
+            showImageIcon: false,
+          };
+          await API.prepareItemsLeafsFromAddLeaf(document, itemTmp, leafOptions);
+        }
       }
-      break;
     }
   }
 
   static crystalMap = new Map([
-    ["none", "icons/commodities/gems/gem-faceted-rough-blue.webp"],
+    ["none", "icons/commodities/gems/gem-cluster-blue-white.webp"],
+    ["background", null],
+    ["backpack", null],
+    ["base", null],
+    ["class", null],
+    ["consumable", "icons/commodities/gems/gem-faceted-rough-green.webp"],
+    ["equipment", "icons/commodities/gems/gem-faceted-rough-purple.webp"],
+    ["feat", null],
+    ["loot", "icons/commodities/gems/gem-faceted-rough-yellow.webp"],
+    ["spell", null],
+    ["subclass", null],
+    ["tool", "icons/commodities/gems/gem-faceted-rough-blue.webp"],
     ["weapon", "icons/commodities/gems/gem-faceted-rough-red.webp"],
-    ["armor", "icons/commodities/gems/gem-faceted-rough-purple.webp"],
   ]);
 }

@@ -65,7 +65,22 @@
       "path": "languages/en.json"
     }
   ],
-  "packs": [],
+  "packs": [
+    {
+      "name": "items-dnd5e-upgrades",
+      "label": "ILT - Items Dnd5e Upgrades Sample",
+      "path": "packs/items-dnd5e-upgrades",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "NONE",
+        "TRUSTED": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "module": "item-link-tree",
+      "system": "dnd5e",
+      "flags": {}
+    }
+  ],
   "systems": [],
   "scripts": [],
   "esmodules": ["module.js"],

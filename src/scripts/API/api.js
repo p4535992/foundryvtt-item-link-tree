@@ -386,7 +386,7 @@ const API = {
     if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
   },
 
-  async prepareItemsLeafsFromAddLeaf(item, itemLeaf) {
+  async prepareItemsLeafsFromAddLeaf(item, itemLeaf, leafOptions = {}) {
     const itemI = await getItemAsync(item);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
@@ -423,11 +423,14 @@ const API = {
       return;
     }
 
-    const subType = getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
-    const showImageIcon = getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? false;
-    const customType = getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
-    const shortDescription = getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
-    const customLink = null;
+    const subType = leafOptions.subType ?? getProperty(itemBaseAdded, `flags.item-link-tree.subType`) ?? "";
+    const showImageIcon = isRealBooleanOrElseNull(leafOptions.showImageIcon)
+      ? leafOptions.showImageIcon
+      : getProperty(itemBaseAdded, `flags.item-link-tree.showImageIcon`) ?? false;
+    const customType = leafOptions.customType ?? getProperty(itemBaseAdded, `flags.item-link-tree.customType`) ?? "";
+    const shortDescription =
+      leafOptions.shortDescriptionLink ?? getProperty(itemBaseAdded, `flags.item-link-tree.shortDescription`) ?? "";
+    const customLink = leafOptions.customLink;
 
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
