@@ -285,7 +285,7 @@ const API = {
 
     await ItemLinkTreeManager.managePostRemoveLeafFromItem(itemLinkTree.item, itemRemoved, options);
 
-    await Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
+    Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
   },
 
   async addLeaf(item, itemLeaf, leafOptions = {}) {
@@ -350,7 +350,7 @@ const API = {
       try {
         await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-        // await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+        // Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
       } catch (e) {
         throw e;
       }
@@ -379,7 +379,7 @@ const API = {
 
     await ItemLinkTreeManager.managePostAddLeafToItem(itemLinkTree.item, itemAdded, options);
 
-    await Hooks.call("item-link-tree.postAddLeafToItem", itemLinkTree.item, itemAdded);
+    Hooks.call("item-link-tree.postAddLeafToItem", itemLinkTree.item, itemAdded);
 
     // now re-render the item and actor sheets
     await itemLinkTree.item.render();
@@ -457,7 +457,7 @@ const API = {
 
     // await ItemLinkTreeManager.managePostAddLeafToItem(itemI, itemAdded, options);
 
-    await Hooks.call("item-link-tree.postAddLeafToItem", itemI, itemAdded);
+    Hooks.call("item-link-tree.postAddLeafToItem", itemI, itemAdded);
 
     //return itemLeafs;
   },

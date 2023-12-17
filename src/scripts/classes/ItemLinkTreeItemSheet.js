@@ -15,19 +15,19 @@ export class ItemLinkTreeItemSheet {
     this.item = app.item;
     this.sheetHtml = html;
     this.itemLinkTreeItem = new ItemLinkTreeItem(this.item);
-    this.hack(this.app);
+    // this.hack(this.app);
   }
 
-  hack(app) {
-    let tab = app._tabs?.length > 0 ? app._tabs[0] : null;
-    if (tab) {
-      app.setPosition = function (position = {}) {
-        // position.height = tab.isActive() && !position.height ? "auto" : position.height;
-        position.height = tab?.active === "tree" && !position.height ? "auto" : position.height;
-        return this.__proto__.__proto__.setPosition.apply(this, [position]);
-      };
-    }
-  }
+  // hack(app) {
+  //   let tab = app._tabs?.length > 0 ? app._tabs[0] : null;
+  //   if (tab) {
+  //     app.setPosition = function (position = {}) {
+  //       // position.height = tab.isActive() && !position.height ? "auto" : position.height;
+  //       position.height = tab?.active === "tree" && !position.height ? "auto" : position.height;
+  //       return this.__proto__.__proto__.setPosition.apply(this, [position]);
+  //     };
+  //   }
+  // }
 
   /** MUTATED: All open ItemSheet have a cached instance of this class */
   static instances = new Map();

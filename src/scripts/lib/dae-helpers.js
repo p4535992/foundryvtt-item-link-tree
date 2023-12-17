@@ -17,4 +17,24 @@ export class DaeHelpers {
       await game.modules.get("dae").api.fixTransferEffect(actor, item);
     }
   }
+
+  static transferEffectToActor(actor, effect) {
+    return CONFIG.ActiveEffect.documentClass.create(
+      {
+        ...effect.toObject(),
+        origin: effect.parent.uuid,
+      },
+      { parent: actor }
+    );
+  }
+
+  static transferEffectDataToActor(actor, effectData) {
+    return CONFIG.ActiveEffect.documentClass.create(
+      {
+        ...effectData,
+        origin: effectData.origin,
+      },
+      { parent: actor }
+    );
+  }
 }

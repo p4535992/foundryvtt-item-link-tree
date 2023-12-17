@@ -434,7 +434,7 @@ export class UpgradeItemHelpers {
                     await UpgradeItemHelpers.removeItem(originalItem);
                     await UpgradeItemHelpers.removeItem(originalCrystal);
 
-                    await DaeHelpers.fixTransferEffect(actorA, targetItem);
+                    // await DaeHelpers.fixTransferEffect(actorA, targetItem);
 
                     log(`Item upgraded with success! ${originalItem.name} -> ${targetItem.name}`);
                     info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
@@ -445,13 +445,7 @@ export class UpgradeItemHelpers {
               </div>`,
                     });
 
-                    await Hooks.call(
-                      "item-link-tree.postUpgrade",
-                      actor,
-                      originalItem,
-                      targetItem,
-                      optionsAdditionalCost
-                    );
+                    Hooks.call("item-link-tree.postUpgrade", actor, originalItem, targetItem, optionsAdditionalCost);
                   },
                 },
               },

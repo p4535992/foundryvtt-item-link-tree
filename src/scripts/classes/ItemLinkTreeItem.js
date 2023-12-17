@@ -158,7 +158,7 @@ export class ItemLinkTreeItem {
       try {
         await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-        // await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+        // Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
       } catch (e) {
         throw e;
       }
@@ -191,7 +191,7 @@ export class ItemLinkTreeItem {
 
     await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
 
-    await Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+    Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
   }
 
   /**
@@ -243,7 +243,7 @@ export class ItemLinkTreeItem {
 
     await ItemLinkTreeManager.managePostRemoveLeafFromItem(this.item, itemRemoved, options);
 
-    await Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
+    Hooks.call("item-link-tree.postRemoveLeafFromItem", this.item, itemRemoved);
   }
 
   /**
@@ -362,7 +362,7 @@ export class ItemLinkTreeItem {
 
             ItemLinkTreeManager.managePostUpdateLeafFromItem(this.item, itemUpdated, options);
 
-            await Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemUpdated, this.itemTreeList);
+            Hooks.call("item-link-tree.postUpdateLeafFromItem", this.item, itemUpdated, this.itemTreeList);
           },
         },
       },

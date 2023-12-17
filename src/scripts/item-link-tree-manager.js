@@ -163,6 +163,9 @@ export class ItemLinkTreeManager {
         }
         if (effectDatas.length > 0) {
           await item.createEmbeddedDocuments("ActiveEffect", effectDatas);
+          for (const effectData of effectDatas) {
+            DaeHelpers.transferEffectDataToActor(actor, effectData);
+          }
         }
       }
     }
@@ -224,7 +227,7 @@ export class ItemLinkTreeManager {
       if (idsEffectActorToRemove.length > 0) {
         await actor.deleteEmbeddedDocuments("ActiveEffect", idsEffectActorToRemove);
       }
-      await DAE.fixTransferEffect(actor, item);
+      // await DaeHelpers.fixTransferEffect(actor, item);
       const idsEffectActorToRemove2 = [];
       const actorEffects2 = actor.effects ?? [];
       for (const effectToRemove of actorEffects2) {
