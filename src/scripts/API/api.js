@@ -348,9 +348,9 @@ const API = {
     // Ignore any flag update if is a upgrade
     if (customType === "upgrade") {
       try {
-        await ItemLinkTreeManager.managePostAddLeafToItem(this.item, itemAdded, options);
+        await ItemLinkTreeManager.managePostAddLeafToItem(item, itemAdded, options);
 
-        // Hooks.call("item-link-tree.postAddLeafToItem", this.item, itemAdded);
+        // Hooks.call("item-link-tree.postAddLeafToItem", item, itemAdded);
       } catch (e) {
         throw e;
       }
