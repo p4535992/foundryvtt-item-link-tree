@@ -2,7 +2,7 @@ import CONSTANTS from "./constants/constants.js";
 import { BeaverCraftingHelpers } from "./lib/beavers-crafting-helpers.js";
 import API from "./API/api.js";
 import { ItemLinkingHelpers } from "./lib/item-linking-helper.js";
-import { log, warn } from "./lib/lib.js";
+import { info, log, warn } from "./lib/lib.js";
 import { DaeHelpers } from "./lib/dae-helpers.js";
 import { BabonusHelpers } from "./lib/babonus-helpers.js";
 
@@ -18,6 +18,11 @@ export class ItemLinkTreeManager {
   }
 
   static managePreAddLeafToItem(item, itemAdded, options) {
+    if (!item?.actor && game.user.isGM) {
+      info(`The '${item?.name}' is not in a actor so is probably the GM ?`);
+      return true;
+    }
+
     if (options.checkForBeaverCrafting) {
       const isCrafted = BeaverCraftingHelpers.isItemBeaverCrafted(item);
       if (!isCrafted) {

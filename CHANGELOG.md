@@ -1,3 +1,11 @@
+### 0.0.19
+
+- Remove hard check for item not in actor and if you are the GM
+
+### 0.0.14 - 0.0.18
+
+- Add upgrade feature
+
 ### 0.0.13 [BREAKING CHANGES]
 
 - Rewrite a lot of code
