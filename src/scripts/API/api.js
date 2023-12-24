@@ -11,6 +11,7 @@ import {
   info,
   isRealBooleanOrElseNull,
   isRealNumber,
+  log,
   parseAsArray,
   warn,
 } from "../lib/lib.js";
