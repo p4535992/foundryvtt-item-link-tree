@@ -33,7 +33,14 @@ export class ItemLinkTreeHelpers {
     // DnD5e
     // =================================
     if (game.system.id === "dnd5e") {
-      let items = html.find($(".item-list .item"));
+      let items = [];
+      const isTidySheetKgar = actor.sheet.id.startsWith("Tidy5eCharacterSheet");
+      if (isTidySheetKgar) {
+        items = html.find($(".item-table .item-table-row"));
+      } else {
+        items = html.find($(".item-list .item"));
+      }
+
       for (let itemElement of items) {
         let htmlId = itemElement.outerHTML.match(/data-item-id="(.*?)"/);
         if (!htmlId) {
@@ -44,7 +51,12 @@ export class ItemLinkTreeHelpers {
         if (!item) {
           continue;
         }
-        const title = itemElement.querySelector("h4");
+        let title = null;
+        if (isTidySheetKgar) {
+          title = itemElement.querySelector(".item-name");
+        } else {
+          title = itemElement.querySelector("h4");
+        }
         title.style.display = "contents";
 
         const leafs = API.getCollection({ item: item });
