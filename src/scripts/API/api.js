@@ -19,6 +19,12 @@ import { UpgradeItemGeneratorHelpers } from "../lib/upgrade-item-generator-helpe
 import { UpgradeItemHelpers } from "../lib/upgrade-item-helper.js";
 
 const API = {
+  /**
+   * Method to retrieve all the child item leafs on the the item
+   * @param {object} inAttributes The options object to pass
+   * @param {Item|string} [inAttributes.item] The uuid of the item or the item object himself.
+   * @returns {Leaf[]} All the leafs on the item
+   */
   getCollection(inAttributes) {
     // if (!Array.isArray(inAttributes)) {
     //   throw error("getCollection | inAttributes must be of type array");
@@ -37,9 +43,23 @@ const API = {
     return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs) ?? [];
   },
 
+  /**
+   * Method to retrieve a specific child item leaf on the the item
+   * @param {object} inAttributes The options object to pass
+   * @param {Item|string} [inAttributes.item] The uuid of the item or the item object himself.
+   * @param {string} [inAttributes.name] The name of the leaf to retrieve
+   * @param {string} [inAttributes.uuid] The uuid of the leaf to retrieve
+   * @param {string} [inAttributes.id] The id of the leaf to retrieve
+   * @returns {Leaf} The leaf
+   */
   retrieveLeaf(inAttributes) {
-    const leafsFounded = this.retrieveLeafs(inAttributes);
-    return leafsFounded?.length > 0 ? leafsFounded[0] : null;
+    if (!inAttributes.name && !inAttributes.uuid && !inAttributes.id) {
+      const leafsFounded = this.getCollection(inAttributes);
+      return leafsFounded?.length > 0 ? leafsFounded[0] : null;
+    } else {
+      const leafsFounded = this.retrieveLeafs(inAttributes);
+      return leafsFounded?.length > 0 ? leafsFounded[0] : null;
+    }
   },
 
   retrieveLeafs(inAttributes) {
