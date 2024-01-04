@@ -1,3 +1,7 @@
+### 0.0.22
+
+- Update and bug fixes the Loot/Leaf sheet for Dnd5e 2.4.1
+
 ### 0.0.21
 
 - Add support for tidy5e sheet by kgar
