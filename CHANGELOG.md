@@ -1,3 +1,12 @@
+### 0.0.23
+
+- Update API Documentation
+- Update and bug fix API
+- Little clean up of the code
+- Add method api addLeafLight
+- Rmeove class item-controls for incomaptibility with item linking module
+
+
 ### 0.0.22
 
 - Update and bug fixes the Loot/Leaf sheet for Dnd5e 2.4.1

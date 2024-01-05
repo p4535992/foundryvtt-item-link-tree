@@ -21,7 +21,10 @@
         {{localize 'item-link-tree.customLink.label'}}
       </div>
 
-      <div class="item-controls"></div>
+      <!-- stupid 2.4.1... remove class item-controls  for module incompatibiltiy with item-lining -->
+      <div class="ilt-controls">
+
+      </div>
 
     </li>
 
@@ -40,8 +43,8 @@
         <div class="item-detail item-link-tree-item-detail">
           <span title="{{leaf.customLink}}">{{leaf.customLink}}</span>
         </div>
-
-        <div class="item-controls flexrow context-menu item-link-tree-item-controls">
+        <!-- stupid 2.4.1... remove class item-controls  for module incompatibiltiy with item-lining -->
+        <div class="ilt-controls flexrow context-menu item-link-tree-item-controls">
           {{#if @root/playerCanOnlyView}}
 
             {{#if @root/isOwner}}

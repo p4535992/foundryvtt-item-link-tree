@@ -27,3 +27,12 @@
   line-height: 5;
   border: 2px #828180 dashed;
 }
+
+.dnd5e .items-list .ilt-controls {
+  flex: 0 0 60px;
+  justify-content: space-between;
+}
+.dnd5e .items-list .ilt-controls a {
+  font-size: 12px;
+  text-align: center;
+}
