@@ -423,7 +423,7 @@ export class UpgradeItemHelpers {
                     //this update should not re-render the item sheet because we need to wait until we refresh to do so
                     const property = `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`;
                     await itemLinkTree.item.update({ [property]: itemLeafs }, { render: false });
-                    
+
                     await itemLinkTree.refresh();
 
                     // now re-render the item and actor sheets

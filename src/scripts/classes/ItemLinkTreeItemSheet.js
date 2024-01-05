@@ -86,8 +86,6 @@ export class ItemLinkTreeItemSheet {
    * Renders the tree tab template to be injected
    */
   async _renderLeafsList() {
-    // MOD 4535992
-    //const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeItemMap).values()];
     const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeFlagMap).values()];
 
     log("", false, "rendering list", itemLeafsArray);
@@ -122,7 +120,7 @@ export class ItemLinkTreeItemSheet {
     }
 
     return renderTemplate(ItemLinkTree.TEMPLATES.treeTab, {
-      itemLeafs: itemLeafsArrayTmp, // MOD 4535992 itemLeafsArray,
+      itemLeafs: itemLeafsArrayTmp,
       config: {
         limitedUsePeriods: CONFIG.DND5E.limitedUsePeriods,
         abilities: CONFIG.DND5E.abilities,
@@ -150,9 +148,6 @@ export class ItemLinkTreeItemSheet {
     const item = await fromUuid(data.uuid);
     log("", false, "dragEnd", { item });
 
-    // MOD 4535992
-    //if (item.type !== 'spell') return;
-
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
     return this.itemLinkTreeItem.addLeafToItem(data.uuid);
@@ -163,8 +158,7 @@ export class ItemLinkTreeItemSheet {
    */
   async _handleItemClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
-    // MOD 4535992
-    //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
+
     const itemLeaf = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
     const item = await fromUuid(itemLeaf.uuid);
     log("", false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
@@ -179,8 +173,6 @@ export class ItemLinkTreeItemSheet {
   async _handleItemDeleteClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    // MOD 4535992
-    //log("",false, "deleting", itemId, this.itemLinkTreeItem.itemTreeItemMap);
     log("", false, "deleting", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
@@ -207,8 +199,6 @@ export class ItemLinkTreeItemSheet {
   async _handleItemDestroyClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    // MOD 4535992
-    //log("",false, "destroying", itemId, this.itemLinkTreeItem.itemTreeItemMap);
     log("", false, "destroying", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
@@ -222,17 +212,6 @@ export class ItemLinkTreeItemSheet {
   async _handleItemEditClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    // MOD 4535992
-    /*
-    //const item = this.itemLinkTreeItem.itemTreeItemMap.get(itemId);
-
-    if (item.isOwned) {
-      return item.sheet.render(true);
-    }
-
-    // pop up a formapp to configure this item's overrides
-    return new ItemLinkTreeItemOverrides(this.itemLinkTreeItem, itemId).render(true);
-    */
     const itemTmp = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
     const item = await fromUuid(itemTmp.uuid);
     return item.sheet.render(true);
@@ -289,7 +268,7 @@ export class ItemLinkTreeItemSheet {
     treeTabHtml.on("click", ".item-delete", this._handleItemDeleteClick.bind(this));
     treeTabHtml.on("click", ".item-destroy", this._handleItemDestroyClick.bind(this));
     treeTabHtml.on("click", ".configure-overrides", this._handleItemEditClick.bind(this));
-    // MOD 4535992
+
     treeTabHtml.on("click", ".item-create-custom-link", this._handleCreateCustomLinkClick.bind(this));
 
     // Register a DragDrop handler for adding new items to this item
