@@ -327,12 +327,12 @@ Method to add a child item leaf from the item parent.
 | ---   | ---  | ---     | ---         | ---  |
 | item | <code>Item or string</code> | | The uuid/id of the item or the item object himself containing the leaf. | |
 | leaf | <code>Item or string</code> | | The uuid/id of the item leaf to remove. | |
-| leafOptions | | <code>Object</code> | `{}` | OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf | |
-| [leafOptions.subType] | | <code>string</code> | `null` | The `subType` to override on the leaf data  | |
-| [leafOptions.showImageIcon] | | <code>boolean|null</code> | `null` | The `showImageIcon` to override on the leaf data  | |
-| [leafOptions.customType] | | <code>string</code> | `null` |  The `customType` to override on the leaf data  | |
-| [leafOptions.shortDescriptionLink] | | <code>string</code> | `null` | The `shortDescriptionLink` to override on the leaf data  | |
-| [leafOptions.customLink]  | | <code>string</code> | `null` | The `customLink` to override on the leaf data  | |
+| leafOptions | <code>Object</code> | `{}` | OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf | |
+| [leafOptions.subType] | <code>string</code> | `null` | The `subType` to override on the leaf data  | |
+| [leafOptions.showImageIcon] | <code>boolean|null</code> | `null` | The `showImageIcon` to override on the leaf data  | |
+| [leafOptions.customType] | <code>string</code> | `null` |  The `customType` to override on the leaf data  | |
+| [leafOptions.shortDescriptionLink] | <code>string</code> | `null` | The `shortDescriptionLink` to override on the leaf data  | |
+| [leafOptions.customLink]  | <code>string</code> | `null` | The `customLink` to override on the leaf data  | |
 
 **Example**:
 
@@ -360,11 +360,11 @@ Method to add a child item leaf from the item parent, just like the method 'addL
 | item | <code>Item or string</code> | | The uuid/id of the item or the item object himself containing the leaf. | |
 | leaf | <code>Item or string</code> | | The uuid/id of the item leaf to remove. | |
 | leafOptions | | <code>Object</code> | `{}` | OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf | |
-| [leafOptions.subType] | | <code>string</code> | `null` | The `subType` to override on the leaf data  | |
-| [leafOptions.showImageIcon] | | <code>boolean|null</code> | `null` | The `showImageIcon` to override on the leaf data  | |
-| [leafOptions.customType] | | <code>string</code> | `null` |  The `customType` to override on the leaf data  | |
-| [leafOptions.shortDescriptionLink] | | <code>string</code> | `null` | The `shortDescriptionLink` to override on the leaf data  | |
-| [leafOptions.customLink]  | | <code>string</code> | `null` | The `customLink` to override on the leaf data  | |
+| [leafOptions.subType] | <code>string</code> | `null` | The `subType` to override on the leaf data  | |
+| [leafOptions.showImageIcon] | <code>boolean|null</code> | `null` | The `showImageIcon` to override on the leaf data  | |
+| [leafOptions.customType] | <code>string</code> | `null` |  The `customType` to override on the leaf data  | |
+| [leafOptions.shortDescriptionLink] | <code>string</code> | `null` | The `shortDescriptionLink` to override on the leaf data  | |
+| [leafOptions.customLink]  | <code>string</code> | `null` | The `customLink` to override on the leaf data  | |
 
 **Example**:
 
