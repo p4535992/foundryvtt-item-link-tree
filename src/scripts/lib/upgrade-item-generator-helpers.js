@@ -159,7 +159,7 @@ export class UpgradeItemGeneratorHelpers {
             subType: null,
             showImageIcon: false,
           };
-          await API.prepareItemsLeafsFromAddLeaf(document, itemTmp, leafOptions);
+          await API.addLeafLight(document, itemTmp, leafOptions);
         } else if (itemsListOptionByName.includes(itemTmp.name.trim())) {
           const bonuses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
           let currentBonus = 0;
@@ -180,7 +180,7 @@ export class UpgradeItemGeneratorHelpers {
             subType: null,
             showImageIcon: false,
           };
-          await API.prepareItemsLeafsFromAddLeaf(document, itemTmp, leafOptions);
+          await API.addLeafLight(document, itemTmp, leafOptions);
         } else {
           const leafOptions = {
             name: itemTmp.name.trim(),
@@ -192,7 +192,7 @@ export class UpgradeItemGeneratorHelpers {
             subType: null,
             showImageIcon: false,
           };
-          await API.prepareItemsLeafsFromAddLeaf(document, itemTmp, leafOptions);
+          await API.addLeafLight(document, itemTmp, leafOptions);
         }
       }
     }

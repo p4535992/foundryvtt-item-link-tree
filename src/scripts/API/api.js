@@ -112,7 +112,8 @@ const API = {
    * @returns {Leaf[]} Return All the leafs set as effect or bonus on the item.
    */
   getCollectionEffectAndBonus(item) {
-    const itemWithLeafs = getItemSync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemWithLeafs = getItemSync(itemRef);
     const leafs = this.getCollection(itemWithLeafs);
     if (!leafs || leafs?.length <= 0) {
       return;
@@ -233,7 +234,8 @@ const API = {
    * @returns {boolean} The flag if is a 'Leaf' or no.
    */
   isItemLeaf(item) {
-    const itemLeafToCheck = getItemSync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemLeafToCheck = getItemSync(itemRef);
     const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
     if (isLeaf) {
       return true;
@@ -248,7 +250,8 @@ const API = {
    * @returns {boolean} The flag if is a 'Leaf' and with the specific 'subType' or no.
    */
   isItemLeafBySubType(item, subtype) {
-    const itemLeafToCheck = getItemSync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemLeafToCheck = getItemSync(itemRef);
     const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
     const subTypeToCheck =
       getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.subType}`) ?? "";
@@ -265,10 +268,14 @@ const API = {
    * @returns {boolean} The flag if is a 'Leaf' and with the specific `feature/customLink/customType` or no.
    */
   isItemLeafByFeature(item, feature) {
-    const itemLeafToCheck = getItemSync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemLeafToCheck = getItemSync(itemRef);
     const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
-    const customType = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.customType}`);
-    if (isLeaf && customType === customTypeToCheck) {
+    const customTypeToCheck = getProperty(
+      itemLeafToCheck,
+      `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.customType}`
+    );
+    if (isLeaf && customTypeToCheck === feature) {
       return true;
     }
     return false;
@@ -281,7 +288,8 @@ const API = {
    * @returns {boolean} The flag if is a 'Leaf' is with the specific item type or no.
    */
   isFilterByItemTypeOk(item, itemType) {
-    const itemToCheck = getItemSync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemToCheck = getItemSync(itemRef);
     const filterItemType = getProperty(itemToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.filterItemTypef}`);
     if (filterItemType && itemType) {
       const filterItemTypeArr = parseAsArray(filterItemType);
@@ -301,7 +309,8 @@ const API = {
    * @returns {boolean} The flag there is at least at least one child leaf with the specified subType.
    */
   hasSubtype(item, subtype) {
-    const itemWithLeafs = getItemSync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemWithLeafs = getItemSync(itemRef);
     const options = {
       item: itemWithLeafs,
     };
@@ -349,7 +358,8 @@ const API = {
    * @returns {Promise<void>} No response.
    */
   async removeLeaf(item, leaf) {
-    const itemI = await getItemAsync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemI = await getItemAsync(itemRef);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     const itemToDelete = itemLinkTree.itemTreeFlagMap.get(leaf.id);
@@ -411,13 +421,15 @@ const API = {
    * @returns {Promise<void>} No response.
    */
   async addLeaf(item, itemLeaf, leafOptions = {}) {
-    const itemI = await getItemAsync(item);
+    const itemRef = item.item ? item.item : item;
+    const itemI = await getItemAsync(itemRef);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     // MUTATED if this is an owned item
     // let uuidToAdd = providedUuid;
     // const itemAdded = await fromUuid(uuidToAdd);
-    const itemAdded = await getItemAsync(itemLeaf);
+    const itemLeafRef = itemLeaf.item ? itemLeaf.item : itemLeaf;
+    const itemAdded = await getItemAsync(itemLeafRef);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
       warn(`Cannot find this item with uuid ${itemLeaf}`);
@@ -512,6 +524,7 @@ const API = {
    * Method to add a child item leaf from the item parent, just like the method 'addLeaf' but for a 'bulk' opertions on multiple items.
    * NOTE: If both the property `customLink` and `customType` are passed `customLink` is the one used.
    * @param {Item|string} item The uuid/id of the item or the item object himself containing the leaf.
+   * @deprecated usa insetad `addLeafLight`
    * @param {Item|string} leaf The uuid/id of the item leaf to add.
    * @param {object} [leafOptions={}] OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf
    * @param {string} [leafOptions.subType=null] The `subType` to override on the leaf data
@@ -522,13 +535,32 @@ const API = {
    * @returns {Promise<void>} No response.
    */
   async prepareItemsLeafsFromAddLeaf(item, itemLeaf, leafOptions = {}) {
-    const itemI = await getItemAsync(item);
+    return await this.addLeafLight(item, itemLeaf, leafOptions);
+  },
+
+  /**
+   * Method to add a child item leaf from the item parent, just like the method 'addLeaf' but for a 'bulk' opertions on multiple items.
+   * NOTE: If both the property `customLink` and `customType` are passed `customLink` is the one used.
+   * @param {Item|string} item The uuid/id of the item or the item object himself containing the leaf.
+   * @param {Item|string} leaf The uuid/id of the item leaf to add.
+   * @param {object} [leafOptions={}] OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf
+   * @param {string} [leafOptions.subType=null] The `subType` to override on the leaf data
+   * @param {boolean} [leafOptions.showImageIcon=false] The `showImageIcon` to override on the leaf data
+   * @param {string} [leafOptions.customType=null] The `customType` to override on the leaf data
+   * @param {string} [leafOptions.shortDescriptionLink =null] The `shortDescriptionLink` to override on the leaf data
+   * @param {string} [leafOptions.customLink=null] The `customLink` to override on the leaf data
+   * @returns {Promise<void>} No response.
+   */
+  async addLeafLight(item, itemLeaf, leafOptions = {}) {
+    const itemRef = item.item ? item.item : item;
+    const itemI = await getItemAsync(itemRef);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     // MUTATED if this is an owned item
     // let uuidToAdd = providedUuid;
     // const itemAdded = await fromUuid(uuidToAdd);
-    const itemAdded = await getItemAsync(itemLeaf);
+    const itemLeafRef = itemLeaf.item ? itemLeaf.item : itemLeaf;
+    const itemAdded = await getItemAsync(itemLeafRef);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
       warn(`Cannot find this item with uuid ${itemLeaf}`);

@@ -347,7 +347,7 @@ await game.modules.get('item-link-tree').api.addLeaf(
 ```
 
 
-#### prepareItemsLeafsFromAddLeaf(item: Item|string, leaf: Item|string, leafOptions:Object|undefined):void ⇒ <code>Promise&lt;void&gt;</code>
+#### addLeafLight(item: Item|string, leaf: Item|string, leafOptions:Object|undefined):void ⇒ <code>Promise&lt;void&gt;</code>
 
 Method to add a child item leaf from the item parent, just like the method 'addLeaf' but for a 'bulk' opertions on multiple items.
 
@@ -369,7 +369,7 @@ Method to add a child item leaf from the item parent, just like the method 'addL
 **Example**:
 
 ```
-await game.modules.get('item-link-tree').api.prepareItemsLeafsFromAddLeaf(
+await game.modules.get('item-link-tree').api.addLeafLight(
     "Actor.7bm6EK8jnopnGRS4.Item.kowQq6PhIxid2ei5",
     "Actor.7bm6EK8jnopnGRS4.Item.dbuidghorgrhr4qw3",
     {

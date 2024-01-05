@@ -126,8 +126,8 @@ export class ItemLinkTreeItemSheet {
         abilities: CONFIG.DND5E.abilities,
       },
       playerCanOnlyView: game.user.isGM ? true : false,
-      isOwner: this.item.isOwner,
-      isOwned: this.item.isOwned,
+      isOwner: game.user.isGM ? true : this.item.isOwner,
+      isOwned: game.user.isGM ? true : this.item.isOwned,
     });
   }
 

@@ -399,7 +399,7 @@ export class UpgradeItemHelpers {
 
                     const arrItemLeafsFinal = [];
                     for (const l of itemsLeafsOriginalBase) {
-                      const arrItemLeafs = (await API.prepareItemsLeafsFromAddLeaf(targetItem, l)) ?? [];
+                      const arrItemLeafs = (await API.addLeafLight(targetItem, l)) ?? [];
                       if (arrItemLeafs?.length > 0) {
                         arrItemLeafsFinal.push(...arrItemLeafs);
                       }
