@@ -31,9 +31,9 @@ export class UpgradeItemGeneratorHelpers {
     return 0;
   }
 
-  static generateItemUpgradeCompendiums(compendiumsRecords) {
+  static async generateItemUpgradeCompendiums(compendiumsRecords) {
     for (const [key, values] of Object.entries(compendiumsRecords)) {
-      UpgradeItemGeneratorHelpers._retrieveItemTreeUpgradeByBonus(values, key, undefined);
+      await UpgradeItemGeneratorHelpers._retrieveItemTreeUpgradeByBonus(values, key, undefined);
     }
   }
 

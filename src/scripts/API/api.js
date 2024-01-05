@@ -22,7 +22,7 @@ const API = {
   /**
    * Method to retrieve all the child item leafs on the the item
    * @param {object} inAttributes The options object to pass
-   * @param {Item|string} [inAttributes.item] The uuid of the item or the item object himself.
+   * @param {Item|string} [inAttributes.item] The uuid/id of the item or the item object himself.
    * @returns {Leaf[]} All the leafs on the item
    */
   getCollection(inAttributes) {
@@ -40,28 +40,19 @@ const API = {
       warn(`No Item found`, true, inAttributes);
       return;
     }
-    return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs) ?? [];
+    // return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs) ?? [];
+    return getProperty(item, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.itemLeafs}`) ?? [];
   },
 
   /**
-   * Method to retrieve a specific child item leaf on the the item
+   * Method to retrieve all the child item leafs on the the item filtered by name,uuid, id. This is usually a valid and more intuitive method to 'getCollection'
    * @param {object} inAttributes The options object to pass
-   * @param {Item|string} [inAttributes.item] The uuid of the item or the item object himself.
-   * @param {string} [inAttributes.name] The name of the leaf to retrieve
-   * @param {string} [inAttributes.uuid] The uuid of the leaf to retrieve
-   * @param {string} [inAttributes.id] The id of the leaf to retrieve
-   * @returns {Leaf} The leaf
+   * @param {Item|string} [inAttributes.item] The uuid/id of the item or the item object himself.
+   * @param {string} [inAttributes.name=null] OPTIONAL: The name of the leaf to retrieve
+   * @param {string} [inAttributes.uuid=null] OPTIONAL: The uuid of the leaf to retrieve
+   * @param {string} [inAttributes.id=null] OPTIONAL: The id of the leaf to retrieve
+   * @returns {Leaf[]} All the leafs on the item
    */
-  retrieveLeaf(inAttributes) {
-    if (!inAttributes.name && !inAttributes.uuid && !inAttributes.id) {
-      const leafsFounded = this.getCollection(inAttributes);
-      return leafsFounded?.length > 0 ? leafsFounded[0] : null;
-    } else {
-      const leafsFounded = this.retrieveLeafs(inAttributes);
-      return leafsFounded?.length > 0 ? leafsFounded[0] : null;
-    }
-  },
-
   retrieveLeafs(inAttributes) {
     // if (!Array.isArray(inAttributes)) {
     //   throw error("getCollection | inAttributes must be of type array");
@@ -96,7 +87,32 @@ const API = {
     return leafs;
   },
 
-  getCollectionEffectAndBonus(itemWithLeafs) {
+  /**
+   * Method to retrieve a specific child item leaf on the the item
+   * @param {object} inAttributes The options object to pass
+   * @param {Item|string} [inAttributes.item] The uuid/id of the item or the item object himself.
+   * @param {string} [inAttributes.name=null] OPTIONAL: The name of the leaf to retrieve
+   * @param {string} [inAttributes.uuid=null] OPTIONAL: The uuid of the leaf to retrieve
+   * @param {string} [inAttributes.id=null] OPTIONAL: The id of the leaf to retrieve
+   * @returns {Leaf} The leaf
+   */
+  retrieveLeaf(inAttributes) {
+    if (!inAttributes.name && !inAttributes.uuid && !inAttributes.id) {
+      const leafsFounded = this.getCollection(inAttributes);
+      return leafsFounded?.length > 0 ? leafsFounded[0] : null;
+    } else {
+      const leafsFounded = this.retrieveLeafs(inAttributes);
+      return leafsFounded?.length > 0 ? leafsFounded[0] : null;
+    }
+  },
+
+  /**
+   * Method to retrieve all the child item leafs on the the item with subtype or customlink with value 'bonus' or 'effect' or 'effectAndBonus' or ''.
+   * @param {Item|string} [item] The uuid/id of the item or the item object himself.
+   * @returns {Leaf[]} Return All the leafs set as effect or bonus on the item.
+   */
+  getCollectionEffectAndBonus(item) {
+    const itemWithLeafs = getItemSync(item);
     const leafs = this.getCollection(itemWithLeafs);
     if (!leafs || leafs?.length <= 0) {
       return;
@@ -113,6 +129,14 @@ const API = {
     return leafsFilter;
   },
 
+  /**
+   * Method to retrieve all the child item leafs on the the item filtered by feature (alias for the customLink flag)
+   * @param {object} inAttributes The options object to pass
+   * @param {Item|string} [inAttributes.item] The uuid/id of the item or the item object himself.
+   * @param {Array.<string>} [inAttributes.features=[]] OPTIONAL: Pass only the leafs where the feature/customLink is contains in this array
+   * @param {Array.<string>} [inAttributes.excludes=[]] OPTIONAL: Pass only the leafs where the feature/customLink is not contains in this array
+   * @returns {Leaf[]} All the leafs on the item filtered by specific feature/customLink
+   */
   getCollectionByFeature(inAttributes) {
     if (typeof inAttributes !== "object") {
       throw error("getCollectionBySubType | inAttributes must be of type object");
@@ -137,6 +161,14 @@ const API = {
     return leafsFilter;
   },
 
+  /**
+   * Method to retrieve all the child item leafs on the the item filtered by `feature` (alias for the `customLink` property)
+   * @param {object} inAttributes The options object to pass
+   * @param {Item|string} [inAttributes.item] The uuid/id of the item or the item object himself.
+   * @param {Array.<string>} [inAttributes.types=[]] OPTIONAL: Pass only the leafs where the `feature/customLink/customType` is contains in this array
+   * @param {Array.<string>} [inAttributes.excludes=[]] OPTIONAL: Pass only the leafs where the `feature/customLink/customType` is not contains in this array
+   * @returns {Leaf[]} All the leafs on the item filtered by specific `feature/customLink/customType`
+   */
   getCollectionBySubType(inAttributes) {
     if (typeof inAttributes !== "object") {
       throw error("getCollectionBySubType | inAttributes must be of type object");
@@ -161,12 +193,20 @@ const API = {
     return leafsFilter;
   },
 
+  /**
+   * Method to retrieve all the child item leafs on the the item valid and present on the property shortDescriptionLink for the item with the specific name given. This is a utility method for the upgrade behaviour.
+   * @param {object} inAttributes The options object to pass
+   * @param {Item|string} [inAttributes.item] The uuid/id of the item or the item object himself.
+   * @param {string} [inAttributes.name] The name of the item to upgrade.
+   * @param {Array.<string>} [inAttributes.excludes=[]] OPTIONAL: Pass only the leafs where the source is not contains in this array
+   * @returns {Leaf[]} Return All the leafs on the item filtered as valid for the upgrade of hte item with a specific name.
+   */
   getCollectionUpgradableItems(inAttributes) {
     if (typeof inAttributes !== "object") {
-      throw error("getCollectionBySubType | inAttributes must be of type object");
+      throw error("getCollectionUpgradableItems | inAttributes must be of type object");
     }
     const itemWithLeafs = inAttributes.item;
-    const nameReference = inAttributes.name ?? [];
+    const nameReference = inAttributes.name ?? "";
     const excludes = inAttributes.excludes ?? [];
     const leafs = this.getCollection(itemWithLeafs);
     if (leafs?.length <= 0) {
@@ -187,34 +227,62 @@ const API = {
     return leafsFilter;
   },
 
-  isItemLeaf(itemLeafToCheck) {
-    const isLeaf = itemLeafToCheck.getFlag("item-link-tree", "isLeaf");
+  /**
+   * Method to check if the item is categorized as 'Leaf'
+   * @param {Item|string} item The uuid/id of the item or the item object himself.
+   * @returns {boolean} The flag if is a 'Leaf' or no.
+   */
+  isItemLeaf(item) {
+    const itemLeafToCheck = getItemSync(item);
+    const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
     if (isLeaf) {
       return true;
     }
     return false;
   },
 
-  isItemLeafBySubType(itemLeafToCheck, subTypeToCheck) {
-    const isLeaf = itemLeafToCheck.getFlag("item-link-tree", "isLeaf");
-    const subtype = itemLeafToCheck.getFlag("item-link-tree", "subType");
-    if (isLeaf && subtype === subTypeToCheck) {
+  /**
+   * Method to check if the item is categorized as 'Leaf' and with the specific 'subtype'
+   * @param {Item|string} item The uuid/id of the item or the item object himself.
+   * @param {string} subtype The subtype reference to check e.g.'gem' or 'crystal'.
+   * @returns {boolean} The flag if is a 'Leaf' and with the specific 'subType' or no.
+   */
+  isItemLeafBySubType(item, subtype) {
+    const itemLeafToCheck = getItemSync(item);
+    const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
+    const subTypeToCheck =
+      getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.subType}`) ?? "";
+    if (isLeaf && subTypeToCheck === subtype) {
       return true;
     }
     return false;
   },
 
-  isItemLeafByFeature(itemLeafToCheck, customTypeToCheck) {
-    const isLeaf = itemLeafToCheck.getFlag("item-link-tree", "isLeaf");
-    const customType = itemLeafToCheck.getFlag("item-link-tree", "customType");
+  /**
+   * Method to check if the item is categorized as 'Leaf' and with the specific `feature/customLink/customType`
+   * @param {Item|string} item The uuid/id of the item or the item object himself.
+   * @param {string} feature The `feature/customLink/customType` reference to check e.g.'upgrade' or 'effect'.
+   * @returns {boolean} The flag if is a 'Leaf' and with the specific `feature/customLink/customType` or no.
+   */
+  isItemLeafByFeature(item, feature) {
+    const itemLeafToCheck = getItemSync(item);
+    const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
+    const customType = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.customType}`);
     if (isLeaf && customType === customTypeToCheck) {
       return true;
     }
     return false;
   },
 
-  isFilterByItemTypeOk(itemToCheck, itemType) {
-    const filterItemType = itemToCheck.getFlag("item-link-tree", "filterItemType");
+  /**
+   * Method to check if the item is with the specific item type
+   * @param {Item|string} item The uuid/id of the item or the item object himself.
+   * @param {string} itemType The item type reference to check e.g.'gem' or 'crystal'.
+   * @returns {boolean} The flag if is a 'Leaf' is with the specific item type or no.
+   */
+  isFilterByItemTypeOk(item, itemType) {
+    const itemToCheck = getItemSync(item);
+    const filterItemType = getProperty(itemToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.filterItemTypef}`);
     if (filterItemType && itemType) {
       const filterItemTypeArr = parseAsArray(filterItemType);
       if (filterItemTypeArr.length > 0 && filterItemTypeArr.includes(itemType)) {
@@ -226,7 +294,14 @@ const API = {
     }
   },
 
-  hasSubtype(itemWithLeafs, subtype) {
+  /**
+   * Method to verify if at least one child leaf has the passed subType on the current item.
+   * @param {Item|string} item The uuid/id of the item or the item object himself.
+   * @param {string} subtype The subtype reference to check e.g.'gem' or 'crystal'.
+   * @returns {boolean} The flag there is at least at least one child leaf with the specified subType.
+   */
+  hasSubtype(item, subtype) {
+    const itemWithLeafs = getItemSync(item);
     const options = {
       item: itemWithLeafs,
     };
@@ -256,10 +331,23 @@ const API = {
   //   return !!leafsFilter;
   // },
 
+  /**
+   * Method to upgrade a item with the passed leaf
+   * NOTE: The leaf must be a valid one set as upgrade and with all the options for the upgrade, major information on the upgrade behavior paragraph at the bottom of the document.
+   * @param {Item|string} item The uuid/id of the item or the item object himself to upgrade.
+   * @param {Item|string} leaf The uuid/id of the item leaf with all the details about the upgrade.
+   * @returns {Promise<void>} No response.
+   */
   async upgradeItem(item, leaf) {
     return await UpgradeItemHelpers.retrieveSuperiorItemAndReplaceOnActor(item, leaf);
   },
 
+  /**
+   * Method to remove a child item leaf from the item parent
+   * @param {Item|string} item The uuid/id of the item or the item object himself containing the leaf.
+   * @param {Item|string} leaf The uuid/id of the item leaf to remove.
+   * @returns {Promise<void>} No response.
+   */
   async removeLeaf(item, leaf) {
     const itemI = await getItemAsync(item);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
@@ -309,6 +397,19 @@ const API = {
     Hooks.call("item-link-tree.postRemoveLeafFromItem", itemLinkTree.item, itemRemoved);
   },
 
+  /**
+   * Method to add a child item leaf from the item parent.
+   * NOTE: If both the property `customLink` and `customType` are passed `customLink` is the one used.
+   * @param {Item|string} item The uuid/id of the item or the item object himself containing the leaf.
+   * @param {Item|string} leaf The uuid/id of the item leaf to add.
+   * @param {object} [leafOptions={}] OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf
+   * @param {string} [leafOptions.subType=null] The `subType` to override on the leaf data
+   * @param {boolean} [leafOptions.showImageIcon=false] The `showImageIcon` to override on the leaf data
+   * @param {string} [leafOptions.customType=null] The `customType` to override on the leaf data
+   * @param {string} [leafOptions.shortDescriptionLink =null] The `shortDescriptionLink` to override on the leaf data
+   * @param {string} [leafOptions.customLink=null] The `customLink` to override on the leaf data
+   * @returns {Promise<void>} No response.
+   */
   async addLeaf(item, itemLeaf, leafOptions = {}) {
     const itemI = await getItemAsync(item);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
@@ -407,6 +508,19 @@ const API = {
     if (itemLinkTree.item.actor) await itemLinkTree.item.actor.render();
   },
 
+  /**
+   * Method to add a child item leaf from the item parent, just like the method 'addLeaf' but for a 'bulk' opertions on multiple items.
+   * NOTE: If both the property `customLink` and `customType` are passed `customLink` is the one used.
+   * @param {Item|string} item The uuid/id of the item or the item object himself containing the leaf.
+   * @param {Item|string} leaf The uuid/id of the item leaf to add.
+   * @param {object} [leafOptions={}] OPTIONAL: The options object to pass for customize the leaf data by ovverriding the one passed by default on the item leaf
+   * @param {string} [leafOptions.subType=null] The `subType` to override on the leaf data
+   * @param {boolean} [leafOptions.showImageIcon=false] The `showImageIcon` to override on the leaf data
+   * @param {string} [leafOptions.customType=null] The `customType` to override on the leaf data
+   * @param {string} [leafOptions.shortDescriptionLink =null] The `shortDescriptionLink` to override on the leaf data
+   * @param {string} [leafOptions.customLink=null] The `customLink` to override on the leaf data
+   * @returns {Promise<void>} No response.
+   */
   async prepareItemsLeafsFromAddLeaf(item, itemLeaf, leafOptions = {}) {
     const itemI = await getItemAsync(item);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
@@ -483,8 +597,13 @@ const API = {
     //return itemLeafs;
   },
 
-  async upgradeItemGeneratorHelpers(compendiumsLabels) {
-    return await UpgradeItemGeneratorHelpers.generateItemUpgradeCompendiums(compendiumsLabels);
+  /**
+   * Method for 'try' to automatic generate some upgradable leaf for the chain Dnd5e logic for weapons and armors +1,+2,+3
+   * @param {Object.<string, string[]>} compendiumMapLabelsByType The record list containing filter for itme type and a array  of labels compendiums to check
+   * @returns {Promise<void>} No response.
+   */
+  async upgradeItemGeneratorHelpers(compendiumMapLabelsByType) {
+    return await UpgradeItemGeneratorHelpers.generateItemUpgradeCompendiums(compendiumMapLabelsByType);
   },
 };
 

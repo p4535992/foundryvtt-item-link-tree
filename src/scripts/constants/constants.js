@@ -16,7 +16,7 @@ const CONSTANTS = {
     NONE: "",
     LEAF: "🍃",
     GEM: "💎",
-    UPGRADE: "💎",
+    // UPGRADE: "💎", // NOT USED
     CRYSTAL: "💠",
   },
 };

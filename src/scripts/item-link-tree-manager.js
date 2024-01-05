@@ -8,13 +8,15 @@ import { BabonusHelpers } from "./lib/babonus-helpers.js";
 
 export class ItemLinkTreeManager {
   static _cleanName(name) {
-    return name
-      .replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "")
-      .replaceAll(CONSTANTS.SYMBOLS.GEM, "")
-      .replaceAll(CONSTANTS.SYMBOLS.LEAF, "")
-      .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
-      .replaceAll(CONSTANTS.SYMBOLS.CRYSTAL, "")
-      .trim();
+    return (
+      name
+        //.replaceAll(CONSTANTS.SYMBOLS.UPGRADE, "")
+        .replaceAll(CONSTANTS.SYMBOLS.GEM, "")
+        .replaceAll(CONSTANTS.SYMBOLS.LEAF, "")
+        .replaceAll(CONSTANTS.SYMBOLS.NONE, "")
+        .replaceAll(CONSTANTS.SYMBOLS.CRYSTAL, "")
+        .trim()
+    );
   }
 
   static managePreAddLeafToItem(item, itemAdded, options) {
