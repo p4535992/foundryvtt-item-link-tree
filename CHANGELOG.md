@@ -1,3 +1,7 @@
+### 0.0.24
+
+- Little fix switch  "canAddLeafOnlyIfItemLinked" and "canAddLeafOnlyIfItemCrafted"),
+
 ### 0.0.23
 
 - Update API Documentation

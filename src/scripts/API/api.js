@@ -460,10 +460,10 @@ const API = {
     const options = {
       checkForItemLinking:
         ItemLinkingHelpers.isItemLinkingModuleActive() &&
-        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
       checkForBeaverCrafting:
         BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
-        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
     };
     const preResult = ItemLinkTreeManager.managePreAddLeafToItem(itemLinkTree.item, itemAdded, options);
     if (!preResult) {
@@ -580,10 +580,10 @@ const API = {
     const options = {
       checkForItemLinking:
         ItemLinkingHelpers.isItemLinkingModuleActive() &&
-        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
       checkForBeaverCrafting:
         BeaverCraftingHelpers.isBeaverCraftingModuleActive() &&
-        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemLinked"),
+        game.settings.get(CONSTANTS.MODULE_ID, "canAddLeafOnlyIfItemCrafted"),
     };
     const preResult = ItemLinkTreeManager.managePreAddLeafToItem(itemI, itemAdded, options);
     if (!preResult) {
