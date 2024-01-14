@@ -1,7 +1,10 @@
 import API from "../API/api";
 import CONSTANTS from "../constants/constants";
 import { ItemSheetLeafFeature } from "../systems/dnd5e/sheets/ItemSheetLeafFeature";
+import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
+import { ItemLinkingHelpers } from "./item-linking-helper";
 import { getItemAsync, warn } from "./lib";
+import { PoppersJsHelpers } from "./poppersjs-helpers";
 
 export class ItemLinkTreeHelpers {
   static registerSheet() {
@@ -36,7 +39,8 @@ export class ItemLinkTreeHelpers {
       let items = [];
       const isTidySheetKgar = actor.sheet.id.startsWith("Tidy5eCharacterSheet");
       if (isTidySheetKgar) {
-        items = html.find($(".item-table .item-table-row"));
+        // items = html.find($(".item-table .item-table-row"));
+        items = $(html)[0].querySelectorAll(`[data-tab-contents-for="inventory"] [data-tidy-item-table-row]`);
       } else {
         items = html.find($(".item-list .item"));
       }
@@ -59,25 +63,29 @@ export class ItemLinkTreeHelpers {
         }
         title.style.display = "contents";
 
-        const leafs = API.getCollection({ item: item });
-        if (leafs) {
-          for (const leaf of leafs) {
-            if (leaf.showImageIcon) {
-              const icon = leaf.img;
-              const tooltipText = leaf.shortDescriptionLink ? leaf.shortDescriptionLink : leaf.subType;
-              const img = document.createElement("img");
-              img.src = icon;
-              // img.classList.add("item-image");
-              img.style.border = "none";
-              img.style.marginRight = "5px";
-              img.style.marginLeft = "5px";
-              img.style.height = "20px";
-              img.style.width = "20px";
-              if (tooltipText) {
-                img.dataset.tooltip = tooltipText;
-                img.dataset.tooltipDirection = "UP";
+        if (isTidySheetKgar) {
+          //
+        } else {
+          const leafs = API.getCollection({ item: item });
+          if (leafs) {
+            for (const leaf of leafs) {
+              if (leaf.showImageIcon) {
+                const icon = leaf.img;
+                const tooltipText = leaf.shortDescriptionLink ? leaf.shortDescriptionLink : leaf.subType;
+                const img = document.createElement("img");
+                img.src = icon;
+                // img.classList.add("item-image");
+                img.style.border = "none";
+                img.style.marginRight = "5px";
+                img.style.marginLeft = "5px";
+                img.style.height = "20px";
+                img.style.width = "20px";
+                if (tooltipText) {
+                  img.dataset.tooltip = tooltipText;
+                  img.dataset.tooltipDirection = "UP";
+                }
+                title.prepend(img);
               }
-              title.prepend(img);
             }
           }
         }

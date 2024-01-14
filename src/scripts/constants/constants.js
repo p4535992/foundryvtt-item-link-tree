@@ -19,6 +19,11 @@ const CONSTANTS = {
     // UPGRADE: "💎", // NOT USED
     CRYSTAL: "💠",
   },
+  IMAGES: {
+    IS_BEAVER_CRAFTED: "modules/item-link-tree/assets/images/placeholders/beaver_crafted.png",
+    IS_BROKEN_LINK: "modules/item-link-tree/assets/images/placeholders/broken_link.png",
+    IS_LINKED: "modules/item-link-tree/assets/images/placeholders/linked.png",
+  },
 };
 
 CONSTANTS.PATH = `modules/${CONSTANTS.MODULE_ID}/`;

@@ -84,7 +84,7 @@
   "systems": [],
   "scripts": [],
   "esmodules": ["module.js"],
-  "styles": ["styles/item-link-tree.css"],
+  "styles": ["styles/item-link-tree.css", "styles/popperjs-material-badge-style.css"],
   "compatibility": {
     "minimum": 11,
     "verified": 11,
