@@ -1,3 +1,8 @@
+### 0.0.25
+
+- Add popper library with some tooltip on kgar tidy5e sheet
+- Some better behaviour
+
 ### 0.0.24
 
 - Little fix switch  "canAddLeafOnlyIfItemLinked" and "canAddLeafOnlyIfItemCrafted"),
