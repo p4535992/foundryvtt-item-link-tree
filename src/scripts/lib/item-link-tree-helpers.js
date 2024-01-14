@@ -70,9 +70,14 @@ export class ItemLinkTreeHelpers {
           if (leafs) {
             for (const leaf of leafs) {
               if (await ItemLinkTreeHelpers.isApplyImagesActive(leaf)) {
-                // if (leaf.showImageIcon) {
-                const icon = leaf.img;
-                const tooltipText = leaf.shortDescriptionLink ? leaf.shortDescriptionLink : leaf.subType;
+                const leafTmp = await ItemLinkTreeHelpers.retrieveLeafDataAsync(leaf);
+                // if (leafTmp.showImageIcon) {
+                const icon = leafTmp.img;
+                const tooltipText = leafTmp.shortDescriptionLink
+                  ? leafTmp.shortDescriptionLink
+                  : leafTmp.shortDescription
+                  ? leafTmp.shortDescription
+                  : leafTmp.subType;
                 const img = document.createElement("img");
                 img.src = icon;
                 // img.classList.add("item-image");
@@ -127,6 +132,24 @@ export class ItemLinkTreeHelpers {
         return isApplyImagesActive;
       } else {
         return leaf.showImageIcon;
+      }
+    }
+  }
+
+  static async retrieveLeafDataAsync(leaf) {
+    let itemTmp = await getItemAsync(leaf);
+    if (ItemLinkingHelpers.isItemLinked(itemTmp)) {
+      itemTmp = ItemLinkingHelpers.retrieveLinkedItem(itemTmp);
+      let data = getProperty(itemTmp, `flags.${CONSTANTS.MODULE_ID}`);
+      data = mergeObject(leaf, data);
+      return data;
+    } else {
+      if (itemTmp?.flags) {
+        let data = getProperty(itemTmp, `flags.${CONSTANTS.MODULE_ID}`);
+        data = mergeObject(leaf, data);
+        return data;
+      } else {
+        return leaf;
       }
     }
   }
