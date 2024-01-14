@@ -4,7 +4,7 @@ import { ItemSheetLeafFeature } from "../systems/dnd5e/sheets/ItemSheetLeafFeatu
 import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
 import { getItemAsync, warn } from "./lib";
-import { PoppersJsHelpers } from "./poppersjs-helpers";
+import { PoppersJsHelpers } from "./poppers-js-helpers";
 
 export class ItemLinkTreeHelpers {
   static registerSheet() {

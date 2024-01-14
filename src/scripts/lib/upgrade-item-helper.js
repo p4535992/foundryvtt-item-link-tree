@@ -440,7 +440,7 @@ export class UpgradeItemHelpers {
                     info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
                     ChatMessage.create({
                       content: `<div style="text-align: center;">
-                <img src="https://media.discordapp.net/attachments/1016086779796918362/1145841095335485620/dmkal_a_square_image_of_a_gem_floating_on_a_black_canvas_bright_e8c49697-b113-4bae-95cf-980c6bd05ba9.png?width=671&height=671" alt="Image" style="max-width: 100%;">
+                <img src="${CONSTANTS.IMAGES.IS_UPGRADED_WITH_SUCCESS}" alt="Image" style="max-width: 100%;">
                 <p><strong>${actor.name}</strong> ha inserito una <strong>${originalCrystal.name}</strong> e ha migliorato 1 <strong>${originalItem.name}</strong> in una <strong>${targetItem.name}</strong></p>
               </div>`,
                     });

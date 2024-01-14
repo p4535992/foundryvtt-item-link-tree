@@ -7,7 +7,7 @@ import { BeaverCraftingHelpers } from "./scripts/lib/beavers-crafting-helpers.js
 import { ItemLinkTreeHelpers } from "./scripts/lib/item-link-tree-helpers.js";
 import { ItemLinkingHelpers } from "./scripts/lib/item-linking-helper.js";
 import { ItemTagsHelpers } from "./scripts/lib/item-tags-helpers.js";
-import { PoppersJsHelpers } from "./scripts/lib/poppersjs-helpers.js";
+import { PoppersJsHelpers } from "./scripts/lib/poppers-js-helpers.js";
 
 Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag(CONSTANTS.MODULE_ID);
@@ -34,17 +34,17 @@ Hooks.on("renderActorSheet", (app, html, data) => {
   ItemLinkTreeHelpers.applyImagesOnInventory(app, html, data);
 });
 
-Hooks.on("tidy5e-sheet.renderActorSheet", (sheet, element, data) => {
+Hooks.on("tidy5e-sheet.renderActorSheet", (app, html, data) => {
   function main() {
     // items = $(html)[0].querySelectorAll(`[data-tab-contents-for="inventory"] [data-tidy-item-table-row]`);
-    const items = element.querySelectorAll(`[data-tab-contents-for="inventory"] [data-tidy-item-table-row]`);
+    const items = html.querySelectorAll(`[data-tab-contents-for="inventory"] [data-tidy-item-table-row]`);
     for (let row of items) {
       const itemId = row.getAttribute("data-item-id");
       const item = data.actor.items.get(itemId);
 
-      let html = "";
-      let html2 = "";
-      let html3 = "";
+      let htmlItemTags = "";
+      let htmlItemLinking = "";
+      let htmlBeaverCrafting = "";
 
       if (ItemTagsHelpers.isItemTagsModuleActive()) {
         const itemTags = item.flags?.["item-tags"]?.tags;
@@ -63,7 +63,7 @@ Hooks.on("tidy5e-sheet.renderActorSheet", (sheet, element, data) => {
 
             for (const tag of itemTags) {
               if (tagToHTML[tag]) {
-                html += tagToHTML[tag];
+                htmlItemTags += tagToHTML[tag];
               }
             }
           }
@@ -106,13 +106,13 @@ Hooks.on("tidy5e-sheet.renderActorSheet", (sheet, element, data) => {
       if (BeaverCraftingHelpers.isBeaverCraftingModuleActive()) {
         const isCrafted = BeaverCraftingHelpers.isItemBeaverCrafted(item);
         if (isCrafted) {
-          html3 = `<img src="${CONSTANTS.IMAGES.IS_BEAVER_CRAFTED}" style="border: none; margin-right: 5px;" data-tidy-render-scheme="handlebars" title="Item Crafted" />`;
+          htmlBeaverCrafting = `<img src="${CONSTANTS.IMAGES.IS_BEAVER_CRAFTED}" style="border: none; margin-right: 5px;" data-tidy-render-scheme="handlebars" title="Item Crafted" />`;
         }
       }
 
-      if (html !== "") {
+      if (htmlItemTags !== "") {
         const primaryCell = row.querySelector(".item-table-cell.primary");
-        primaryCell.insertAdjacentHTML("afterend", html);
+        primaryCell.insertAdjacentHTML("afterend", htmlItemTags);
 
         const badges = primaryCell.parentNode.querySelectorAll(".material-badge");
         badges.forEach((badge) => {
@@ -137,18 +137,18 @@ Hooks.on("tidy5e-sheet.renderActorSheet", (sheet, element, data) => {
         const isLinked = ItemLinkingHelpers.isItemLinked(item);
         const linkedIcon = isLinked ? CONSTANTS.IMAGES.IS_LINKED : CONSTANTS.IMAGES.IS_BROKEN_LINK;
         const tooltipText = isLinked ? "Item Linked" : "Item Not Linked";
-        html2 = `<img src="${linkedIcon}" style="border: none; margin-right: 5px;" data-tidy-render-scheme="handlebars" title="${tooltipText}" />`;
+        htmlItemLinking = `<img src="${linkedIcon}" style="border: none; margin-right: 5px;" data-tidy-render-scheme="handlebars" title="${tooltipText}" />`;
       }
 
       // After elements are added to the DOM
-      if (html2 !== "") {
+      if (htmlItemLinking !== "") {
         const primaryCell = row.querySelector(".item-table-cell.primary");
-        primaryCell.insertAdjacentHTML("beforebegin", html2);
+        primaryCell.insertAdjacentHTML("beforebegin", htmlItemLinking);
       }
 
-      if (html3 !== "") {
+      if (htmlBeaverCrafting !== "") {
         const primaryCell = row.querySelector(".item-table-cell.primary");
-        primaryCell.insertAdjacentHTML("beforeend", html3);
+        primaryCell.insertAdjacentHTML("beforeend", htmlBeaverCrafting);
         const craftedImage = primaryCell.querySelector("img[src*='cra.png']");
         if (craftedImage) {
           // Add a Tippy tooltip for the "crafted" image

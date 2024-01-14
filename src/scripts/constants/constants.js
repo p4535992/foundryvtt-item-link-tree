@@ -23,6 +23,7 @@ const CONSTANTS = {
     IS_BEAVER_CRAFTED: "modules/item-link-tree/assets/images/placeholders/beaver_crafted.png",
     IS_BROKEN_LINK: "modules/item-link-tree/assets/images/placeholders/broken_link.png",
     IS_LINKED: "modules/item-link-tree/assets/images/placeholders/linked.png",
+    IS_UPGRADED_WITH_SUCCESS: "modules/item-link-tree/assets/images/placeholders/upgrade_chat_image_success.png",
   },
 };
 
