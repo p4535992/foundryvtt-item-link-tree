@@ -39,8 +39,8 @@ Hooks.on("tidy5e-sheet.renderActorSheet", (app, html, data) => {
     // items = $(html)[0].querySelectorAll(`[data-tab-contents-for="inventory"] [data-tidy-item-table-row]`);
     const items = html.querySelectorAll(`[data-tab-contents-for="inventory"] [data-tidy-item-table-row]`);
     for (let row of items) {
-      // const itemId = row.getAttribute("data-item-id");
-      // const item = data.actor.items.get(itemId);
+      const itemId = row.getAttribute("data-item-id");
+      const item = data.actor.items.get(itemId);
 
       // let htmlItemTags = "";
       // let htmlItemLinking = "";
