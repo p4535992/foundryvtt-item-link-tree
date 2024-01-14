@@ -3,7 +3,7 @@ import CONSTANTS from "../constants/constants";
 import { ItemSheetLeafFeature } from "../systems/dnd5e/sheets/ItemSheetLeafFeature";
 import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { getItemAsync, warn } from "./lib";
+import { getItemAsync, getItemSync, warn } from "./lib";
 import { PoppersJsHelpers } from "./poppers-js-helpers";
 
 export class ItemLinkTreeHelpers {
@@ -26,7 +26,7 @@ export class ItemLinkTreeHelpers {
     }
   }
 
-  static applyImagesOnInventory(app, html, data) {
+  static async applyImagesOnInventory(app, html, data) {
     if (!app) {
       return;
     }
@@ -69,7 +69,8 @@ export class ItemLinkTreeHelpers {
           const leafs = API.getCollection({ item: item });
           if (leafs) {
             for (const leaf of leafs) {
-              if (leaf.showImageIcon) {
+              if (await ItemLinkTreeHelpers.isApplyImagesActive(leaf)) {
+                // if (leaf.showImageIcon) {
                 const icon = leaf.img;
                 const tooltipText = leaf.shortDescriptionLink ? leaf.shortDescriptionLink : leaf.subType;
                 const img = document.createElement("img");
@@ -109,5 +110,24 @@ export class ItemLinkTreeHelpers {
       },
       { render: false }
     );
+  }
+
+  static async isApplyImagesActive(leaf) {
+    let itemTmp = await getItemAsync(leaf);
+    if (ItemLinkingHelpers.isItemLinked(itemTmp)) {
+      itemTmp = ItemLinkingHelpers.retrieveLinkedItem(itemTmp);
+      const isApplyImagesActive = getProperty(itemTmp, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.showImageIcon}`);
+      return isApplyImagesActive;
+    } else {
+      if (itemTmp?.flags) {
+        const isApplyImagesActive = getProperty(
+          itemTmp,
+          `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.showImageIcon}`
+        );
+        return isApplyImagesActive;
+      } else {
+        return leaf.showImageIcon;
+      }
+    }
   }
 }

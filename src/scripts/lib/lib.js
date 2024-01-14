@@ -1,5 +1,6 @@
 import CONSTANTS from "../constants/constants.js";
 import Logger from "./Logger.js";
+import { RetrieveHelpers } from "./retrieve-helpers.js";
 
 // =================================
 // Logger Utility
@@ -48,115 +49,78 @@ export function dialogWarning(message, icon = "fas fa-exclamation-triangle") {
 // ================================================================================
 
 export function getDocument(target) {
-  if (stringIsUuid(target)) {
-    target = fromUuidSync(target);
-  }
-  return target?.document ?? target;
+  return RetrieveHelpers.getDocument(target);
 }
 
 export function stringIsUuid(inId) {
-  return typeof inId === "string" && (inId.match(/\./g) || []).length && !inId.endsWith(".");
+  return RetrieveHelpers.stringIsUuid(inId);
 }
 
 export function getUuid(target) {
-  if (stringIsUuid(target)) {
-    return target;
-  }
-  const document = getDocument(target);
-  return document?.uuid ?? false;
+  return RetrieveHelpers.getUuid(target);
+}
+
+export function getCompendiumCollectionSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getCompendiumCollectionSync(target, ignoreError, ignoreName);
+}
+
+export async function getCompendiumCollectionAsync(target, ignoreError = false, ignoreName = true) {
+  return await RetrieveHelpers.getCompendiumCollectionAsync(target, ignoreError, ignoreName);
+}
+
+export function getUserSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getUserSync(target, ignoreError, ignoreName);
+}
+
+export function getActorSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getActorSync(target, ignoreError, ignoreName);
+}
+
+export async function getActorAsync(target, ignoreError = false, ignoreName = true) {
+  return await RetrieveHelpers.getActorAsync(target, ignoreError, ignoreName);
+}
+
+export function getJournalSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getJournalSync(target, ignoreError, ignoreName);
+}
+
+export async function getJournalAsync(target, ignoreError = false, ignoreName = true) {
+  return await RetrieveHelpers.getJournalAsync(target, ignoreError, ignoreName);
+}
+
+export function getMacroSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getMacroSync(target, ignoreError, ignoreName);
+}
+
+export async function getMacroAsync(target, ignoreError = false, ignoreName = true) {
+  return await RetrieveHelpers.getMacroAsync(target, ignoreError, ignoreName);
+}
+
+export function getSceneSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getSceneSync(target, ignoreError, ignoreName);
+}
+
+export async function getSceneAsync(target, ignoreError = false, ignoreName = true) {
+  return await RetrieveHelpers.getSceneAsync(target, ignoreError, ignoreName);
 }
 
 export function getItemSync(target, ignoreError = false, ignoreName = true) {
-  if (!target) {
-    throw error(`Item is undefined`, true, target);
-  }
-  if (target instanceof Item) {
-    return target;
-  }
-  // This is just a patch for compatibility with others modules
-  if (target.document) {
-    target = target.document;
-  }
-  if (target.uuid) {
-    target = target.uuid;
-  }
-
-  if (target instanceof Item) {
-    return target;
-  }
-  if (stringIsUuid(target)) {
-    target = fromUuidSync(target);
-  } else {
-    target = game.items.get(target);
-    if (!target && !ignoreName) {
-      target = game.items.getName(target);
-    }
-  }
-  if (!target) {
-    if (ignoreError) {
-      warn(`Item is not found`, false, target);
-      return;
-    } else {
-      throw error(`Item is not found`, true, target);
-    }
-  }
-  // Type checking
-  if (!(target instanceof Item)) {
-    if (ignoreError) {
-      warn(`Invalid Item`, true, target);
-      return;
-    } else {
-      throw error(`Invalid Item`, true, target);
-    }
-  }
-  return target;
+  return RetrieveHelpers.getItemSync(target, ignoreError, ignoreName);
 }
 
 export async function getItemAsync(target, ignoreError = false, ignoreName = true) {
-  if (!target) {
-    throw error(`Item is undefined`, true, target);
-  }
-  if (target instanceof Item) {
-    return target;
-  }
-  // This is just a patch for compatibility with others modules
-  if (target.document) {
-    target = target.document;
-  }
-  if (target.uuid) {
-    target = target.uuid;
-  }
-
-  if (target instanceof Item) {
-    return target;
-  }
-  if (stringIsUuid(target)) {
-    target = await fromUuid(target);
-  } else {
-    target = game.items.get(target);
-    if (!target && !ignoreName) {
-      target = game.items.getName(target);
-    }
-  }
-  if (!target) {
-    if (ignoreError) {
-      warn(`Item is not found`, false, target);
-      return;
-    } else {
-      throw error(`Item is not found`, true, target);
-    }
-  }
-  // Type checking
-  if (!(target instanceof Item)) {
-    if (ignoreError) {
-      warn(`Invalid Item`, true, target);
-      return;
-    } else {
-      throw error(`Invalid Item`, true, target);
-    }
-  }
-  return target;
+  return await RetrieveHelpers.getItemAsync(target, ignoreError, ignoreName);
 }
+
+export function getPlaylistSoundPathSync(target, ignoreError = false, ignoreName = true) {
+  return RetrieveHelpers.getPlaylistSoundPathSync(target, ignoreError, ignoreName);
+}
+
+export async function getPlaylistSoundPathAsync(target, ignoreError = false, ignoreName = true) {
+  return await RetrieveHelpers.getPlaylistSoundPathAsync(target, ignoreError, ignoreName);
+}
+
+// =============================================================
 
 export function isEmptyObject(obj) {
   // because Object.keys(new Date()).length === 0;

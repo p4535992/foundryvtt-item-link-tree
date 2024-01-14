@@ -9,7 +9,7 @@ export class ItemLinkingHelpers {
     if (!ItemLinkingHelpers.isItemLinkingModuleActive()) {
       return false;
     }
-    const isLinked = itemToCheck.getFlag("item-linking", "baseItem");
+    const isLinked = getProperty(itemToCheck, `flags.item-linking.baseItem`);
     if (isLinked) {
       return true;
     }
@@ -21,11 +21,11 @@ export class ItemLinkingHelpers {
       warn(`The module 'item-linking' is not active`);
       return;
     }
-    if (!ItemLinkingHelpers.isItemLinked(itemToCheck)) {
-      warn(`The item ${itemToCheck.name}|${itemToCheck.uuid} is not linked`);
-      return;
-    }
-    const baseItemUuid = itemToCheck.getFlag("item-linking", "baseItem");
+    // if (!ItemLinkingHelpers.isItemLinked(itemToCheck)) {
+    //   warn(`The item ${itemToCheck.name}|${itemToCheck.uuid} is not linked`);
+    //   return;
+    // }
+    const baseItemUuid = getProperty(itemToCheck, `flags.item-linking.baseItem`);
     if (!baseItemUuid) {
       warn(`No baseItemUuid is been found for ${itemToCheck.name}|${itemToCheck.uuid}`);
       return;
@@ -65,7 +65,7 @@ export class ItemLinkingHelpers {
       return;
     }
 
-    const baseItemUuid = itemToCheck.getFlag("item-linking", "baseItem");
+    const baseItemUuid = getProperty(itemToCheck, `flags.item-linking.baseItem`);
     if (baseItemUuid) {
       warn(`No baseItemUuid is been found for ${itemToCheck.name}|${itemToCheck.uuid}`);
       return;

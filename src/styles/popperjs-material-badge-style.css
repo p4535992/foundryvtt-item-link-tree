@@ -1,4 +1,4 @@
-.material-badge {
+.item-link-tree-material-badge {
   display: inline-block;
   width: 21px;
   height: 21px;
@@ -13,7 +13,7 @@
   margin-left: 2px;
   border-style: ridge;
 }
-.material-badge2 {
+.item-link-tree-material-badge2 {
   display: inline-block;
   width: 21px;
   height: 21px;
