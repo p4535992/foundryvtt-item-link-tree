@@ -1,4 +1,5 @@
-import { getItemSync, warn } from "./lib";
+import Logger from "./Logger";
+import { getItemSync } from "./lib.js";
 
 export class ItemLinkingHelpers {
   static isItemLinkingModuleActive() {
@@ -58,21 +59,21 @@ export class ItemLinkingHelpers {
   static retrieveLinkedItem(itemToCheck) {
     const itemToCheckTmp = getItemSync(itemToCheck);
     if (!ItemLinkingHelpers.isItemLinkingModuleActive()) {
-      warn(`The module 'item-linking' is not active`);
+      Logger.warn(`The module 'item-linking' is not active`);
       return;
     }
     if (!ItemLinkingHelpers.isItemLinked(itemToCheckTmp)) {
-      warn(`The item ${itemToCheckTmp.name}|${itemToCheckTmp.uuid} is not linked`);
+      Logger.warn(`The item ${itemToCheckTmp.name}|${itemToCheckTmp.uuid} is not linked`);
       return;
     }
     const baseItemUuid = getProperty(itemToCheckTmp, `flags.item-linking.baseItem`);
     if (!baseItemUuid) {
-      warn(`No baseItemUuid is been found for ${itemToCheckTmp.name}|${itemToCheckTmp.uuid}`);
+      Logger.warn(`No baseItemUuid is been found for ${itemToCheckTmp.name}|${itemToCheckTmp.uuid}`);
       return;
     }
     const baseItem = fromUuidSync(baseItemUuid);
     if (!baseItem) {
-      warn(`No baseItem is been found for ${itemToCheckTmp.name}|${itemToCheckTmp.uuid}`);
+      Logger.warn(`No baseItem is been found for ${itemToCheckTmp.name}|${itemToCheckTmp.uuid}`);
       return;
     }
     return baseItem;
@@ -86,12 +87,12 @@ export class ItemLinkingHelpers {
    */
   static async setLinkedItem(itemToCheck, itemBaseReference) {
     if (!ItemLinkingHelpers.isItemLinkingModuleActive()) {
-      warn(`The module 'item-linking' is not active`);
+      Logger.warn(`The module 'item-linking' is not active`);
       return;
     }
 
     if (!itemBaseReference) {
-      warn(`The 'baseItemReference' is null or empty`);
+      Logger.warn(`The 'baseItemReference' is null or empty`);
       return;
     }
 
@@ -107,13 +108,13 @@ export class ItemLinkingHelpers {
       baseItem.uuid;
 
     if (!uuidToSet) {
-      warn(`The 'uuidToSet' is null or empty`);
+      Logger.warn(`The 'uuidToSet' is null or empty`);
       return;
     }
 
     const baseItemUuid = getProperty(itemToCheckTmp, `flags.item-linking.baseItem`);
     if (baseItemUuid) {
-      warn(`No baseItemUuid is been found for ${itemToCheckTmp.name}|${itemToCheckTmp.uuid}`);
+      Logger.warn(`No baseItemUuid is been found for ${itemToCheckTmp.name}|${itemToCheckTmp.uuid}`);
       return;
     }
     // itemToCheck = await itemToCheckTmp.update({
@@ -149,7 +150,7 @@ export class ItemLinkingHelpers {
 
       const owner = toReplace.actor;
       if (!owner) {
-        throw error(`The item '${itemToCheckTmp}' is not on a actor`);
+        throw Logger.error(`The item '${itemToCheckTmp}' is not on a actor`);
       }
       if (force) {
         await toReplace.delete();
@@ -161,7 +162,7 @@ export class ItemLinkingHelpers {
       }
       return await owner.createEmbeddedDocuments("Item", [obj]);
     } else {
-      warn(`The item '${itemToCheckTmp?.name}' is already linked`);
+      Logger.warn(`The item '${itemToCheckTmp?.name}' is already linked`);
     }
   }
 
@@ -179,8 +180,9 @@ export class ItemLinkingHelpers {
    */
   static async tryToUpdateActorWithLinkedDocumentsFromCompendiumFolder(actor, compendiumsFolderToCheck, options) {
     if (!compendiumsFolderToCheck) {
-      ui.notifications.warn(
-        `${MODULE} | tryToUpdateActorWithLinkedDocumentsFromCompendiumFolder | No compendiums folder is been passed`
+      Logger.warn(
+        `tryToUpdateActorWithLinkedDocumentsFromCompendiumFolder | No compendiums folder is been passed`,
+        true
       );
       return;
     }
@@ -215,7 +217,7 @@ export class ItemLinkingHelpers {
   static async tryToUpdateActorWithLinkedDocumentsFromCompendiums(actor, compendiumsToCheck, options) {
     const actorToUpdate = await getActorAsync(actor, false);
     if (!actorToUpdate) {
-      ui.notifications.warn(`${MODULE} | tryToUpdateActorWithLinkedDocumentsFromCompendiums | No Actor is been passed`);
+      Logger.warn(`tryToUpdateActorWithLinkedDocumentsFromCompendiums | No Actor is been passed`, true);
       return;
     }
 
@@ -235,7 +237,7 @@ export class ItemLinkingHelpers {
     }
 
     if (!compendiums || compendiums.length === 0) {
-      ui.notifications.warn(`${MODULE} | tryToLinkItemsFromCompendium | No Compendiums is been passed with value`);
+      Logger.warn(`tryToLinkItemsFromCompendium | No Compendiums is been passed with value`, true);
       return;
     }
 
@@ -260,7 +262,7 @@ export class ItemLinkingHelpers {
     }
 
     if (Object.keys(documentsToCheckMap).length === 0) {
-      ui.notifications.info(`No documents were found in the compendiums`);
+      Logger.info(`No documents were found in the compendiums`, true);
       return;
     }
 
@@ -308,9 +310,9 @@ export class ItemLinkingHelpers {
       }
     }
 
-    ui.notifications.info(
+    Logger.info(
       `Total of <b>${documentsFound}</b> items found, <b>${documentsUpdated}</b> were fixed and linked, <b>${documentsAlreadyLinked}</b> were already linked, ${documentsBroken} had broken links and <b>${documentsWithNoMatch.length}</b> were not linked but there was no compatible document in the compendiums.`,
-      { permanent: true }
+      true
     );
 
     const names = new Set();
@@ -333,7 +335,7 @@ export class ItemLinkingHelpers {
     if (confirm) {
       const noMatchCompendium = game.packs.contents.find((pack) => pack.metadata.label === compendiumForNoMatch);
       if (!noMatchCompendium) {
-        ui.notifications.error(`Compendium ${compendiumForNoMatch} not found`);
+        Logger.error(`Compendium ${compendiumForNoMatch} not found`, true);
         return;
       }
       let items_fixed = 0;
@@ -352,9 +354,7 @@ export class ItemLinkingHelpers {
           items_fixed++;
         }
       }
-      ui.notifications.info(`<b>${unique_no_match.length}</b> items created and <b>${items_fixed}</b> items linked`, {
-        permanent: true,
-      });
+      Logger.info(`<b>${unique_no_match.length}</b> items created and <b>${items_fixed}</b> items linked`, true);
     }
   }
 }

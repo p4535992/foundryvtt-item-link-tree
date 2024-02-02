@@ -2,12 +2,13 @@ import API from "../API/api";
 import { ItemLinkTreeItem } from "../classes/ItemLinkTreeItem";
 import CONSTANTS from "../constants/constants";
 import { ItemLinkTreeManager } from "../item-link-tree-manager";
+import Logger from "./Logger";
 import { BabonusHelpers } from "./babonus-helpers";
 import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { DaeHelpers } from "./dae-helpers";
 import { ItemLinkTreeHelpers } from "./item-link-tree-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { error, getItemAsync, getItemSync, info, isRealNumber, log } from "./lib";
+import { getItemAsync, getItemSync, isRealNumber } from "./lib";
 
 export class UpgradeItemHelpers {
   /**
@@ -83,7 +84,7 @@ export class UpgradeItemHelpers {
 
     // TODO MAKE MULTISYSTEM
     if (originalItem.system.quantity !== 1) {
-      throw error(`Could not find ${originalItem.name} for doing the upgrade`, true);
+      throw Logger.error(`Could not find ${originalItem.name} for doing the upgrade`, true);
     }
     let baseLinkedItem = originalItem;
     if (ItemLinkingHelpers.isItemLinked(baseLinkedItem)) {
@@ -93,11 +94,11 @@ export class UpgradeItemHelpers {
 
     const actorA = originalItem.actor;
     if (!actorA) {
-      throw error(`${game.user.name} please at least select a actor`, true);
+      throw Logger.error(`${game.user.name} please at least select a actor`, true);
     }
     // Type checking
     if (!(actorA instanceof CONFIG.Actor.documentClass)) {
-      throw error(`Invalid actor`, true);
+      throw Logger.error(`Invalid actor`, true);
     }
 
     const itemsLeafsOriginalBase = [];
@@ -113,7 +114,7 @@ export class UpgradeItemHelpers {
           itemsLeafsOriginalBase.push(itemUp);
         }
       } catch (e) {
-        throw error(e);
+        throw Logger.error(e);
       }
     }
 
@@ -121,7 +122,7 @@ export class UpgradeItemHelpers {
 
     // TODO MAKE MULTISYSTEM
     if (originalCrystal.system.quantity !== 1) {
-      throw error(`Could not find ${originalCrystal.name} for doing the upgrade`, true);
+      throw Logger.error(`Could not find ${originalCrystal.name} for doing the upgrade`, true);
     }
     let baseLinkedCrystal = originalCrystal;
     if (ItemLinkingHelpers.isItemLinked(baseLinkedCrystal)) {
@@ -150,25 +151,25 @@ export class UpgradeItemHelpers {
       return ItemLinkTreeManager._cleanName(iTmp.name) === ItemLinkTreeManager._cleanName(baseLinkedItem.name);
     });
     if (!isCurrentItemASource) {
-      throw error(`The item '${originalItem.name}' cannot be upgraded because is not set as a source`);
+      throw Logger.error(`The item '${originalItem.name}' cannot be upgraded because is not set as a source`);
     }
 
     const actorB = originalCrystal.actor;
     if (!actorB) {
-      throw error(`${game.user.name} please at least select a actor`, true);
+      throw Logger.error(`${game.user.name} please at least select a actor`, true);
     }
     // Type checking
     if (!(actorB instanceof CONFIG.Actor.documentClass)) {
-      throw error(`Invalid actor`, true);
+      throw Logger.error(`Invalid actor`, true);
     }
 
     if (actorA.id !== actorB.id) {
-      throw error(`Invalid actor source and actor target`, true);
+      throw Logger.error(`Invalid actor source and actor target`, true);
     }
 
     const customType = getProperty(baseLinkedCrystal, `flags.item-link-tree.customType`) ?? "";
     if (customType !== "upgrade") {
-      throw error(`Invalid leaf customType for the upgrade of the item ${customType}`, true);
+      throw Logger.error(`Invalid leaf customType for the upgrade of the item ${customType}`, true);
     }
 
     const upgradeableItemsBase = [];
@@ -192,36 +193,36 @@ export class UpgradeItemHelpers {
           upgradeableItemsBase.push(itemUp);
         }
       } catch (e) {
-        throw error(e);
+        throw Logger.error(e);
       }
     }
 
     // Type checking
     if (!(baseLinkedCrystal instanceof CONFIG.Item.documentClass)) {
-      throw error(`Invalid leaf for the upgrade of the item`, true);
+      throw Logger.error(`Invalid leaf for the upgrade of the item`, true);
     }
 
     const actor = originalItem.actor;
     if (!actor) {
-      throw error(`${game.user.name} please at least select a actor`, true);
+      throw Logger.error(`${game.user.name} please at least select a actor`, true);
     }
 
     // Type checking
     if (!(actor instanceof CONFIG.Actor.documentClass)) {
-      throw error(`Invalid actor`, true);
+      throw Logger.error(`Invalid actor`, true);
     }
 
     // if (!(type in COMPENDIUM)) {
-    //   throw error(`The macro was called with an invalid argument "type": ${type}`, true);
+    //   throw Logger.error(`The macro was called with an invalid argument "type": ${type}`, true);
     // }
 
     // if (!(target_bonus > 0)) {
-    //   throw error(`The macro was called with an invalid argument "target_bonus": ${target_bonus}`, true);
+    //   throw Logger.error(`The macro was called with an invalid argument "target_bonus": ${target_bonus}`, true);
     // }
 
     if (!upgradeableItemsBase || upgradeableItemsBase?.length === 0) {
-      //throw error(`The macro was called with an invalid argument "itemUpgraded": ${upgradeableItemsBase}`, true);
-      throw error(`No upgradable item is been found for the item '${originalItem.name}'`, true);
+      //throw Logger.error(`The macro was called with an invalid argument "itemUpgraded": ${upgradeableItemsBase}`, true);
+      throw Logger.error(`No upgradable item is been found for the item '${originalItem.name}'`, true);
     }
 
     // const base_bonus = target_bonus - 1;
@@ -234,7 +235,7 @@ export class UpgradeItemHelpers {
     // // Asserting every compendium exists
     // if (compendiums.some((c) => c === undefined)) {
     //   const name = COMPENDIUM[type][compendiums.indexOf(undefined)];
-    //   throw error(`Compendium not found: ${name}`, true);
+    //   throw Logger.error(`Compendium not found: ${name}`, true);
     // }
 
     // // ------------------------------------ //
@@ -247,12 +248,12 @@ export class UpgradeItemHelpers {
     //     // MOD 4535992
     //     //const match = i.name.match(rgx);
     //     if (!ItemLinkingHelpers.isItemLinked(i)) {
-    //       // warn(`The item ${i.name}|${i.uuid} is not linked`);
+    //       // Logger.warn(`The item ${i.name}|${i.uuid} is not linked`);
     //       return false;
     //     }
     //     const baseItem = ItemLinkingHelpers.retrieveLinkedItem(i);
     //     if (!baseItem) {
-    //       // warn(`The item ${i.name}|${i.uuid} is linked but not item is founded`);
+    //       // Logger.warn(`The item ${i.name}|${i.uuid} is linked but not item is founded`);
     //       return false;
     //     }
     //     const match = baseItem.name.match(rgx);
@@ -270,12 +271,12 @@ export class UpgradeItemHelpers {
     //   // MOD 4535992
     //   //return itemKeys.includes(i.name) && i.getFlag("beavers-crafting", "isCrafted")
     //   if (!ItemLinkingHelpers.isItemLinked(i)) {
-    //     // warn(`The item ${i.name}|${i.uuid} is not linked`);
+    //     // Logger.warn(`The item ${i.name}|${i.uuid} is not linked`);
     //     return false;
     //   }
     //   const baseItem = ItemLinkingHelpers.retrieveLinkedItem(i);
     //   if (!baseItem) {
-    //     // warn(`The item ${i.name}|${i.uuid} is linked but not item is founded`);
+    //     // Logger.warn(`The item ${i.name}|${i.uuid} is linked but not item is founded`);
     //     return false;
     //   }
     //   return itemKeys.includes(baseItem.name);
@@ -283,7 +284,7 @@ export class UpgradeItemHelpers {
     const upgradeableItems = upgradeableItemsBase; //[item];
 
     if (upgradeableItems.length === 0) {
-      throw error(`${actor.name} does not have any upgradeable`, true);
+      throw Logger.error(`${actor.name} does not have any upgradeable`, true);
     }
 
     // ------------------------------------ //
@@ -330,7 +331,10 @@ export class UpgradeItemHelpers {
             let targetItem = upgradeableItems.find((i) => i.id === targetItemId);
 
             if (!targetItem) {
-              throw error(`Could not find the item to upgrade, you must select at least a item for the upgrade`, true);
+              throw Logger.error(
+                `Could not find the item to upgrade, you must select at least a item for the upgrade`,
+                true
+              );
             }
 
             // const targetItem = mappedItems[item.name];
@@ -373,7 +377,9 @@ export class UpgradeItemHelpers {
                         optionsAdditionalCost
                       ) === false
                     ) {
-                      log(`The upgrade of the item completion was prevented by the 'item-link-tree.preUpgrade' hook.`);
+                      Logger.log(
+                        `The upgrade of the item completion was prevented by the 'item-link-tree.preUpgrade' hook.`
+                      );
                       return;
                     }
 
@@ -436,8 +442,8 @@ export class UpgradeItemHelpers {
 
                     // await DaeHelpers.fixTransferEffect(actorA, targetItem);
 
-                    log(`Item upgraded with success! ${originalItem.name} -> ${targetItem.name}`);
-                    info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
+                    Logger.log(`Item upgraded with success! ${originalItem.name} -> ${targetItem.name}`);
+                    Logger.info(`Oggetto migliorato con successo! ${originalItem.name} -> ${targetItem.name}`, true);
                     ChatMessage.create({
                       content: `<div style="text-align: center;">
                 <img src="${CONSTANTS.IMAGES.IS_UPGRADED_WITH_SUCCESS}" alt="Image" style="max-width: 100%;">

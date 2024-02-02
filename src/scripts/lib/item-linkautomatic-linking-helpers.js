@@ -1,6 +1,7 @@
 import { error } from "jquery";
 import { ItemLinkingHelpers } from "./item-linking-helper";
 import { getItemAsync } from "./lib";
+import Logger from "./Logger";
 
 export class ItemLinkingAutomaticHelpers {
   // let item;
@@ -18,7 +19,7 @@ export class ItemLinkingAutomaticHelpers {
 
       const owner = toReplace.actor;
       if (!owner) {
-        throw error(`The item '${itemUuid}' is not on a actor`);
+        throw Logger.error(`The item '${itemUuid}' is not on a actor`);
       }
       if (force) {
         await toReplace.delete();

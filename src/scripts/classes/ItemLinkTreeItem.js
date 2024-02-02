@@ -1,9 +1,10 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
+import Logger from "../lib/Logger.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { getItemAsync, log, warn } from "../lib/lib.js";
+import { getItemAsync } from "../lib/lib.js";
 import { ItemLinkTreeItemSheet } from "./ItemLinkTreeItemSheet.js";
 
 /**
@@ -61,10 +62,10 @@ export class ItemLinkTreeItem {
    * Update this class's understanding of the item items
    */
   async refresh() {
-    log("", false, "REFRESHING", this.itemTreeList);
+    Logger.log("", false, "REFRESHING", this.itemTreeList);
     this._getItemTreeFlagMap();
     // await this._getItemTreeItems();
-    log("", false, "REFRESHed");
+    Logger.log("", false, "REFRESHed");
   }
 
   /**
@@ -76,7 +77,7 @@ export class ItemLinkTreeItem {
     // original could be in a compendium or on an actor
     let original = await fromUuid(uuid);
 
-    log("", false, "original", original);
+    Logger.log("", false, "original", original);
 
     // return a fake 'empty' item if we could not create a childItem
     if (!original) {
@@ -109,7 +110,7 @@ export class ItemLinkTreeItem {
     const itemAdded = await fromUuid(uuidToAdd);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
-      warn(`Cannot find this item with uuid ${uuidToAdd}`);
+      Logger.warn(`Cannot find this item with uuid ${uuidToAdd}`);
       return;
     }
     if (ItemLinkingHelpers.isItemLinked(itemAdded)) {
@@ -129,7 +130,7 @@ export class ItemLinkTreeItem {
     }
 
     if (Hooks.call("item-link-tree.preAddLeafToItem", this.item, itemAdded) === false) {
-      log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
+      Logger.log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
       return;
     }
 
@@ -216,7 +217,7 @@ export class ItemLinkTreeItem {
     }
 
     if (Hooks.call("item-link-tree.preRemoveLeafFromItem", this.item, itemRemoved) === false) {
-      log(`AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`);
+      Logger.log(`AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`);
       return;
     }
 
@@ -265,7 +266,7 @@ export class ItemLinkTreeItem {
     }
 
     if (Hooks.call("item-link-tree.preUpdateLeafFromItem", this.item, itemUpdated, this.itemTreeList) === false) {
-      log(`UpdateLeafFromItem completion was prevented by the 'item-link-tree.preUpdateLeafFromItem' hook.`);
+      Logger.log(`UpdateLeafFromItem completion was prevented by the 'item-link-tree.preUpdateLeafFromItem' hook.`);
       return;
     }
 

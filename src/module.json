@@ -82,7 +82,7 @@
     }
   ],
   "systems": [],
-  "scripts": ["scripts/libs/popper.min.js","scripts/libs/tippy-bundle.umd.min.js"],
+  "scripts": ["scripts/libs/popper.min.js", "scripts/libs/tippy-bundle.umd.min.js"],
   "esmodules": ["module.js"],
   "styles": ["styles/item-link-tree.css", "styles/popperjs-material-badge-style.css"],
   "compatibility": {

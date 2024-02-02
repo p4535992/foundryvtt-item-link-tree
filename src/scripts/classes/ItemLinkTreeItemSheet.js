@@ -1,6 +1,6 @@
 import { ItemLinkTree } from "../ItemLinkTree.js";
 import CONSTANTS from "../constants/constants.js";
-import { log } from "../lib/lib.js";
+import Logger from "../lib/Logger.js";
 import { ItemLinkTreeItem } from "./ItemLinkTreeItem.js";
 
 /**
@@ -51,7 +51,7 @@ export class ItemLinkTreeItemSheet {
       if (!include) {
         return;
       }
-      log("", false, {
+      Logger.log("", false, {
         instances: this.instances,
       });
 
@@ -88,7 +88,7 @@ export class ItemLinkTreeItemSheet {
   async _renderLeafsList() {
     const itemLeafsArray = [...(await this.itemLinkTreeItem.itemTreeFlagMap).values()];
 
-    log("", false, "rendering list", itemLeafsArray);
+    Logger.log("", false, "rendering list", itemLeafsArray);
 
     const itemLeafsArrayTmp = [];
     // TOD made this better...
@@ -109,7 +109,7 @@ export class ItemLinkTreeItemSheet {
         };
         itemLeafsArrayTmp.push(i);
       } else {
-        console.warn(`${CONSTANTS.MODULE_ID} | there is a wrong item uuid ${leaf}`);
+        Logger.warn(`There is a wrong item uuid ${leaf}`);
         const uuidToRemove = leaf.uuid;
         for (const [key, value] of this.itemLinkTreeItem.itemTreeFlagMap) {
           if (value.uuid === uuidToRemove) {
@@ -136,17 +136,19 @@ export class ItemLinkTreeItemSheet {
    * @returns Promise that resolves when the item has been modified
    */
   async _dragEnd(event) {
-    if (!this.app.isEditable) return;
-    log("", false, "dragEnd", { event });
+    if (!this.app.isEditable) {
+      return;
+    }
+    Logger.log("", false, "dragEnd", { event });
 
     const data = TextEditor.getDragEventData(event);
-    log("", false, "dragEnd", { data });
+    Logger.log("", false, "dragEnd", { data });
 
     if (data.type !== "Item") {
       return;
     }
     const item = await fromUuid(data.uuid);
-    log("", false, "dragEnd", { item });
+    Logger.log("", false, "dragEnd", { item });
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -161,7 +163,7 @@ export class ItemLinkTreeItemSheet {
 
     const itemLeaf = this.itemLinkTreeItem.itemTreeFlagMap.get(itemId);
     const item = await fromUuid(itemLeaf.uuid);
-    log("", false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
+    Logger.log("", false, "_handleItemClick", !!item.isOwned && !!item.isOwner);
     item?.sheet.render(true, {
       editable: !!item.isOwned && !!item.isOwner,
     });
@@ -173,7 +175,7 @@ export class ItemLinkTreeItemSheet {
   async _handleItemDeleteClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    log("", false, "deleting", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+    Logger.log("", false, "deleting", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -186,7 +188,7 @@ export class ItemLinkTreeItemSheet {
   async _handleCreateCustomLinkClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    log("", false, "customLink", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+    Logger.log("", false, "customLink", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -199,7 +201,7 @@ export class ItemLinkTreeItemSheet {
   async _handleItemDestroyClick(event) {
     const itemId = event.currentTarget.closest("[data-item-id]").dataset.itemId;
 
-    log("", false, "destroying", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
+    Logger.log("", false, "destroying", itemId, this.itemLinkTreeItem.itemTreeFlagMap);
 
     // set the flag to re-open this tab when the update completes
     this._shouldOpenTreeTab = true;
@@ -222,7 +224,7 @@ export class ItemLinkTreeItemSheet {
    * This allows for less delay during the update -> renderItemSheet -> set tab cycle
    */
   renderLite() {
-    log("", false, "RENDERING");
+    Logger.log("", false, "RENDERING");
     const titleTab = game.settings.get(CONSTANTS.MODULE_ID, "customItemTabName")
       ? game.settings.get(CONSTANTS.MODULE_ID, "customItemTabName")
       : game.i18n.localize(`${CONSTANTS.MODULE_ID}.tab.label`);

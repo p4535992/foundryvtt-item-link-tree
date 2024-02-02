@@ -1,5 +1,6 @@
 import CONSTANTS from "../constants/constants";
-import { getItemSync, warn } from "./lib";
+import Logger from "./Logger";
+import { getItemSync } from "./lib.js";
 
 export class BeaverCraftingHelpers {
   static isBeaverCraftingModuleActive() {
@@ -31,7 +32,7 @@ export class BeaverCraftingHelpers {
   static async setItemAsBeaverCrafted(itemOrItemUuid) {
     const item = getItemSync(itemOrItemUuid);
     if (!item) {
-      warn(`I could not find the item with reference ${itemOrItemUuid}`);
+      Logger.warn(`I could not find the item with reference ${itemOrItemUuid}`);
       return;
     }
     // NOTE: is a boolean now
@@ -45,7 +46,7 @@ export class BeaverCraftingHelpers {
   static async unsetItemAsBeaverCrafted(itemOrItemUuid) {
     const item = getItemSync(itemOrItemUuid);
     if (!item) {
-      warn(`I could not find the item with reference ${itemOrItemUuid}`);
+      Logger.warn(`I could not find the item with reference ${itemOrItemUuid}`);
       return;
     }
     const status = item.getFlag("beavers-crafting", "status");

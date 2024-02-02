@@ -1,9 +1,10 @@
 import API from "../API/api";
 import CONSTANTS from "../constants/constants";
 import { ItemSheetLeafFeature } from "../systems/dnd5e/sheets/ItemSheetLeafFeature";
+import Logger from "./Logger";
 import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { getItemAsync, getItemSync, warn } from "./lib";
+import { getItemAsync, getItemSync } from "./lib.js";
 import { PoppersJsHelpers } from "./poppers-js-helpers";
 
 export class ItemLinkTreeHelpers {
@@ -19,7 +20,7 @@ export class ItemLinkTreeHelpers {
         types: ["tool"], // TODO Can't use tool...
       });
     } else {
-      warn(
+      Logger.warn(
         `No sheet is been prepared for this system please contacts the developer on the git project issues page`,
         true
       );

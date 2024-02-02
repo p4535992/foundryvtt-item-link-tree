@@ -2,50 +2,6 @@ import CONSTANTS from "../constants/constants.js";
 import Logger from "./Logger.js";
 import { RetrieveHelpers } from "./retrieve-helpers.js";
 
-// =================================
-// Logger Utility
-// ================================
-
-export function debug(msg, ...args) {
-  return Logger.debug(msg, args);
-}
-
-export function log(message, ...args) {
-  return Logger.log(message, args);
-}
-
-export function notify(message, ...args) {
-  return Logger.notify(message, args);
-}
-
-export function info(info, notify = false, ...args) {
-  return Logger.info(info, notify, args);
-}
-
-export function warn(warning, notify = false, ...args) {
-  return Logger.warn(warning, notify, args);
-}
-
-export function error(error, notify = true, ...args) {
-  return Logger.error(error, notify, args);
-}
-
-export function timelog(message) {
-  return Logger.timelog(message);
-}
-
-export const i18n = (key) => {
-  return Logger.i18n(key);
-};
-
-export const i18nFormat = (key, data = {}) => {
-  return Logger.i18nFormat(key, data);
-};
-
-export function dialogWarning(message, icon = "fas fa-exclamation-triangle") {
-  return Logger.dialogWarning(message, icon);
-}
-
 // ================================================================================
 
 export function getDocument(target) {

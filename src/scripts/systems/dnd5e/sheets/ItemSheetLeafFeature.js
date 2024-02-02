@@ -1,6 +1,6 @@
 import CONSTANTS from "../../../constants/constants.js";
-import { ItemLinkTreeManager } from "../../../item-link-tree-manager.js";
-import { i18n, parseAsArray } from "../../../lib/lib.js";
+import Logger from "../../../lib/Logger.js";
+import { parseAsArray } from "../../../lib/lib.js";
 
 export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
   static get defaultOptions() {
@@ -26,13 +26,13 @@ export class ItemSheetLeafFeature extends dnd5e.applications.item.ItemSheet5e {
     for (const typeOpt of subtypesSettings) {
       const opt = parseAsArray(typeOpt, "|");
       const value = opt[0];
-      const label = i18n(opt[1]);
+      const label = Logger.i18n(opt[1]);
       subTypeTypes[value] = label;
     }
     // let subTypeTypes = {
     //   none: "",
-    //   gem: i18n(`item-link-tree.gem.label`),
-    //   leaf: i18n(`item-link-tree.leaf.label`),
+    //   gem: Logger.i18n(`item-link-tree.gem.label`),
+    //   leaf: Logger.i18n(`item-link-tree.leaf.label`),
     // };
 
     // TODO to localize

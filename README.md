@@ -116,15 +116,6 @@ The wiki for the API is [here](wiki/api.md)
 ```bash
 npm install
 ```
-## npm build scripts
-
-# Build
-
-## Install all packages
-
-```bash
-npm install
-```
 
 ### dev
 

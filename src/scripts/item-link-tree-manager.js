@@ -2,9 +2,9 @@ import CONSTANTS from "./constants/constants.js";
 import { BeaverCraftingHelpers } from "./lib/beavers-crafting-helpers.js";
 import API from "./API/api.js";
 import { ItemLinkingHelpers } from "./lib/item-linking-helper.js";
-import { info, log, warn } from "./lib/lib.js";
 import { DaeHelpers } from "./lib/dae-helpers.js";
 import { BabonusHelpers } from "./lib/babonus-helpers.js";
+import Logger from "./lib/Logger.js";
 
 export class ItemLinkTreeManager {
   static _cleanName(name) {
@@ -21,26 +21,26 @@ export class ItemLinkTreeManager {
 
   static managePreAddLeafToItem(item, itemAdded, options) {
     if (!item?.actor && game.user.isGM) {
-      info(`The '${item?.name}' is not in a actor so is probably the GM ?`);
+      Logger.info(`The '${item?.name}' is not in a actor so is probably the GM ?`);
       return true;
     }
 
     if (options.checkForBeaverCrafting) {
       const isCrafted = BeaverCraftingHelpers.isItemBeaverCrafted(item);
       if (!isCrafted) {
-        warn(`You can't add the item because the target item is not crafted`, true);
+        Logger.warn(`You can't add the item because the target item is not crafted`, true);
         return false;
       }
     }
     const quantityItem = item.system.quantity;
     if (quantityItem !== 1) {
-      warn(`You can't add the leaf because the target object at a quantity greater than 1 or equal to 0`, true);
+      Logger.warn(`You can't add the leaf because the target object at a quantity greater than 1 or equal to 0`, true);
       return false;
     }
     if (options.checkForItemLinking) {
       const isItemLinked = ItemLinkingHelpers.isItemLinked(item);
       if (!isItemLinked) {
-        warn(`You can't add the leaf because the target object is not linked`, true);
+        Logger.warn(`You can't add the leaf because the target object is not linked`, true);
         return false;
       }
     }
@@ -50,14 +50,14 @@ export class ItemLinkTreeManager {
       if (customType === "upgrade") {
         // IS OK IF IS A UPGRADE
       } else {
-        warn(`You can't add the leaf because the target object is a leaf`, true);
+        Logger.warn(`You can't add the leaf because the target object is a leaf`, true);
         return false;
       }
     }
 
     const isFilterByItemTypeOk = API.isFilterByItemTypeOk(itemAdded, item.type);
     if (!isFilterByItemTypeOk) {
-      warn(`You can't add the leaf because the target object is an unsupported type '${item.type}'`, true);
+      Logger.warn(`You can't add the leaf because the target object is an unsupported type '${item.type}'`, true);
       return false;
     }
 
@@ -65,7 +65,7 @@ export class ItemLinkTreeManager {
     for (const leaf of leafs) {
       const itemLeaf = fromUuidSync(leaf.uuid);
       if (itemLeaf && itemLeaf.name === itemAdded.name) {
-        warn(`You can't add the leaf because the target object already has a leaf of that type`, true);
+        Logger.warn(`You can't add the leaf because the target object already has a leaf of that type`, true);
         return false;
       }
     }
@@ -78,13 +78,13 @@ export class ItemLinkTreeManager {
         if (isItemLeaf2) {
           // DO NOTHING
         } else {
-          warn(`You can't add the leaf because it's not linked`, true);
+          Logger.warn(`You can't add the leaf because it's not linked`, true);
           return false;
         }
       }
       const quantityItemAdded = itemAdded.system.quantity;
       if (quantityItemAdded !== 1) {
-        warn(`You can't add the leaf because the amount is != 1`, true);
+        Logger.warn(`You can't add the leaf because the amount is != 1`, true);
         return false;
       }
     }
@@ -92,11 +92,11 @@ export class ItemLinkTreeManager {
     /*
     const isGemCanBeAdded = ItemLinkTreeManager.checkIfYouCanAddMoreGemsToItem(item);
     if (!isGemCanBeAdded) {
-      warn(
+      Logger.warn(
         `Non puoi aggiungere la gemma/foglia perche' l'oggetto di destinazione non puo' contenere altre gemme/foglie!`,
         true
       );
-      warn(`Hai raggiunto il numero massimo di gemme per l'arma '${item.name}'`, true);
+      Logger.warn(`Hai raggiunto il numero massimo di gemme per l'arma '${item.name}'`, true);
       return false;
     }
     */
@@ -137,7 +137,7 @@ export class ItemLinkTreeManager {
               }
             }
             if (!foundedBonus) {
-              log(`Added bonus '${bonusToAdd.name}'`, true);
+              Logger.log(`Added bonus '${bonusToAdd.name}'`, true);
               await game.modules.get("babonus").api.embedBabonus(item, bonusToAdd);
             }
           }
@@ -159,7 +159,7 @@ export class ItemLinkTreeManager {
             }
           }
           if (!foundedEffect) {
-            log(`Added effect '${effectToAdd.name}'`, true);
+            Logger.log(`Added effect '${effectToAdd.name}'`, true);
             const effectData = effectToAdd.toObject();
             setProperty(effectData, `origin`, item.uuid);
             setProperty(effectData, `flags.core.sourceId`, item.uuid);
@@ -207,10 +207,10 @@ export class ItemLinkTreeManager {
 
     if (itemAdded.actor instanceof CONFIG.Actor.documentClass) {
       if (itemAdded.system.quantity > 1) {
-        log(`Update quantity item '${itemAdded.name}|${itemAdded.id}'`);
+        Logger.log(`Update quantity item '${itemAdded.name}|${itemAdded.id}'`);
         await itemAdded.update({ "system.quantity": itemAdded.system.quantity - 1 });
       } else {
-        log(`Delete item '${itemAdded.name}|${itemAdded.id}'`);
+        Logger.log(`Delete item '${itemAdded.name}|${itemAdded.id}'`);
         await actor.deleteEmbeddedDocuments("Item", [itemAdded.id]);
       }
     }
@@ -226,7 +226,7 @@ export class ItemLinkTreeManager {
             ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToRemove.name) &&
             effect.origin === item.uuid
           ) {
-            log(`Removed effect from actor '${effect.name}'`, true);
+            Logger.log(`Removed effect from actor '${effect.name}'`, true);
             idsEffectActorToRemove.push(effect.id);
           }
         }
@@ -243,7 +243,7 @@ export class ItemLinkTreeManager {
           effectToRemove.flags?.core?.sourceId.startsWith("Compendium") &&
           ItemLinkTreeManager._cleanName(effectToRemove.name) === ItemLinkTreeManager._cleanName(effectToRemove.name)
         ) {
-          log(`Removed effect from actor '${effectToRemove.name}'`, true);
+          Logger.log(`Removed effect from actor '${effectToRemove.name}'`, true);
           idsEffectActorToRemove2.push(effectToRemove.id);
         }
       }
@@ -273,7 +273,7 @@ export class ItemLinkTreeManager {
           for (const bonusToRemove of bonusesToRemove) {
             for (const bonus of bonuses) {
               if (bonus.name === bonusToRemove.name) {
-                log(`Removed bonus '${bonus.name}'`, true);
+                Logger.log(`Removed bonus '${bonus.name}'`, true);
                 await game.modules.get("babonus").api.deleteBonus(item, bonus.id);
               }
             }
@@ -291,7 +291,7 @@ export class ItemLinkTreeManager {
         //   for (const effectToRemove of effectsToRemove) {
         //     for (const effect of effects) {
         //       if (ItemLinkTreeManager._cleanLeafAndGem(effect.name) === ItemLinkTreeManager._cleanLeafAndGem(effectToRemove.name)) {
-        //         log(`Rimosso effect '${effect.name}'`, true);
+        //         Logger.log(`Rimosso effect '${effect.name}'`, true);
         //         let uuidItem = item.uuid;
         //         let origin = effect.origin;
         //         let ignore = [];
@@ -307,7 +307,7 @@ export class ItemLinkTreeManager {
           for (const effect of itemEffects) {
             if (ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToRemove.name)) {
               // Non funziona  && effect.origin === itemRemoved.uuid
-              log(`Removed effect from item '${effect.name}'`, true);
+              Logger.log(`Removed effect from item '${effect.name}'`, true);
               idsEffectItemToRemove.push(effect.id);
             }
           }
@@ -323,7 +323,7 @@ export class ItemLinkTreeManager {
               ItemLinkTreeManager._cleanName(effect.name) === ItemLinkTreeManager._cleanName(effectToRemove.name) &&
               effect.origin === item.uuid
             ) {
-              log(`Removed effect from actor '${effect.name}'`, true);
+              Logger.log(`Removed effect from actor '${effect.name}'`, true);
               idsEffectActorToRemove.push(effect.id);
             }
           }
@@ -419,7 +419,7 @@ export class ItemLinkTreeManager {
   //       }
   //       default: {
   //         if (rarity) {
-  //           warn(`No quantity of leafs is check for rarity '${rarity}'`);
+  //           Logger.warn(`No quantity of leafs is check for rarity '${rarity}'`);
   //         }
   //         canAddGem = false;
   //         break;

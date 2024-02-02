@@ -57,7 +57,7 @@ export class ItemPriceHelpers {
     const copper = pennies % 10;
     const silver = ((pennies - copper) % 100) / 10;
     const gold = (pennies - copper - 10 * silver) / 100;
-    //console.log(copper, silver, gold, pennies, pennies-copper);
+    //Logger.log(copper, silver, gold, pennies, pennies-copper);
     return {
       gold: gold,
       silver: silver,

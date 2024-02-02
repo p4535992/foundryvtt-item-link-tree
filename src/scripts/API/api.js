@@ -1,20 +1,10 @@
 import { ItemLinkTreeItem } from "../classes/ItemLinkTreeItem.js";
 import CONSTANTS from "../constants/constants.js";
 import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
+import Logger from "../lib/Logger.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import {
-  debug,
-  error,
-  getItemAsync,
-  getItemSync,
-  info,
-  isRealBooleanOrElseNull,
-  isRealNumber,
-  log,
-  parseAsArray,
-  warn,
-} from "../lib/lib.js";
+import { getItemAsync, getItemSync, isRealBooleanOrElseNull, isRealNumber, parseAsArray } from "../lib/lib.js";
 import { UpgradeItemGeneratorHelpers } from "../lib/upgrade-item-generator-helpers.js";
 import { UpgradeItemHelpers } from "../lib/upgrade-item-helper.js";
 
@@ -27,17 +17,17 @@ const API = {
    */
   getCollection(inAttributes) {
     // if (!Array.isArray(inAttributes)) {
-    //   throw error("getCollection | inAttributes must be of type array");
+    //   throw Logger.error("getCollection | inAttributes must be of type array");
     // }
     // const [uuidOrItem] = inAttributes;
     // if (typeof inAttributes !== "object") {
-    //   throw error("getCollection | inAttributes must be of type object");
+    //   throw Logger.error("getCollection | inAttributes must be of type object");
     // }
 
     const itemRef = inAttributes.item ? inAttributes.item : inAttributes;
     const item = getItemSync(itemRef);
     if (!item) {
-      warn(`No Item found`, true, inAttributes);
+      Logger.warn(`No Item found`, true, inAttributes);
       return;
     }
     // return item.getFlag(CONSTANTS.MODULE_ID, CONSTANTS.FLAGS.itemLeafs) ?? [];
@@ -55,16 +45,16 @@ const API = {
    */
   retrieveLeafs(inAttributes) {
     // if (!Array.isArray(inAttributes)) {
-    //   throw error("getCollection | inAttributes must be of type array");
+    //   throw Logger.error("getCollection | inAttributes must be of type array");
     // }
     // const [uuidOrItem] = inAttributes;
     // if (typeof inAttributes !== "object") {
-    //   throw error("getCollection | inAttributes must be of type object");
+    //   throw Logger.error("getCollection | inAttributes must be of type object");
     // }
 
     let leafs = this.getCollection(inAttributes);
     if (!leafs || leafs?.length <= 0) {
-      warn(`No Leafs found`, true, inAttributes);
+      Logger.warn(`No Leafs found`, true, inAttributes);
       return;
     }
 
@@ -140,7 +130,7 @@ const API = {
    */
   getCollectionByFeature(inAttributes) {
     if (typeof inAttributes !== "object") {
-      throw error("getCollectionBySubType | inAttributes must be of type object");
+      throw Logger.error("getCollectionBySubType | inAttributes must be of type object");
     }
     const itemWithLeafs = inAttributes.item;
     const features = inAttributes.features ?? [];
@@ -172,7 +162,7 @@ const API = {
    */
   getCollectionBySubType(inAttributes) {
     if (typeof inAttributes !== "object") {
-      throw error("getCollectionBySubType | inAttributes must be of type object");
+      throw Logger.error("getCollectionBySubType | inAttributes must be of type object");
     }
     const itemWithLeafs = inAttributes.item;
     const types = inAttributes.types ?? [];
@@ -204,7 +194,7 @@ const API = {
    */
   getCollectionUpgradableItems(inAttributes) {
     if (typeof inAttributes !== "object") {
-      throw error("getCollectionUpgradableItems | inAttributes must be of type object");
+      throw Logger.error("getCollectionUpgradableItems | inAttributes must be of type object");
     }
     const itemWithLeafs = inAttributes.item;
     const nameReference = inAttributes.name ?? "";
@@ -375,7 +365,7 @@ const API = {
     }
 
     if (Hooks.call("item-link-tree.preRemoveLeafFromItem", itemLinkTree.item, itemRemoved) === false) {
-      log(`AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`);
+      Logger.log(`AddRemoveLeafFromItem completion was prevented by the 'item-link-tree.preRemoveLeafFromItem' hook.`);
       return;
     }
 
@@ -432,7 +422,7 @@ const API = {
     const itemAdded = await getItemAsync(itemLeafRef);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
-      warn(`Cannot find this item with uuid ${itemLeaf}`);
+      Logger.warn(`Cannot find this item with uuid ${itemLeaf}`);
       return;
     }
     let uuidToAdd = itemAdded.uuid;
@@ -453,7 +443,7 @@ const API = {
     // }
 
     if (Hooks.call("item-link-tree.preAddLeafToItem", itemLinkTree.item, itemAdded) === false) {
-      log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
+      Logger.log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
       return;
     }
 
@@ -563,7 +553,7 @@ const API = {
     const itemAdded = await getItemAsync(itemLeafRef);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
-      warn(`Cannot find this item with uuid ${itemLeaf}`);
+      Logger.warn(`Cannot find this item with uuid ${itemLeaf}`);
       return;
     }
     let uuidToAdd = itemAdded.uuid;
@@ -573,7 +563,7 @@ const API = {
     }
 
     if (Hooks.call("item-link-tree.preAddLeafToItem", item, itemAdded) === false) {
-      log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
+      Logger.log(`AddLeafToItem completion was prevented by the 'item-link-tree.preAddLeafToItem' hook.`);
       return;
     }
 
