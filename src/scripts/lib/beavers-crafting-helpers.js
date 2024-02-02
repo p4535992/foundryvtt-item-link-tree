@@ -1,6 +1,5 @@
 import CONSTANTS from "../constants/constants";
 import Logger from "./Logger";
-import { getItemSync } from "./lib.js";
 
 export class BeaverCraftingHelpers {
   static isBeaverCraftingModuleActive() {
@@ -30,7 +29,7 @@ export class BeaverCraftingHelpers {
   }
 
   static async setItemAsBeaverCrafted(itemOrItemUuid) {
-    const item = getItemSync(itemOrItemUuid);
+    const item = RetrieveHelpers.getItemSync(itemOrItemUuid);
     if (!item) {
       Logger.warn(`I could not find the item with reference ${itemOrItemUuid}`);
       return;
@@ -44,7 +43,7 @@ export class BeaverCraftingHelpers {
   }
 
   static async unsetItemAsBeaverCrafted(itemOrItemUuid) {
-    const item = getItemSync(itemOrItemUuid);
+    const item = RetrieveHelpers.getItemSync(itemOrItemUuid);
     if (!item) {
       Logger.warn(`I could not find the item with reference ${itemOrItemUuid}`);
       return;

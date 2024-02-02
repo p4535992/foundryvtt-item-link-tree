@@ -1,15 +1,15 @@
 import { error } from "jquery";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { getItemAsync } from "./lib";
 import Logger from "./Logger";
+import { RetrieveHelpers } from "./retrieve-helpers.js";
 
 export class ItemLinkingAutomaticHelpers {
   // let item;
   static async replaceItemWithLinkedItemOnActor(itemUuid, force = false) {
-    let itemToCheck = await getItemAsync(itemUuid);
+    let itemToCheck = await RetrieveHelpers.getItemAsync(itemUuid);
     // Replace only if there is a base item
     if (ItemLinkingHelpers.isItemLinked(itemToCheck)) {
-      const toReplace = await getItemAsync(itemToCheck.uuid);
+      const toReplace = await RetrieveHelpers.getItemAsync(itemToCheck.uuid);
       const itemLinked = ItemLinkingHelpers.retrieveLinkedItem(itemToCheck);
       const obj = item.toObject();
       obj.flags["item-linking"] = {

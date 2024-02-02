@@ -8,7 +8,8 @@ import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { DaeHelpers } from "./dae-helpers";
 import { ItemLinkTreeHelpers } from "./item-link-tree-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { getItemAsync, getItemSync, isRealNumber } from "./lib";
+import { isRealNumber } from "./lib.js";
+import { RetrieveHelpers } from "./retrieve-helpers.js";
 
 export class UpgradeItemHelpers {
   /**
@@ -80,7 +81,7 @@ export class UpgradeItemHelpers {
     // itemNewPrefix,
     // itemNewSuffix
   ) {
-    originalItem = await getItemAsync(originalItem);
+    originalItem = await RetrieveHelpers.getItemAsync(originalItem);
 
     // TODO MAKE MULTISYSTEM
     if (originalItem.system.quantity !== 1) {
@@ -89,7 +90,7 @@ export class UpgradeItemHelpers {
     let baseLinkedItem = originalItem;
     if (ItemLinkingHelpers.isItemLinked(baseLinkedItem)) {
       baseLinkedItem = ItemLinkingHelpers.retrieveLinkedItem(baseLinkedItem);
-      baseLinkedItem = await getItemAsync(baseLinkedItem);
+      baseLinkedItem = await RetrieveHelpers.getItemAsync(baseLinkedItem);
     }
 
     const actorA = originalItem.actor;
@@ -108,7 +109,7 @@ export class UpgradeItemHelpers {
     });
     for (const up of leafsOriginalOnItem) {
       try {
-        let itemUp = await getItemAsync(up);
+        let itemUp = await RetrieveHelpers.getItemAsync(up);
         if (itemUp) {
           // itemUp = await ItemLinkingHelpers.setLinkedItem(itemUp, itemUp);
           itemsLeafsOriginalBase.push(itemUp);
@@ -118,7 +119,7 @@ export class UpgradeItemHelpers {
       }
     }
 
-    originalCrystal = await getItemAsync(originalCrystal);
+    originalCrystal = await RetrieveHelpers.getItemAsync(originalCrystal);
 
     // TODO MAKE MULTISYSTEM
     if (originalCrystal.system.quantity !== 1) {
@@ -127,7 +128,7 @@ export class UpgradeItemHelpers {
     let baseLinkedCrystal = originalCrystal;
     if (ItemLinkingHelpers.isItemLinked(baseLinkedCrystal)) {
       baseLinkedCrystal = ItemLinkingHelpers.retrieveLinkedItem(baseLinkedCrystal);
-      baseLinkedCrystal = await getItemAsync(baseLinkedCrystal);
+      baseLinkedCrystal = await RetrieveHelpers.getItemAsync(baseLinkedCrystal);
     }
 
     const upgradeSources =
@@ -137,15 +138,15 @@ export class UpgradeItemHelpers {
       }) ?? [];
     const isCurrentItemASource = await UpgradeItemHelpers._findAsync(upgradeSources, async (i) => {
       //await upgradeSources.find(async (i) => {
-      let iTmp = await getItemAsync(i);
+      let iTmp = await RetrieveHelpers.getItemAsync(i);
       if (ItemLinkingHelpers.isItemLinked(iTmp)) {
         iTmp = ItemLinkingHelpers.retrieveLinkedItem(iTmp);
-        iTmp = await getItemAsync(iTmp);
+        iTmp = await RetrieveHelpers.getItemAsync(iTmp);
       }
-      // let iTmp2 = await getItemAsync(originalItem);
+      // let iTmp2 = await RetrieveHelpers.getItemAsync(originalItem);
       // if (ItemLinkingHelpers.isItemLinked(originalItem)) {
       //   iTmp2 = ItemLinkingHelpers.retrieveLinkedItem(originalItem);
-      //   iTmp2 = await getItemAsync(iTmp2);
+      //   iTmp2 = await RetrieveHelpers.getItemAsync(iTmp2);
       // }
       // TODO control by name is enough ??
       return ItemLinkTreeManager._cleanName(iTmp.name) === ItemLinkTreeManager._cleanName(baseLinkedItem.name);
@@ -184,10 +185,10 @@ export class UpgradeItemHelpers {
     });
     for (const up of upgradeableItemsOnLeaf) {
       try {
-        let itemUp = await getItemAsync(up);
+        let itemUp = await RetrieveHelpers.getItemAsync(up);
         if (ItemLinkingHelpers.isItemLinked(itemUp)) {
           itemUp = ItemLinkingHelpers.retrieveLinkedItem(itemUp);
-          itemUp = await getItemAsync(itemUp);
+          itemUp = await RetrieveHelpers.getItemAsync(itemUp);
         }
         if (itemUp) {
           upgradeableItemsBase.push(itemUp);

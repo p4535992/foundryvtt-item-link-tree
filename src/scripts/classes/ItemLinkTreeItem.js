@@ -4,7 +4,7 @@ import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
 import Logger from "../lib/Logger.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { getItemAsync } from "../lib/lib.js";
+import { RetrieveHelpers } from "../lib/retrieve-helpers.js";
 import { ItemLinkTreeItemSheet } from "./ItemLinkTreeItemSheet.js";
 
 /**
@@ -260,7 +260,7 @@ export class ItemLinkTreeItem {
     // If owned, we are storing the actual owned item item's uuid. Else we store the source id.
     // const uuidToUpdate = this.item.isOwned ? itemToUpdate.uuid : itemToUpdate.getFlag("core", "sourceId");
     const uuidToUpdate = itemToUpdateLeaf.uuid;
-    const itemUpdated = await getItemAsync(uuidToUpdate, true);
+    const itemUpdated = await RetrieveHelpers.getItemAsync(uuidToUpdate, true);
     if (!itemUpdated) {
       return;
     }

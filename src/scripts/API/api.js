@@ -4,7 +4,8 @@ import { ItemLinkTreeManager } from "../item-link-tree-manager.js";
 import Logger from "../lib/Logger.js";
 import { BeaverCraftingHelpers } from "../lib/beavers-crafting-helpers.js";
 import { ItemLinkingHelpers } from "../lib/item-linking-helper.js";
-import { getItemAsync, getItemSync, isRealBooleanOrElseNull, isRealNumber, parseAsArray } from "../lib/lib.js";
+import { isRealBooleanOrElseNull, isRealNumber, parseAsArray } from "../lib/lib.js";
+import { RetrieveHelpers } from "../lib/retrieve-helpers.js";
 import { UpgradeItemGeneratorHelpers } from "../lib/upgrade-item-generator-helpers.js";
 import { UpgradeItemHelpers } from "../lib/upgrade-item-helper.js";
 
@@ -25,7 +26,7 @@ const API = {
     // }
 
     const itemRef = inAttributes.item ? inAttributes.item : inAttributes;
-    const item = getItemSync(itemRef);
+    const item = RetrieveHelpers.getItemSync(itemRef);
     if (!item) {
       Logger.warn(`No Item found`, true, inAttributes);
       return;
@@ -103,7 +104,7 @@ const API = {
    */
   getCollectionEffectAndBonus(item) {
     const itemRef = item.item ? item.item : item;
-    const itemWithLeafs = getItemSync(itemRef);
+    const itemWithLeafs = RetrieveHelpers.getItemSync(itemRef);
     const leafs = this.getCollection(itemWithLeafs);
     if (!leafs || leafs?.length <= 0) {
       return;
@@ -225,7 +226,7 @@ const API = {
    */
   isItemLeaf(item) {
     const itemRef = item.item ? item.item : item;
-    const itemLeafToCheck = getItemSync(itemRef);
+    const itemLeafToCheck = RetrieveHelpers.getItemSync(itemRef);
     const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
     if (isLeaf) {
       return true;
@@ -241,7 +242,7 @@ const API = {
    */
   isItemLeafBySubType(item, subtype) {
     const itemRef = item.item ? item.item : item;
-    const itemLeafToCheck = getItemSync(itemRef);
+    const itemLeafToCheck = RetrieveHelpers.getItemSync(itemRef);
     const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
     const subTypeToCheck =
       getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.subType}`) ?? "";
@@ -259,7 +260,7 @@ const API = {
    */
   isItemLeafByFeature(item, feature) {
     const itemRef = item.item ? item.item : item;
-    const itemLeafToCheck = getItemSync(itemRef);
+    const itemLeafToCheck = RetrieveHelpers.getItemSync(itemRef);
     const isLeaf = getProperty(itemLeafToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.isLeaf}`);
     const customTypeToCheck = getProperty(
       itemLeafToCheck,
@@ -279,7 +280,7 @@ const API = {
    */
   isFilterByItemTypeOk(item, itemType) {
     const itemRef = item.item ? item.item : item;
-    const itemToCheck = getItemSync(itemRef);
+    const itemToCheck = RetrieveHelpers.getItemSync(itemRef);
     const filterItemType = getProperty(itemToCheck, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.filterItemTypef}`);
     if (filterItemType && itemType) {
       const filterItemTypeArr = parseAsArray(filterItemType);
@@ -300,7 +301,7 @@ const API = {
    */
   hasSubtype(item, subtype) {
     const itemRef = item.item ? item.item : item;
-    const itemWithLeafs = getItemSync(itemRef);
+    const itemWithLeafs = RetrieveHelpers.getItemSync(itemRef);
     const options = {
       item: itemWithLeafs,
     };
@@ -349,7 +350,7 @@ const API = {
    */
   async removeLeaf(item, leaf) {
     const itemRef = item.item ? item.item : item;
-    const itemI = await getItemAsync(itemRef);
+    const itemI = await RetrieveHelpers.getItemAsync(itemRef);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     const itemToDelete = itemLinkTree.itemTreeFlagMap.get(leaf.id);
@@ -412,14 +413,14 @@ const API = {
    */
   async addLeaf(item, itemLeaf, leafOptions = {}) {
     const itemRef = item.item ? item.item : item;
-    const itemI = await getItemAsync(itemRef);
+    const itemI = await RetrieveHelpers.getItemAsync(itemRef);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     // MUTATED if this is an owned item
     // let uuidToAdd = providedUuid;
     // const itemAdded = await fromUuid(uuidToAdd);
     const itemLeafRef = itemLeaf.item ? itemLeaf.item : itemLeaf;
-    const itemAdded = await getItemAsync(itemLeafRef);
+    const itemAdded = await RetrieveHelpers.getItemAsync(itemLeafRef);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
       Logger.warn(`Cannot find this item with uuid ${itemLeaf}`);
@@ -543,14 +544,14 @@ const API = {
    */
   async addLeafLight(item, itemLeaf, leafOptions = {}) {
     const itemRef = item.item ? item.item : item;
-    const itemI = await getItemAsync(itemRef);
+    const itemI = await RetrieveHelpers.getItemAsync(itemRef);
     const itemLinkTree = new ItemLinkTreeItem(itemI);
 
     // MUTATED if this is an owned item
     // let uuidToAdd = providedUuid;
     // const itemAdded = await fromUuid(uuidToAdd);
     const itemLeafRef = itemLeaf.item ? itemLeaf.item : itemLeaf;
-    const itemAdded = await getItemAsync(itemLeafRef);
+    const itemAdded = await RetrieveHelpers.getItemAsync(itemLeafRef);
     let itemBaseAdded = itemAdded;
     if (!itemAdded) {
       Logger.warn(`Cannot find this item with uuid ${itemLeaf}`);

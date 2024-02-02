@@ -1,5 +1,5 @@
 import Logger from "./Logger";
-import { getItemSync } from "./lib.js";
+import { RetrieveHelpers } from "./retrieve-helpers.js";
 
 export class ItemLinkingHelpers {
   static isItemLinkingModuleActive() {
@@ -12,7 +12,7 @@ export class ItemLinkingHelpers {
    * @returns {boolean} if is linked or no
    */
   static isItemLinked(itemToCheck) {
-    const itemToCheckTmp = getItemSync(itemToCheck);
+    const itemToCheckTmp = RetrieveHelpers.getItemSync(itemToCheck);
     const hasBaseItem = getProperty(itemToCheckTmp, `flags.item-linking.baseItem`);
     const isLinked = getProperty(itemToCheckTmp, `flags.item-linking.isLinked`);
     if (hasBaseItem && isLinked) {
@@ -27,7 +27,7 @@ export class ItemLinkingHelpers {
    * @returns {boolean} if is linked or no
    */
   static isItemBrokenLink(itemToCheck) {
-    const itemToCheckTmp = getItemSync(itemToCheck);
+    const itemToCheckTmp = RetrieveHelpers.getItemSync(itemToCheck);
     const hasBaseItem = getProperty(itemToCheckTmp, `flags.item-linking.baseItem`);
     const isLinked = getProperty(itemToCheckTmp, `flags.item-linking.isLinked`);
     if (!hasBaseItem && isLinked) {
@@ -42,7 +42,7 @@ export class ItemLinkingHelpers {
    * @returns {boolean} if is linked or no
    */
   static isItemUnlinked(itemToCheck) {
-    const itemToCheckTmp = getItemSync(itemToCheck);
+    const itemToCheckTmp = RetrieveHelpers.getItemSync(itemToCheck);
     const hasBaseItem = getProperty(itemToCheckTmp, `flags.item-linking.baseItem`);
     const isLinked = getProperty(itemToCheckTmp, `flags.item-linking.isLinked`);
     if (!hasBaseItem && !isLinked) {
@@ -57,7 +57,7 @@ export class ItemLinkingHelpers {
    * @returns {Item|null} the item linked
    */
   static retrieveLinkedItem(itemToCheck) {
-    const itemToCheckTmp = getItemSync(itemToCheck);
+    const itemToCheckTmp = RetrieveHelpers.getItemSync(itemToCheck);
     if (!ItemLinkingHelpers.isItemLinkingModuleActive()) {
       Logger.warn(`The module 'item-linking' is not active`);
       return;
@@ -96,12 +96,12 @@ export class ItemLinkingHelpers {
       return;
     }
 
-    let itemToCheckTmp = await getItemAsync(itemToCheck);
+    let itemToCheckTmp = await RetrieveHelpers.getItemAsync(itemToCheck);
     if (ItemLinkingHelpers.isItemLinked(itemToCheckTmp)) {
       return itemToCheckTmp;
     }
 
-    const baseItem = await getItemAsync(itemBaseReference);
+    const baseItem = await RetrieveHelpers.getItemAsync(itemBaseReference);
     const uuidToSet =
       ItemLinkingHelpers.retrieveLinkedItem(baseItem)?.uuid ??
       getProperty(baseItem, `flags.core.sourceId`) ??
@@ -137,10 +137,10 @@ export class ItemLinkingHelpers {
    * @returns {Promise<Void>}
    */
   static async replaceItemWithLinkedItemOnActor(itemToCheck, force = false) {
-    let itemToCheckTmp = await getItemAsync(itemToCheck);
+    let itemToCheckTmp = await RetrieveHelpers.getItemAsync(itemToCheck);
     // Replace only if there is a base item
     if (ItemLinkingHelpers.isItemLinked(itemToCheckTmp)) {
-      const toReplace = await getItemAsync(itemToCheckTmp.uuid);
+      const toReplace = await RetrieveHelpers.getItemAsync(itemToCheckTmp.uuid);
       const itemLinked = ItemLinkingHelpers.retrieveLinkedItem(itemToCheckTmp);
       const obj = item.toObject();
       obj.flags["item-linking"] = {
@@ -215,7 +215,7 @@ export class ItemLinkingHelpers {
    * @param {string} [options.compendiumForNoMatch=null] Unmatched documents can be included in this compendium if present
    */
   static async tryToUpdateActorWithLinkedDocumentsFromCompendiums(actor, compendiumsToCheck, options) {
-    const actorToUpdate = await getActorAsync(actor, false);
+    const actorToUpdate = await RetrieveHelpers.getActorAsync(actor, false);
     if (!actorToUpdate) {
       Logger.warn(`tryToUpdateActorWithLinkedDocumentsFromCompendiums | No Actor is been passed`, true);
       return;
@@ -230,7 +230,7 @@ export class ItemLinkingHelpers {
 
     const compendiums = [];
     for (const ref of compendiumsReferences) {
-      const comp = await getCompendiumCollectionAsync(ref, false);
+      const comp = await RetrieveHelpers.getCompendiumCollectionAsync(ref, false);
       if (comp) {
         compendiums.push(comp);
       }

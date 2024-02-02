@@ -1,5 +1,3 @@
-import { getItemSync } from "./lib.js";
-
 export class BabonusHelpers {
   static isBabonusModuleActive() {
     return game.modules.get("babonus")?.active;
@@ -24,7 +22,7 @@ export class BabonusHelpers {
   }
 
   static async deleteAllBonusFromItem(itemToCheck) {
-    itemToCheck = getItemSync(itemToCheck);
+    itemToCheck = RetrieveHelpers.getItemSync(itemToCheck);
     const collection = retrieveBonusesFromItem(itemToCheck);
     for (const bonus of collection) {
       await game.modules.get("babonus").api.deleteBonus(itemToCheck, bonus.id);

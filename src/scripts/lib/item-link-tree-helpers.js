@@ -4,8 +4,8 @@ import { ItemSheetLeafFeature } from "../systems/dnd5e/sheets/ItemSheetLeafFeatu
 import Logger from "./Logger";
 import { BeaverCraftingHelpers } from "./beavers-crafting-helpers";
 import { ItemLinkingHelpers } from "./item-linking-helper";
-import { getItemAsync, getItemSync } from "./lib.js";
 import { PoppersJsHelpers } from "./poppers-js-helpers";
+import { RetrieveHelpers } from "./retrieve-helpers.js";
 
 export class ItemLinkTreeHelpers {
   static registerSheet() {
@@ -101,8 +101,8 @@ export class ItemLinkTreeHelpers {
   }
 
   static async transferFlagsFromItemToItem(itemWherePutTheFlags, itemWithTheFlags) {
-    itemWherePutTheFlags = await getItemAsync(itemWherePutTheFlags);
-    itemWithTheFlags = await getItemAsync(itemWithTheFlags);
+    itemWherePutTheFlags = await RetrieveHelpers.getItemAsync(itemWherePutTheFlags);
+    itemWithTheFlags = await RetrieveHelpers.getItemAsync(itemWithTheFlags);
     const currentFlags = getProperty(itemWherePutTheFlags, `flags.${CONSTANTS.MODULE_ID}`) ?? {};
     const newFlags = getProperty(itemWithTheFlags, `flags.${CONSTANTS.MODULE_ID}`) ?? {};
     const updatedFlags = mergeObject(currentFlags, newFlags);
@@ -119,7 +119,7 @@ export class ItemLinkTreeHelpers {
   }
 
   static async isApplyImagesActive(leaf) {
-    let itemTmp = await getItemAsync(leaf);
+    let itemTmp = await RetrieveHelpers.getItemAsync(leaf);
     if (ItemLinkingHelpers.isItemLinked(itemTmp)) {
       itemTmp = ItemLinkingHelpers.retrieveLinkedItem(itemTmp);
       const isApplyImagesActive = getProperty(itemTmp, `flags.${CONSTANTS.MODULE_ID}.${CONSTANTS.FLAGS.showImageIcon}`);
@@ -138,7 +138,7 @@ export class ItemLinkTreeHelpers {
   }
 
   static async retrieveLeafDataAsync(leaf) {
-    let itemTmp = await getItemAsync(leaf);
+    let itemTmp = await RetrieveHelpers.getItemAsync(leaf);
     if (ItemLinkingHelpers.isItemLinked(itemTmp)) {
       itemTmp = ItemLinkingHelpers.retrieveLinkedItem(itemTmp);
       let data = getProperty(itemTmp, `flags.${CONSTANTS.MODULE_ID}`);
